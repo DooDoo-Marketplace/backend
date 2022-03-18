@@ -9,7 +9,7 @@ public class AuthRequest {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
     @Column(name = "phone")
     private String phone;
     @Column(name = "code", nullable = false)
@@ -28,11 +28,11 @@ public class AuthRequest {
         this.attempts = attempts;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

@@ -94,4 +94,13 @@ public class AuthorizationService {
         return new AuthResponseDto(token, registered);
 
     }
+
+    public void closeSession(Session session){
+        this.sessionRepository.setExpirationById(session.getId());
+    }
+
+    public void closeAllSessions(Session session){
+        this.sessionRepository.setExpirationByUser(session.getUser());
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.rebot.micro.userservice.utils;
 
 import com.rebot.micro.userservice.model.User;
+import org.postgresql.util.Base64;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -20,16 +21,7 @@ public class TokenUtils {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] bytes = md.digest(in.getBytes(StandardCharsets.UTF_8));
-            StringBuilder s = new StringBuilder();
-            for (byte aByte : bytes) {
-                try {
-                    s.append(Character.toChars(aByte));
-                }
-                catch (IllegalArgumentException ex){
-                    s.append(ThreadLocalRandom.current().nextInt(1,9));
-                }
-            }
-            return s.toString();
+            return Base64.encodeBytes(bytes, Base64.DONT_BREAK_LINES);
 
         } catch (NoSuchAlgorithmException ex) {
             throw new Error("Пизда рулю. Алгоритма нет");

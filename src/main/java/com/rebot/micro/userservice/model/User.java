@@ -2,6 +2,7 @@ package com.rebot.micro.userservice.model;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -25,6 +26,8 @@ public class User {
     private Date onlineAt;
     @Column(name = "phone")
     private String phone;
+    @ManyToMany
+    List<Role> roles;
 
     public long getId() {
         return id;
@@ -48,6 +51,15 @@ public class User {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
     public String getLastName() {

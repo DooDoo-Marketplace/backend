@@ -8,16 +8,16 @@ import com.rebot.micro.userservice.exception.AttemptsLimitException;
 import com.rebot.micro.userservice.exception.AuthRequestNotFoundException;
 import com.rebot.micro.userservice.exception.InvalidCodeException;
 import com.rebot.micro.userservice.exception.TooFastRequestsException;
+import com.rebot.micro.userservice.model.Session;
 import com.rebot.micro.userservice.service.AuthorizationService;
 import com.rebot.micro.userservice.validator.PhoneValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("api/v1/auth")
@@ -25,6 +25,9 @@ public class AuthController {
 
     @Autowired
     AuthorizationService authorizationService;
+
+    @Autowired
+    private HttpServletRequest context;
 
     PhoneValidator phoneValidator;
     public AuthController(){
@@ -66,7 +69,17 @@ public class AuthController {
             ErrorDto error = new ErrorDto("ATTEMPTS_LIMIT_REACHED");
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
+    }
 
-
+    @PostMapping(value = "logout", produces = "application/json")
+    private ResponseEntity<?> code (@RequestParam(name = "all") Boolean closeAll){
+        Session session = (Session)(this.context.getAttribute("session"));
+        if (closeAll){
+            this.authorizationService.closeAllSessions(session);
+        }
+        else{
+            this.authorizationService.closeSession(session);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

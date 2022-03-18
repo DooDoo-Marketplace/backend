@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface AuthRequestRepository extends JpaRepository<AuthRequest, Integer> {
     AuthRequest getAuthRequestByPhone(String phone);
     @Query("update AuthRequest set attempts = ?2 where id = ?1")
-    void setAttemptsById(int id, int attempts);
+    void setAttemptsById(long id, int attempts);
 }

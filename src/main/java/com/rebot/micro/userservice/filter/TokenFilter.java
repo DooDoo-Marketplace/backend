@@ -30,7 +30,7 @@ public class TokenFilter implements Filter {
             Map<String, String> headers = Collections.list(request.getHeaderNames())
                     .stream()
                     .collect(Collectors.toMap(h -> h, request::getHeader));
-            String token = headers.get("Authorization");
+            String token = headers.get("authorization");
             if (token == null) {
                 ((HttpServletResponse) servletResponse).sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
             } else {

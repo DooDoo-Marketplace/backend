@@ -9,7 +9,7 @@ public class Session {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
     @OneToOne
     private User user;
     @Column(name = "token", nullable = false)
@@ -19,11 +19,11 @@ public class Session {
     @Column(name = "expired", nullable = false)
     private boolean expired;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
