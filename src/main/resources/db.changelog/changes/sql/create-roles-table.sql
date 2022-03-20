@@ -1,4 +1,4 @@
-create table roles
+create table if not exists roles
 (
     id   bigserial    not null
         constraint role_pk

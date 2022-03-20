@@ -1,4 +1,4 @@
-package com.rebot.micro.userservice.model;
+package space.rebot.micro.userservice.model;
 
 import javax.persistence.*;
 import java.util.Date;

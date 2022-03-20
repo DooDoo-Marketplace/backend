@@ -1,12 +1,16 @@
 package space.rebot.micro.userservice.filter;
 
-import space.rebot.micro.config.PermissionsConfig;
-import space.rebot.micro.config.RoleConfig;
-import space.rebot.micro.userservice.model.Session;
-import space.rebot.micro.userservice.repository.SessionsRepository;
+
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import space.rebot.micro.config.PermissionsConfig;
+import space.rebot.micro.config.RoleConfig;
+import space.rebot.micro.userservice.model.Role;
+import space.rebot.micro.userservice.model.Session;
+import space.rebot.micro.userservice.model.User;
+
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -17,48 +21,45 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-@Order(1)
-public class TokenFilter implements Filter {
-
-    @Autowired
-    SessionsRepository repository;
+@Order(2)
+public class RoleFilter implements Filter {
 
     @Autowired
     PermissionsConfig permissionsConfig;
 
+    private String[] getUserPermissions(User user){
+        String[] permissions = {};
+        for(Role role: user.getRoles()){
+            permissions = ArrayUtils.addAll(permissions, permissionsConfig.allowedUrls.get(role.getName()));
+        }
+        return permissions;
+
+    }
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        String[] unauthorized = permissionsConfig.allowedUrls.get(RoleConfig.UNAUTHORIZED);
-        boolean skipAuth = false;
+        Session session = (Session)(request.getAttribute("session"));
+        if (session == null){
+            filterChain.doFilter(servletRequest, servletResponse);
+            return;
+        }
+        User user = ((Session)(request.getAttribute("session"))).getUser();
+        String[] allowedUrls = getUserPermissions(user);
+        boolean allowed = false;
         String requestUrl = request.getRequestURL().toString();
-        for (String url: unauthorized){
+        for (String url: allowedUrls){
             if (requestUrl.matches(url)){
-                skipAuth = true;
+                allowed = true;
                 break;
             }
         }
-        if (skipAuth) {
+        if (allowed) {
             filterChain.doFilter(servletRequest, servletResponse);
         }
         else {
-            Map<String, String> headers = Collections.list(request.getHeaderNames())
-                    .stream()
-                    .collect(Collectors.toMap(h -> h, request::getHeader));
-            String token = headers.get("authorization");
-            if (token == null) {
-                ((HttpServletResponse) servletResponse).sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
-            } else {
-                Session session = repository.getSessionByToken(token);
-                if (session == null || session.isExpired()) {
-                    ((HttpServletResponse) servletResponse).sendError(HttpServletResponse.SC_UNAUTHORIZED, "The token is not valid.");
-                } else {
-                    servletRequest.setAttribute("session", session);
-                    filterChain.doFilter(servletRequest, servletResponse);
-                }
-            }
-        }
 
+            ((HttpServletResponse) servletResponse).sendError(HttpServletResponse.SC_FORBIDDEN);
+        }
 
     }
 }

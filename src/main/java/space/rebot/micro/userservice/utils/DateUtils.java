@@ -1,4 +1,4 @@
-package com.rebot.micro.userservice.utils;
+package space.rebot.micro.userservice.utils;
 
 import java.util.Date;
 

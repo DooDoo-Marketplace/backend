@@ -1,26 +1,27 @@
-package com.rebot.micro.userservice.service;
+package space.rebot.micro.userservice.service;
 
-import com.rebot.micro.config.RoleConfig;
-import com.rebot.micro.userservice.dto.AuthResponseDto;
-import com.rebot.micro.userservice.exception.AttemptsLimitException;
-import com.rebot.micro.userservice.exception.AuthRequestNotFoundException;
-import com.rebot.micro.userservice.exception.InvalidCodeException;
-import com.rebot.micro.userservice.exception.TooFastRequestsException;
-import com.rebot.micro.userservice.model.AuthRequest;
-import com.rebot.micro.userservice.model.Role;
-import com.rebot.micro.userservice.model.Session;
-import com.rebot.micro.userservice.model.User;
-import com.rebot.micro.userservice.repository.AuthRequestsRepository;
-import com.rebot.micro.userservice.repository.RolesRepository;
-import com.rebot.micro.userservice.repository.SessionsRepository;
-import com.rebot.micro.userservice.repository.UsersRepository;
-import com.rebot.micro.userservice.utils.DateUtils;
-import com.rebot.micro.userservice.utils.TokenUtils;
+import space.rebot.micro.config.RoleConfig;
+import space.rebot.micro.userservice.dto.AuthResponseDto;
+import space.rebot.micro.userservice.exception.AttemptsLimitException;
+import space.rebot.micro.userservice.exception.AuthRequestNotFoundException;
+import space.rebot.micro.userservice.exception.InvalidCodeException;
+import space.rebot.micro.userservice.exception.TooFastRequestsException;
+import space.rebot.micro.userservice.model.AuthRequest;
+import space.rebot.micro.userservice.model.Role;
+import space.rebot.micro.userservice.model.Session;
+import space.rebot.micro.userservice.model.User;
+import space.rebot.micro.userservice.repository.AuthRequestsRepository;
+import space.rebot.micro.userservice.repository.RolesRepository;
+import space.rebot.micro.userservice.repository.SessionsRepository;
+import space.rebot.micro.userservice.repository.UsersRepository;
+import space.rebot.micro.userservice.utils.DateUtils;
+import space.rebot.micro.userservice.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class AuthorizationService {
@@ -89,6 +90,7 @@ public class AuthorizationService {
             user.setRegisteredAt(now);
             Role role = rolesRepository.getRoleByName(RoleConfig.ROLE_USER.toString());
             user.addRole(role);
+            role.getUsers().add(user);
             userRepository.save(user);
             registered = true;
         }

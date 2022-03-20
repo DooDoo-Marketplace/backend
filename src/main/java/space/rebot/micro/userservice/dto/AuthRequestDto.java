@@ -1,4 +1,4 @@
-package com.rebot.micro.userservice.dto;
+package space.rebot.micro.userservice.dto;
 
 import org.wildfly.common.annotation.NotNull;
 

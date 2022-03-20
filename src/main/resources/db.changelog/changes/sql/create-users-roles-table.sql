@@ -1,4 +1,4 @@
-create table users_roles
+create table if not exists users_roles
 (
     id       bigserial not null
         constraint user_roles_pk

@@ -1,4 +1,4 @@
-package com.rebot.micro.userservice.model;
+package space.rebot.micro.userservice.model;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -27,7 +27,12 @@ public class User {
     private Date onlineAt;
     @Column(name = "phone")
     private String phone;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "roles_id") }
+    )
     List<Role> roles;
     public User(){
         this.roles = new LinkedList<Role>();

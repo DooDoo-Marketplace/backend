@@ -1,4 +1,4 @@
-package com.rebot.micro.userservice.utils;
+package space.rebot.micro.userservice.utils;
 
 public class StringUtils {
     public static boolean isUint(String value){

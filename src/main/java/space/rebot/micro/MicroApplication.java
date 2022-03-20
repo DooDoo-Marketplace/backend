@@ -1,4 +1,4 @@
-package com.rebot.micro;
+package space.rebot.micro;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

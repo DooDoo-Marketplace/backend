@@ -1,7 +1,9 @@
-package com.rebot.micro.userservice.filter;
+package space.rebot.micro.userservice.filter;
 
-import com.rebot.micro.userservice.model.Session;
-import com.rebot.micro.userservice.repository.SessionsRepository;
+import space.rebot.micro.config.PermissionsConfig;
+import space.rebot.micro.config.RoleConfig;
+import space.rebot.micro.userservice.model.Session;
+import space.rebot.micro.userservice.repository.SessionsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -21,10 +23,22 @@ public class TokenFilter implements Filter {
     @Autowired
     SessionsRepository repository;
 
+    @Autowired
+    PermissionsConfig permissionsConfig;
+
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        if (request.getRequestURL().toString().contains("auth")) {
+        String[] unauthorized = permissionsConfig.allowedUrls.get(RoleConfig.UNAUTHORIZED.toString());
+        boolean skipAuth = false;
+        String requestUrl = request.getRequestURL().toString();
+        for (String url: unauthorized){
+            if (requestUrl.matches(url)){
+                skipAuth = true;
+                break;
+            }
+        }
+        if (skipAuth) {
             filterChain.doFilter(servletRequest, servletResponse);
         }
         else {
@@ -35,7 +49,7 @@ public class TokenFilter implements Filter {
             if (token == null) {
                 ((HttpServletResponse) servletResponse).sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
             } else {
-                Session session = repository.getSessionByToken(token);
+                Session session = repository.getByToken(token);
                 if (session == null || session.isExpired()) {
                     ((HttpServletResponse) servletResponse).sendError(HttpServletResponse.SC_UNAUTHORIZED, "The token is not valid.");
                 } else {

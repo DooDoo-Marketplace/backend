@@ -1,4 +1,4 @@
-package com.rebot.micro.config;
+package space.rebot.micro.config;
 
 public enum RoleConfig {
     ROLE_USER("USER"),

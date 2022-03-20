@@ -1,6 +1,6 @@
-package com.rebot.micro.userservice.validator;
+package space.rebot.micro.userservice.validator;
 
-import com.rebot.micro.userservice.utils.StringUtils;
+import space.rebot.micro.userservice.utils.StringUtils;
 
 public class PhoneValidator implements Validator<String>{
 

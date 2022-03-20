@@ -1,4 +1,4 @@
-package com.rebot.micro.userservice.exception;
+package space.rebot.micro.userservice.exception;
 
 public class InvalidCodeException extends Exception{
 }

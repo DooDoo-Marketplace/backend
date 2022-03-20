@@ -1,16 +1,16 @@
-package com.rebot.micro.userservice.controller;
+package space.rebot.micro.userservice.controller;
 
-import com.rebot.micro.userservice.dto.AuthRequestDto;
-import com.rebot.micro.userservice.dto.AuthResponseDto;
-import com.rebot.micro.userservice.dto.CodeRequestDto;
-import com.rebot.micro.userservice.dto.MessageDto;
-import com.rebot.micro.userservice.exception.AttemptsLimitException;
-import com.rebot.micro.userservice.exception.AuthRequestNotFoundException;
-import com.rebot.micro.userservice.exception.InvalidCodeException;
-import com.rebot.micro.userservice.exception.TooFastRequestsException;
-import com.rebot.micro.userservice.model.Session;
-import com.rebot.micro.userservice.service.AuthorizationService;
-import com.rebot.micro.userservice.validator.PhoneValidator;
+import space.rebot.micro.userservice.dto.AuthRequestDto;
+import space.rebot.micro.userservice.dto.AuthResponseDto;
+import space.rebot.micro.userservice.dto.CodeRequestDto;
+import space.rebot.micro.userservice.dto.MessageDto;
+import space.rebot.micro.userservice.exception.AttemptsLimitException;
+import space.rebot.micro.userservice.exception.AuthRequestNotFoundException;
+import space.rebot.micro.userservice.exception.InvalidCodeException;
+import space.rebot.micro.userservice.exception.TooFastRequestsException;
+import space.rebot.micro.userservice.model.Session;
+import space.rebot.micro.userservice.service.AuthorizationService;
+import space.rebot.micro.userservice.validator.PhoneValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,12 +51,13 @@ public class AuthController {
 
 
     }
-    @PostMapping(value = "code", produces = "application/xml")
+    @PostMapping(value = "code", produces = "application/json")
     private ResponseEntity<?> code (@NonNull @RequestBody CodeRequestDto codeRequestDto){
         try {
             AuthResponseDto responseDto = authorizationService.authorizeByCode(codeRequestDto.getPhone(), codeRequestDto.getCode());
             return ResponseEntity.ok(responseDto);
         }
+
         catch (AuthRequestNotFoundException ex){
             MessageDto error = new MessageDto("AUTH_REQUEST_NOT_FOUND");
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
@@ -72,7 +73,7 @@ public class AuthController {
     }
 
     @PostMapping(value = "logout", produces = "application/json")
-    private ResponseEntity<?> code (@RequestParam(name = "all") Boolean closeAll){
+    private ResponseEntity<?> logout (@RequestParam(name = "all") Boolean closeAll){
         Session session = (Session)(this.context.getAttribute("session"));
         if (closeAll){
             this.authorizationService.closeAllSessions(session);

@@ -1,6 +1,6 @@
-package com.rebot.micro.userservice.utils;
+package space.rebot.micro.userservice.utils;
 
-import com.rebot.micro.userservice.model.User;
+import space.rebot.micro.userservice.model.User;
 import org.postgresql.util.Base64;
 
 import java.nio.charset.StandardCharsets;
@@ -8,7 +8,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 import java.time.Instant;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class TokenUtils {
 

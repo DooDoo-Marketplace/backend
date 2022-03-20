@@ -1,4 +1,4 @@
-package com.rebot.micro.userservice.dto;
+package space.rebot.micro.userservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonView;
 

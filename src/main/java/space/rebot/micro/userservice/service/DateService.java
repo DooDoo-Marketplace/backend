@@ -1,4 +1,4 @@
-package com.rebot.micro.userservice.service;
+package space.rebot.micro.userservice.service;
 
 import org.springframework.stereotype.Service;
 
