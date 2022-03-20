@@ -1,1 +1,1 @@
-DROP table auth_requests;
+DROP table roles;

@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AuthRequestRepository extends JpaRepository<AuthRequest, Integer> {
+public interface AuthRequestsRepository extends JpaRepository<AuthRequest, Long> {
     AuthRequest getAuthRequestByPhone(String phone);
-    @Query("update AuthRequest set attempts = ?2 where id = ?1")
+    @Query(value = "update auth_requests set attempts = ?2 where id = ?1", nativeQuery = true)
     void setAttemptsById(long id, int attempts);
 }

@@ -1,20 +1,13 @@
-create table users_roles
+create table roles
 (
-    id       bigserial not null
-        constraint user_roles_pk
+    id   bigserial    not null
+        constraint role_pk
             primary key,
-    user_id  bigint    not null
-        constraint user_roles_users_id_fk
-            references users,
-    roles_id bigint    not null
-        constraint user_roles_roles_id_fk
-            references roles
-        constraint user_roles_roles_id_fk_
-            references roles
+    name varchar(255) not null
 );
 
-alter table users_roles
+alter table roles
     owner to postgres;
 
-create unique index user_roles_id_uindex
-    on users_roles (id);
+create unique index role_id_uindex
+    on roles (id);

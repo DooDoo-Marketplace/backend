@@ -2,6 +2,7 @@ package com.rebot.micro.userservice.model;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -28,7 +29,9 @@ public class User {
     private String phone;
     @ManyToMany
     List<Role> roles;
-
+    public User(){
+        this.roles = new LinkedList<Role>();
+    }
     public long getId() {
         return id;
     }
@@ -100,5 +103,9 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public void addRole(Role role){
+        this.roles.add(role);
     }
 }

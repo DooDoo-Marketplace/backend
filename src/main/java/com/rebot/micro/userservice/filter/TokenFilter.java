@@ -1,7 +1,7 @@
 package com.rebot.micro.userservice.filter;
 
 import com.rebot.micro.userservice.model.Session;
-import com.rebot.micro.userservice.repository.SessionRepository;
+import com.rebot.micro.userservice.repository.SessionsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Order(1)
 public class TokenFilter implements Filter {
     @Autowired
-    SessionRepository repository;
+    SessionsRepository repository;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

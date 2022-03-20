@@ -1,16 +1,19 @@
 package com.rebot.micro.userservice.service;
 
+import com.rebot.micro.userservice.Config;
 import com.rebot.micro.userservice.dto.AuthResponseDto;
 import com.rebot.micro.userservice.exception.AttemptsLimitException;
 import com.rebot.micro.userservice.exception.AuthRequestNotFoundException;
 import com.rebot.micro.userservice.exception.InvalidCodeException;
 import com.rebot.micro.userservice.exception.TooFastRequestsException;
 import com.rebot.micro.userservice.model.AuthRequest;
+import com.rebot.micro.userservice.model.Role;
 import com.rebot.micro.userservice.model.Session;
 import com.rebot.micro.userservice.model.User;
-import com.rebot.micro.userservice.repository.AuthRequestRepository;
-import com.rebot.micro.userservice.repository.SessionRepository;
-import com.rebot.micro.userservice.repository.UserRepository;
+import com.rebot.micro.userservice.repository.AuthRequestsRepository;
+import com.rebot.micro.userservice.repository.RolesRepository;
+import com.rebot.micro.userservice.repository.SessionsRepository;
+import com.rebot.micro.userservice.repository.UsersRepository;
 import com.rebot.micro.userservice.utils.DateUtils;
 import com.rebot.micro.userservice.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +25,19 @@ import java.util.Date;
 @Service
 public class AuthorizationService {
     @Autowired
-    UserRepository userRepository;
+    UsersRepository userRepository;
 
     @Autowired
-    SessionRepository sessionRepository;
+    SessionsRepository sessionRepository;
 
     @Autowired
-    AuthRequestRepository authRequestRepository;
+    AuthRequestsRepository authRequestRepository;
 
     @Autowired
     DateService dateService;
+
+    @Autowired
+    RolesRepository rolesRepository;
 
     @Resource(name = "smsService")
     SmsService smsService;
@@ -81,6 +87,8 @@ public class AuthorizationService {
             user = new User();
             user.setPhone(phone);
             user.setRegisteredAt(now);
+            Role role = rolesRepository.getRoleByName(Config.ROLE_USER.toString());
+            user.addRole(role);
             userRepository.save(user);
             registered = true;
         }

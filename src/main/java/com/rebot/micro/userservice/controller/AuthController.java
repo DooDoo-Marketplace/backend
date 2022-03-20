@@ -51,7 +51,7 @@ public class AuthController {
 
 
     }
-    @PostMapping(value = "code", produces = "application/json")
+    @PostMapping(value = "code", produces = "application/xml")
     private ResponseEntity<?> code (@NonNull @RequestBody CodeRequestDto codeRequestDto){
         try {
             AuthResponseDto responseDto = authorizationService.authorizeByCode(codeRequestDto.getPhone(), codeRequestDto.getCode());
@@ -63,11 +63,11 @@ public class AuthController {
         }
         catch (InvalidCodeException ex){
             ErrorDto error = new ErrorDto("INVALID_CODE");
-            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
         }
         catch (AttemptsLimitException ex){
             ErrorDto error = new ErrorDto("ATTEMPTS_LIMIT_REACHED");
-            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(error, HttpStatus.TOO_MANY_REQUESTS);
         }
     }
 

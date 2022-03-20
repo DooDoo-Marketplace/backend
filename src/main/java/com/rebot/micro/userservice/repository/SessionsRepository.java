@@ -7,12 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SessionRepository extends JpaRepository<Session, Integer> {
+public interface SessionsRepository extends JpaRepository<Session, Long> {
     Session getSessionByToken(String token);
 
-    @Query("update Session set  expired = true where id = ?1")
+    @Query(value = "update sessions set expired = true where id = ?1", nativeQuery = true)
     void setExpirationById(Long id);
 
-    @Query("update Session set  expired = true where user = ?1")
+    @Query(value = "update sessions set expired = true where user = ?1", nativeQuery = true)
     void setExpirationByUser(User id);
 }

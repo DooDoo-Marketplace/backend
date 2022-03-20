@@ -1,10 +1,20 @@
-create table if not exists auth_requests
+create table users_roles
 (
-    id         serial    not null
-        constraint auth_requests_pkey
-        primary key,
-    attempts   integer,
-    code       integer   not null,
-    created_at timestamp not null,
-    phone      varchar(255) not null
+    id       bigserial not null
+        constraint user_roles_pk
+            primary key,
+    user_id  bigint    not null
+        constraint user_roles_users_id_fk
+            references users,
+    roles_id bigint    not null
+        constraint user_roles_roles_id_fk
+            references roles
+        constraint user_roles_roles_id_fk_
+            references roles
 );
+
+alter table users_roles
+    owner to postgres;
+
+create unique index user_roles_id_uindex
+    on users_roles (id);
