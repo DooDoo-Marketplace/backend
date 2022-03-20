@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Component
 @Order(1)
 public class TokenFilter implements Filter {
+
     @Autowired
     SessionsRepository repository;
 

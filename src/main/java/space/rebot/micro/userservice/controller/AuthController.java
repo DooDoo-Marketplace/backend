@@ -3,7 +3,7 @@ package com.rebot.micro.userservice.controller;
 import com.rebot.micro.userservice.dto.AuthRequestDto;
 import com.rebot.micro.userservice.dto.AuthResponseDto;
 import com.rebot.micro.userservice.dto.CodeRequestDto;
-import com.rebot.micro.userservice.dto.ErrorDto;
+import com.rebot.micro.userservice.dto.MessageDto;
 import com.rebot.micro.userservice.exception.AttemptsLimitException;
 import com.rebot.micro.userservice.exception.AuthRequestNotFoundException;
 import com.rebot.micro.userservice.exception.InvalidCodeException;
@@ -36,16 +36,16 @@ public class AuthController {
     @PostMapping(value="login", produces="application/json")
     private ResponseEntity<?> login(@NonNull @RequestBody AuthRequestDto authRequestDto){
         if (!phoneValidator.validate(authRequestDto.getPhone())) {
-            ErrorDto error = new ErrorDto("INVALID_PHONE");
+            MessageDto error = new MessageDto("INVALID_PHONE");
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
         try{
             authorizationService.generateAuthRequest(authRequestDto.getPhone());
         }catch (TooFastRequestsException ex) {
-            ErrorDto error = new ErrorDto("TOO_FAST_RESPONSES");
+            MessageDto error = new MessageDto("TOO_FAST_RESPONSES");
             return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
         }
-        return ResponseEntity.ok(new ErrorDto("REQUEST_CREATED"));
+        return ResponseEntity.ok(new MessageDto("REQUEST_CREATED"));
 
 
 
@@ -58,15 +58,15 @@ public class AuthController {
             return ResponseEntity.ok(responseDto);
         }
         catch (AuthRequestNotFoundException ex){
-            ErrorDto error = new ErrorDto("AUTH_REQUEST_NOT_FOUND");
+            MessageDto error = new MessageDto("AUTH_REQUEST_NOT_FOUND");
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
         catch (InvalidCodeException ex){
-            ErrorDto error = new ErrorDto("INVALID_CODE");
+            MessageDto error = new MessageDto("INVALID_CODE");
             return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
         }
         catch (AttemptsLimitException ex){
-            ErrorDto error = new ErrorDto("ATTEMPTS_LIMIT_REACHED");
+            MessageDto error = new MessageDto("ATTEMPTS_LIMIT_REACHED");
             return new ResponseEntity<>(error, HttpStatus.TOO_MANY_REQUESTS);
         }
     }

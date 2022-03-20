@@ -1,12 +1,13 @@
-package com.rebot.micro.userservice;
+package com.rebot.micro.config;
 
-public enum Config {
+public enum RoleConfig {
     ROLE_USER("USER"),
-    ROLE_ADMIN("ADMIN");
+    ROLE_ADMIN("ADMIN"),
+    UNAUTHORIZED("UNAUTHORIZED");
 
     private final String name;
 
-    Config(String name){
+    RoleConfig(String name){
         this.name = name;
     }
 

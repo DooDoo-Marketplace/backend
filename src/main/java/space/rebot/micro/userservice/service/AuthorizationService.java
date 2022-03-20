@@ -1,6 +1,6 @@
 package com.rebot.micro.userservice.service;
 
-import com.rebot.micro.userservice.Config;
+import com.rebot.micro.config.RoleConfig;
 import com.rebot.micro.userservice.dto.AuthResponseDto;
 import com.rebot.micro.userservice.exception.AttemptsLimitException;
 import com.rebot.micro.userservice.exception.AuthRequestNotFoundException;
@@ -87,7 +87,7 @@ public class AuthorizationService {
             user = new User();
             user.setPhone(phone);
             user.setRegisteredAt(now);
-            Role role = rolesRepository.getRoleByName(Config.ROLE_USER.toString());
+            Role role = rolesRepository.getRoleByName(RoleConfig.ROLE_USER.toString());
             user.addRole(role);
             userRepository.save(user);
             registered = true;

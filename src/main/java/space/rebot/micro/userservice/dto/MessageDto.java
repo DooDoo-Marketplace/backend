@@ -1,8 +1,13 @@
 package com.rebot.micro.userservice.dto;
 
-public class ErrorDto {
+import com.fasterxml.jackson.annotation.JsonView;
+
+@JsonView
+public class MessageDto {
+
+    @JsonView
     String message;
-    public ErrorDto(String message){
+    public MessageDto(String message){
         this.message = message;
     }
 
