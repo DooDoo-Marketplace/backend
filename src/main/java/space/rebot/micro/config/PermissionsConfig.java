@@ -24,7 +24,7 @@ public class PermissionsConfig {
         //USER permissions
         String[] user = {
                 ".*/api/v1/hello.*",
-                ".*/api/v1/logout"
+                ".*/api/v1/auth/logout.*"
         };
 
         //ADMIN permissions

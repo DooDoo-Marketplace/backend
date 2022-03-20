@@ -28,7 +28,7 @@ public class RoleFilter implements Filter {
     PermissionsConfig permissionsConfig;
 
     private String[] getUserPermissions(User user){
-        String[] permissions = {};
+        String[] permissions = permissionsConfig.allowedUrls.get(RoleConfig.UNAUTHORIZED.toString());
         for(Role role: user.getRoles()){
             permissions = ArrayUtils.addAll(permissions, permissionsConfig.allowedUrls.get(role.getName()));
         }
