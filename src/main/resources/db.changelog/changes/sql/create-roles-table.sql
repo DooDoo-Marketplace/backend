@@ -9,5 +9,5 @@ create table if not exists roles
 alter table roles
     owner to postgres;
 
-create unique index role_id_uindex
+create unique index if not exists role_id_uindex
     on roles (id);

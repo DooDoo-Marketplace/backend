@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 public class TestController {
 
     @PostMapping(value = "hello", produces = "application/json")
-    private ResponseEntity<?> login(@RequestParam(name = "text") String text) {
+    private ResponseEntity<?> login(@RequestBody String text) {
 
         return ResponseEntity.ok(
                 "{" +

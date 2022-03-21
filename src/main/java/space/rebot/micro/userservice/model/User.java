@@ -35,7 +35,7 @@ public class User {
     )
     List<Role> roles;
     public User(){
-        this.roles = new LinkedList<Role>();
+        this.roles = new LinkedList<>();
     }
     public long getId() {
         return id;

@@ -22,11 +22,11 @@
 			<artifactId>postgresql</artifactId>
 			<version>42.2.23</version>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>org.liquibase</groupId>-->
-<!--			<artifactId>liquibase-core</artifactId>-->
-<!--			<version>4.8.0</version>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+			<version>4.8.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
@@ -103,14 +103,14 @@
 					</excludes>
 				</configuration>
 			</plugin>
-<!--			<plugin>-->
-<!--				<groupId>org.liquibase</groupId>-->
-<!--				<artifactId>liquibase-maven-plugin</artifactId>-->
-<!--				<version>4.7.1</version>-->
-<!--				<configuration>-->
-<!--					<propertyFile>${project.basedir}/src/main/resources/liquibase.properties</propertyFile>-->
-<!--				</configuration>-->
-<!--			</plugin>-->
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<version>4.7.1</version>
+				<configuration>
+					<propertyFile>${project.basedir}/src/main/resources/liquibase.properties</propertyFile>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
