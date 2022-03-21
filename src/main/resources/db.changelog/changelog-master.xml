@@ -17,7 +17,7 @@
 <!--  LAST ID IS 4-->
     <include file="changes/create-auth-requests-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/create-sessions-table.xml" relativeToChangelogFile="true"/>
-    <include file="changes/create-users-roles-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/create-roles-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/create-users-roles-table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
