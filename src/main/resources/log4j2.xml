@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn">
+    <Properties>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Property>
+    </Properties>
+
+    <Appenders>
+
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+
+        <RollingFile name="FileAppender"
+                     fileName="src/main/resources/logs/log4j2.log"
+                     filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval = "7" />
+                <SizeBasedTriggeringPolicy size="250 MB" />
+            </Policies>
+        </RollingFile>
+
+        <JDBC name="DataBaseAppender" tableName="sql_logs">
+            <ConnectionFactory class="space.rebot.micro.log.ConnectionFactory" method="getDatabaseConnection"/>
+            <Column name="user_id" literal="%d" isUnicode="false"/>
+            <Column name="sql_request" pattern="%message" isUnicode="false"/>
+            <Column name="date" isEventTimestamp="true" isUnicode="false" />
+            <Column name="table_name" pattern="%message" isUnicode="false"/>
+        </JDBC>
+
+    </Appenders>
+    <Loggers>
+        <Logger name="space.rebot.micro" level="warn" additivity="false">
+            <AppenderRef ref="ConsoleAppender" />
+            <AppenderRef ref="FileAppender" />
+            <AppenderRef ref="DataBaseAppender" />
+        </Logger>
+        <Root level="Warn">
+            <AppenderRef ref="ConsoleAppender" />
+        </Root>
+    </Loggers>
+</Configuration>

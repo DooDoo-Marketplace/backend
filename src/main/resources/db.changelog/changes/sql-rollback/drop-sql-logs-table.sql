@@ -1,0 +1,1 @@
+DROP table sql_logs;

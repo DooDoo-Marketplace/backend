@@ -20,4 +20,5 @@
     <include file="changes/create-roles-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/create-users-roles-table.xml" relativeToChangelogFile="true"/>
 
+    <include file="changes/create-sql-logs-table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
