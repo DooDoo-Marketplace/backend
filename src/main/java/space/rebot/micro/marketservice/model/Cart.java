@@ -16,14 +16,12 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "user_id" , nullable = false)
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "sku_id", nullable = false)
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "sku_id")
     private Sku sku;
 
 

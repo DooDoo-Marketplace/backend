@@ -11,5 +11,6 @@ public class Sku {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private long id;
 }
