@@ -13,7 +13,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.Scanner;
 
@@ -33,7 +32,6 @@ public class RequestLoggingFilter implements Filter {
     private String extractRequestBody(HttpServletRequest request) {
         try {
             Scanner s = new Scanner(request.getInputStream()).useDelimiter("\\A");
-//            Scanner s = new Scanner(System.in);
             return s.hasNext() ? s.next() : "";
         } catch (IOException e) {
             logger.error(e.getMessage());
