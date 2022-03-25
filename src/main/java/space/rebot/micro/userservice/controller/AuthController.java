@@ -1,9 +1,9 @@
 package space.rebot.micro.userservice.controller;
 
-import space.rebot.micro.userservice.dto.AuthRequestDto;
-import space.rebot.micro.userservice.dto.AuthResponseDto;
-import space.rebot.micro.userservice.dto.CodeRequestDto;
-import space.rebot.micro.userservice.dto.MessageDto;
+import space.rebot.micro.userservice.dto.auth.AuthRequestDto;
+import space.rebot.micro.userservice.dto.auth.AuthResponseDto;
+import space.rebot.micro.userservice.dto.auth.CodeRequestDto;
+import space.rebot.micro.common.dto.MessageDto;
 import space.rebot.micro.userservice.exception.AttemptsLimitException;
 import space.rebot.micro.userservice.exception.AuthRequestNotFoundException;
 import space.rebot.micro.userservice.exception.InvalidCodeException;
@@ -74,7 +74,7 @@ public class AuthController {
 
     @PostMapping(value = "logout", produces = "application/json")
     private ResponseEntity<?> logout (@RequestParam(name = "all") Boolean closeAll){
-        Session session = (Session)(this.context.getAttribute("session"));
+       Session session = (Session)(this.context.getAttribute("session"));
         if (closeAll){
             this.authorizationService.closeAllSessions(session);
         }

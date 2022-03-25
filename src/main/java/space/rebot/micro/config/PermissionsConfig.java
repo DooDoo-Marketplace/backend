@@ -28,7 +28,9 @@ public class PermissionsConfig {
         };
 
         //ADMIN permissions
-        String[] admin = {};
+        String[] admin = {
+
+        };
 
         //Do not edit this part if you are not adding new role
 
