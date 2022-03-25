@@ -28,6 +28,6 @@ public class Cart {
     @Column(name = "count", nullable = false)
     private int count;
 
-    @Column(name = "isDeleted", nullable = false)
+    @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted;
 }

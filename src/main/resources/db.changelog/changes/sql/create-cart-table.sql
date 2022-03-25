@@ -7,7 +7,7 @@ create table if not exists cart
         constraint cart_sku_id_fk references sku,
     count int not null
         check (count >= 0),
-    isDeleted bool not null
+    is_deleted bool not null
         default false
 );
 
