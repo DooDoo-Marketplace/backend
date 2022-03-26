@@ -1,7 +1,7 @@
 package space.rebot.micro.userservice.service;
 
 import space.rebot.micro.config.RoleConfig;
-import space.rebot.micro.userservice.dto.AuthResponseDto;
+import space.rebot.micro.userservice.dto.auth.AuthResponseDto;
 import space.rebot.micro.userservice.exception.AttemptsLimitException;
 import space.rebot.micro.userservice.exception.AuthRequestNotFoundException;
 import space.rebot.micro.userservice.exception.InvalidCodeException;
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class AuthorizationService {
