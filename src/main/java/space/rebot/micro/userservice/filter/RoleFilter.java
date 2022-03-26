@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-@Order(2)
+@Order(11)
 public class RoleFilter implements Filter {
 
     @Autowired
