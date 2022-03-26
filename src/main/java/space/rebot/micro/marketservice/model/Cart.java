@@ -4,7 +4,7 @@ import lombok.Data;
 import space.rebot.micro.userservice.model.User;
 
 import javax.persistence.*;
-import java.util.List;
+
 
 
 @Data
@@ -16,11 +16,11 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
+    @ManyToOne (cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne (cascade = CascadeType.ALL)
     @JoinColumn(name = "sku_id")
     private Sku sku;
 
@@ -28,6 +28,6 @@ public class Cart {
     @Column(name = "count", nullable = false)
     private int count;
 
-    @Column(name = "isDeleted", nullable = false)
-    private boolean isDeleted;
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted;
 }

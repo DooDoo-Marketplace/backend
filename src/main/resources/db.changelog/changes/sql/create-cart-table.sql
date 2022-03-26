@@ -7,16 +7,10 @@ create table if not exists cart
         references sku,
     count int not null
         check (count >= 0),
-    isDeleted bool not null
-        default 'false'
+    deleted bool not null
+        default false
 );
 
-create unique index cart_id_uindex
+create unique index if not exists cart_id_uindex
 	on cart (id);
 
-create unique index cart_user_id_uindex
-    on cart(user_id);
-
-
-alter table cart
-    owner to postgres;
