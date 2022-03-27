@@ -10,9 +10,3 @@ create table if not exists sessions
     created_at timestamp,
     expired    boolean
 );
-
-alter table sessions
-    owner to postgres;
-
-create unique index if not exists sessions_id_uindex
-    on sessions (id);

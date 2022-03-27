@@ -13,8 +13,6 @@ public class User {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(name = "photo")
-    private String photo;
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
@@ -43,14 +41,6 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
     }
 
     public String getFirstName() {
