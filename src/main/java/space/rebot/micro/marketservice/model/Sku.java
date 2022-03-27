@@ -22,9 +22,9 @@ public class Sku {
     private String region;
     @Column(name = "count")
     private int count;
-    @Column(name = "retail_price")
+    @Column(name = "retail_price", nullable = false)
     private double retail_price;
-    @Column(name = "group_price")
+    @Column(name = "group_price", nullable = false)
     private double group_price;
     @Column(name = "percent")
     private double percent;

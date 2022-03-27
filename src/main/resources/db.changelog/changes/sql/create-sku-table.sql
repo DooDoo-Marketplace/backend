@@ -15,7 +15,7 @@ create table if not exists sku
     created_at timestamp,
     updated_at     timestamp,
     user_id bigint not null
-        references users,
+        constraint sku_users_id_fk references users,
     CHECK ( count >= 0 ),
     CHECK ( retail_price >= 0 ),
     CHECK ( group_price >= 0 ),
@@ -31,7 +31,4 @@ create unique index retail_price_uindex
 
 create unique index group_price_uindex
     on sku (group_price);
-
-alter table sku
-    owner to postgres
 
