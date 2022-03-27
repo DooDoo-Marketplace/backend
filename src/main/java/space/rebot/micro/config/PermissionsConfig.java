@@ -18,7 +18,9 @@ public class PermissionsConfig {
         //UNAUTHORIZED permissions
         String[] unauthorized = {
                 ".*/api/v1/auth/login",
-                ".*/api/v1/auth/code"
+                ".*/api/v1/auth/code",
+                ".*/api-docs.*",
+                "./swagger-ui.*"
         };
 
         //USER permissions

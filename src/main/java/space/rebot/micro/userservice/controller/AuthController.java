@@ -81,6 +81,6 @@ public class AuthController {
         else{
             this.authorizationService.closeSession(session);
         }
-        return new ResponseEntity<>(new MessageDto("LOGOUT"), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(new MessageDto("LOGOUT"), HttpStatus.OK);
     }
 }
