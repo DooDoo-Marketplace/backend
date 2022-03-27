@@ -1,18 +1,12 @@
 create table if not exists sessions
 (
-    id         bigserial not null
-        constraint sessions_pk
-            primary key,
-    user_id    bigint
-        constraint sessions_users_id_fk
-            references users,
-    token      varchar(255),
-    created_at timestamp,
-    expired    boolean
+    id         serial       not null
+        constraint sessions_pkey
+        primary key,
+    created_at timestamp    not null,
+    expired    boolean      not null,
+    token      varchar(255) not null,
+    user_id    integer
+        constraint fkruie73rneumyyd1bgo6qw8vjt
+        references users
 );
-
-alter table sessions
-    owner to postgres;
-
-create unique index if not exists sessions_id_uindex
-    on sessions (id);

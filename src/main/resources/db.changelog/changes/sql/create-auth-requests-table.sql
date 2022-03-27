@@ -1,14 +1,10 @@
 create table if not exists auth_requests
 (
-    id         bigserial not null,
-    code       integer   not null,
-    created_at timestamp,
+    id         serial    not null
+        constraint auth_requests_pkey
+        primary key,
     attempts   integer,
-    phone      varchar(255)
+    code       integer   not null,
+    created_at timestamp not null,
+    phone      varchar(255) not null
 );
-
-alter table auth_requests
-    owner to postgres;
-
-create unique index if not exists auth_requests_id_uindex
-    on auth_requests (id);
