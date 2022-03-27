@@ -20,4 +20,5 @@
     <include file="changes/create-roles-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/create-users-roles-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/DBEB-4-create-cart-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/DBEB-5-create-sku-table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
