@@ -18,16 +18,14 @@ public class PermissionsConfig {
         //UNAUTHORIZED permissions
         String[] unauthorized = {
                 ".*/api/v1/auth/login",
-                ".*/api/v1/auth/code",
-                ".*/api-docs.*",
-                "./swagger-ui.*"
+                ".*/api/v1/auth/code"
         };
 
         //USER permissions
         String[] user = {
                 ".*/api/v1/hello.*",
-                ".*/api/v1/auth/logout.*",
-                ".*/api/v1/user.*"
+                ".*/api/v1/cart.*",
+                ".*/api/v1/auth/logout.*"
         };
 
         //ADMIN permissions

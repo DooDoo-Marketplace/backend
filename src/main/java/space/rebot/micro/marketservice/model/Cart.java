@@ -16,7 +16,7 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne (cascade = CascadeType.ALL)
+    @ManyToOne (cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -30,4 +30,14 @@ public class Cart {
 
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted;
+
+    public Cart() {
+    }
+
+    public Cart(User user, Sku sku, int count, boolean isDeleted) {
+        this.user = user;
+        this.sku = sku;
+        this.count = count;
+        this.isDeleted = isDeleted;
+    }
 }
