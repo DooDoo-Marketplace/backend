@@ -7,8 +7,4 @@ create table if not exists auth_requests
     phone      varchar(255)
 );
 
-alter table auth_requests
-    owner to postgres;
 
-create unique index if not exists auth_requests_id_uindex
-    on auth_requests (id);
