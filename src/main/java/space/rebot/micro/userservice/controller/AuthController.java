@@ -76,7 +76,7 @@ public class AuthController {
 
     @PostMapping(value = "logout", produces = "application/json")
     private ResponseEntity<?> logout (@RequestParam(name = "all") Boolean closeAll){
-       Session session = (Session)(this.context.getAttribute("session"));
+       Session session = (Session)(this.context.getAttribute(Session.SESSION));
         if (closeAll){
             this.authorizationService.closeAllSessions(session);
         }

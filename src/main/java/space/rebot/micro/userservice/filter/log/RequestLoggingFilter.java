@@ -65,7 +65,7 @@ public class RequestLoggingFilter implements Filter {
             wrappedRequest = new BufferedServletRequestWrapper((HttpServletRequest) servletRequest);
             String params = extractRequestParameters(wrappedRequest);
             String body = extractRequestBody(wrappedRequest);
-            Session session = (Session)(wrappedRequest.getAttribute("session"));
+            Session session = (Session)(wrappedRequest.getAttribute(Session.SESSION));
             StringBuilder msg = new StringBuilder();
             msg.append("Request from User:\n");
             if (session == null) {

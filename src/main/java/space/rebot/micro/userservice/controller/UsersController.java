@@ -31,14 +31,14 @@ public class UsersController {
 
     @GetMapping(value="user", produces="application/json")
     private ResponseEntity<?> getUser(){
-        Session session = (Session) context.getAttribute("session");
+        Session session = (Session) context.getAttribute(Session.SESSION);
         User user = session.getUser();
         return new ResponseEntity<>(usersService.getUserDto(user), HttpStatus.OK);
 
     }
     @PutMapping(value="user", produces="application/json")
     private ResponseEntity<?> updateUser(@NonNull @RequestBody UserDto userDto){
-        Session session = (Session) context.getAttribute("session");
+        Session session = (Session) context.getAttribute(Session.SESSION);
         User user = session.getUser();
         try {
             usersService.editFromDto(user, userDto);
