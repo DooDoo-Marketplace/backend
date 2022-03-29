@@ -1,13 +1,11 @@
 package space.rebot.micro.userservice.dto.user;
-
 import com.fasterxml.jackson.annotation.JsonView;
+import lombok.Data;
 import org.wildfly.common.annotation.NotNull;
 
 @JsonView
+@Data
 public class UserDto {
-
-    @JsonView
-    Long id;
 
     @JsonView
     String firstName;
@@ -16,8 +14,11 @@ public class UserDto {
     String lastName;
 
     @JsonView
-    @NotNull
     String phone;
+
+    @JsonView
+    String email;
+
 
 
 

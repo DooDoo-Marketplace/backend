@@ -4,10 +4,7 @@ import space.rebot.micro.userservice.dto.auth.AuthRequestDto;
 import space.rebot.micro.userservice.dto.auth.AuthResponseDto;
 import space.rebot.micro.userservice.dto.auth.CodeRequestDto;
 import space.rebot.micro.common.dto.MessageDto;
-import space.rebot.micro.userservice.exception.AttemptsLimitException;
-import space.rebot.micro.userservice.exception.AuthRequestNotFoundException;
-import space.rebot.micro.userservice.exception.InvalidCodeException;
-import space.rebot.micro.userservice.exception.TooFastRequestsException;
+import space.rebot.micro.userservice.exception.*;
 import space.rebot.micro.userservice.model.Session;
 import space.rebot.micro.userservice.service.AuthorizationService;
 import space.rebot.micro.userservice.validator.PhoneValidator;
@@ -35,7 +32,7 @@ public class AuthController {
     }
     @PostMapping(value="login", produces="application/json")
     private ResponseEntity<?> login(@NonNull @RequestBody AuthRequestDto authRequestDto){
-        if (!phoneValidator.validate(authRequestDto.getPhone())) {
+        if (!phoneValidator.validate(authRequestDto.getPhone(), true)) {
             MessageDto error = new MessageDto("INVALID_PHONE");
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
@@ -70,17 +67,22 @@ public class AuthController {
             MessageDto error = new MessageDto("ATTEMPTS_LIMIT_REACHED");
             return new ResponseEntity<>(error, HttpStatus.TOO_MANY_REQUESTS);
         }
+        catch (InvalidPhoneException ex){
+            MessageDto error = new MessageDto("INVALID_PHONE");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @PostMapping(value = "logout", produces = "application/json")
     private ResponseEntity<?> logout (@RequestParam(name = "all") Boolean closeAll){
-       Session session = (Session)(this.context.getAttribute("session"));
+       Session session = (Session)(this.context.getAttribute(Session.SESSION));
         if (closeAll){
             this.authorizationService.closeAllSessions(session);
         }
         else{
             this.authorizationService.closeSession(session);
         }
-        return new ResponseEntity<>(new MessageDto("LOGOUT"), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(new MessageDto("LOGOUT"), HttpStatus.OK);
     }
 }

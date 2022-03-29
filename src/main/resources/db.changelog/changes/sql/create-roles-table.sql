@@ -6,8 +6,7 @@ create table if not exists roles
     name varchar(255) not null
 );
 
-alter table roles
-    owner to postgres;
 
-create unique index if not exists role_id_uindex
-    on roles (id);
+insert into roles (name) VALUES
+    ('USER'),
+    ('ADMIN');

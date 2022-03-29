@@ -38,12 +38,12 @@ public class RoleFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        Session session = (Session)(request.getAttribute("session"));
+        Session session = (Session)(request.getAttribute(Session.SESSION));
         if (session == null){
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
-        User user = ((Session)(request.getAttribute("session"))).getUser();
+        User user = ((Session)(request.getAttribute(Session.SESSION))).getUser();
         String[] allowedUrls = getUserPermissions(user);
         boolean allowed = false;
         String requestUrl = request.getRequestURL().toString();
