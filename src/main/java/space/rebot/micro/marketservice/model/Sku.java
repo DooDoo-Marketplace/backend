@@ -38,5 +38,4 @@ public class Sku {
     private Date created_at;
     @Column(name = "updated_at")
     private Date updated_at;
-
 }

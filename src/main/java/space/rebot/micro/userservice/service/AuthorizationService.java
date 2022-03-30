@@ -2,10 +2,7 @@ package space.rebot.micro.userservice.service;
 
 import space.rebot.micro.config.RoleConfig;
 import space.rebot.micro.userservice.dto.auth.AuthResponseDto;
-import space.rebot.micro.userservice.exception.AttemptsLimitException;
-import space.rebot.micro.userservice.exception.AuthRequestNotFoundException;
-import space.rebot.micro.userservice.exception.InvalidCodeException;
-import space.rebot.micro.userservice.exception.TooFastRequestsException;
+import space.rebot.micro.userservice.exception.*;
 import space.rebot.micro.userservice.model.AuthRequest;
 import space.rebot.micro.userservice.model.Role;
 import space.rebot.micro.userservice.model.Session;
@@ -24,29 +21,30 @@ import java.util.Date;
 
 @Service
 public class AuthorizationService {
-    @Autowired
-    UsersRepository userRepository;
 
     @Autowired
-    SessionsRepository sessionRepository;
+    private SessionsRepository sessionRepository;
 
     @Autowired
-    AuthRequestsRepository authRequestRepository;
+    private AuthRequestsRepository authRequestRepository;
 
     @Autowired
-    DateService dateService;
+    private DateService dateService;
 
     @Autowired
-    RolesRepository rolesRepository;
+    private UsersService usersService;
+
+    @Autowired
+    private UsersRepository usersRepository;
 
     @Resource(name = "smsService")
     SmsService smsService;
 
 
-    public void generateAuthRequest(String phone) throws TooFastRequestsException{
+    public void generateAuthRequest(String phone) throws TooFastRequestsException {
         AuthRequest authRequest = authRequestRepository.getAuthRequestByPhone(phone);
         Date now = dateService.utcNow();
-        if (authRequest != null){
+        if (authRequest != null) {
             if (DateUtils.between(now, authRequest.getCreatedAt()) < 3 * 60) {
                 throw new TooFastRequestsException();
             }
@@ -64,10 +62,14 @@ public class AuthorizationService {
 
     }
 
-    public AuthResponseDto authorizeByCode(String phone, int code) throws AuthRequestNotFoundException, AttemptsLimitException, InvalidCodeException {
+    public AuthResponseDto authorizeByCode(String phone, int code)
+            throws AuthRequestNotFoundException,
+            AttemptsLimitException,
+            InvalidCodeException,
+            InvalidPhoneException {
         AuthRequest authRequest = authRequestRepository.getAuthRequestByPhone(phone);
         Date now = dateService.utcNow();
-        if (authRequest == null){
+        if (authRequest == null) {
             throw new AuthRequestNotFoundException();
         }
         if (code != authRequest.getCode()) {
@@ -81,17 +83,11 @@ public class AuthorizationService {
 
         }
         authRequestRepository.delete(authRequest);
-        User user = userRepository.getUserByPhone(phone);
+        User user = usersRepository.getUserByPhone(phone);
         boolean registered = false;
         if (user == null) {
-            user = new User();
-            user.setPhone(phone);
-            user.setRegisteredAt(now);
-            Role role = rolesRepository.getRoleByName(RoleConfig.ROLE_USER.toString());
-            user.addRole(role);
-            role.getUsers().add(user);
-            userRepository.save(user);
             registered = true;
+            user = usersService.generateDefault(phone);
         }
         Session session = new Session();
         session.setExpired(false);
@@ -104,11 +100,11 @@ public class AuthorizationService {
 
     }
 
-    public void closeSession(Session session){
+    public void closeSession(Session session) {
         this.sessionRepository.setExpirationById(session.getId());
     }
 
-    public void closeAllSessions(Session session){
+    public void closeAllSessions(Session session) {
         this.sessionRepository.setExpirationByUser(session.getUser());
     }
 

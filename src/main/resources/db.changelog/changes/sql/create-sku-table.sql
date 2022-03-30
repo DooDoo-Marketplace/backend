@@ -22,4 +22,3 @@ create table if not exists sku
     CHECK ( percent >= 0 ),
     CHECK ( min_count >= 0 )
 );
-

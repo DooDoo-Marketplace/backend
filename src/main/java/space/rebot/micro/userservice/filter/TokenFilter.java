@@ -53,7 +53,7 @@ public class TokenFilter implements Filter {
                 if (session == null || session.isExpired()) {
                     ((HttpServletResponse) servletResponse).sendError(HttpServletResponse.SC_UNAUTHORIZED, "The token is not valid.");
                 } else {
-                    servletRequest.setAttribute("session", session);
+                    servletRequest.setAttribute(Session.SESSION, session);
                     filterChain.doFilter(servletRequest, servletResponse);
                 }
             }
