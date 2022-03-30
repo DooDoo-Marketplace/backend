@@ -6,6 +6,8 @@ import java.util.Date;
 @Entity
 @Table(name = "sessions")
 public class Session {
+    public static final String SESSION = "session";
+
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

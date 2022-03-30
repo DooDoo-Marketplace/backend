@@ -13,8 +13,3 @@ create table if not exists users_roles
             references roles
 );
 
-alter table users_roles
-    owner to postgres;
-
-create unique index if not exists user_roles_id_uindex
-    on users_roles (id);

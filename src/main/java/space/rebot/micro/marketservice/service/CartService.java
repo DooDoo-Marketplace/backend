@@ -34,7 +34,7 @@ public class CartService {
         }
         int skuCnt = sku.getCount();
         if (skuCnt >= cnt) {
-            User user = ((Session) context.getAttribute("session")).getUser();
+            User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
             Cart cart = new Cart(user, sku, cnt, false);
             cartRepository.save(cart);
         } else {
@@ -43,7 +43,7 @@ public class CartService {
     }
 
     public void updateCart(Long skuId, int cnt) throws SkuIsOverException, SkuNotFoundException {
-        User user = ((Session) context.getAttribute("session")).getUser();
+        User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
         Long userId = user.getId();
         if (cnt == 0) {
             cartRepository.markDelete(userId, skuId);
@@ -62,12 +62,12 @@ public class CartService {
     }
 
     public void deleteUserSkuInCart(Long skuId) {
-        User user = ((Session) context.getAttribute("session")).getUser();
+        User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
         cartRepository.markDelete(user.getId(), skuId);
     }
 
     public List<Sku> getUsersSku() {
-        User user = ((Session) context.getAttribute("session")).getUser();
+        User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
         List<Long> ids = cartRepository.getSkuIdsByUserId(user.getId());
         if (ids == null) {
             return Collections.emptyList();
