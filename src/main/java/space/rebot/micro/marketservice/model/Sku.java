@@ -5,6 +5,7 @@ import space.rebot.micro.userservice.model.User;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -22,7 +23,9 @@ public class Sku {
     private String region;
     @Column(name = "count", nullable = false)
     private int count;
-    @Column(name = "retail_price", nullable = false)
+    @Column(name = "weight", nullable = false)
+    private double weight;
+    @Column(name = "retail_price")
     private double retailPrice;
     @Column(name = "group_price", nullable = false)
     private double groupPrice;
@@ -36,8 +39,4 @@ public class Sku {
     private Date createdAt;
     @Column(name = "updated_at")
     private Date updatedAt;
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
 }
