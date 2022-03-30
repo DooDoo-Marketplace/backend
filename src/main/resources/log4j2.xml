@@ -32,11 +32,14 @@
         <Logger name="org.hibernate.SQL" level="debug" additivity="false">
             <AppenderRef ref="FileAppender" />
         </Logger>
-        <Logger name="MyLogger" level="info" additivity="false">
+        <Logger name="org.hibernate.type.descriptor.sql" level="trace" additivity="false">
+            <AppenderRef ref="FileAppender" />
+        </Logger>
+        <Logger name="MyLogger" level="debug" additivity="false">
             <AppenderRef ref="FileAppender" />
             <AppenderRef ref="ConsoleAppender" />
         </Logger>
-        <Root level="info">
+        <Root level="info" additivity="false">
             <AppenderRef ref="ConsoleAppender" />
         </Root>
     </Loggers>
