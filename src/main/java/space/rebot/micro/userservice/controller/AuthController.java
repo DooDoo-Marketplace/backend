@@ -30,8 +30,6 @@ public class AuthController {
     @Autowired
     private HttpServletRequest context;
 
-    @Autowired
-    UsersRepository usersRepository;
 
     PhoneValidator phoneValidator;
     public AuthController(){
@@ -39,7 +37,6 @@ public class AuthController {
     }
     @PostMapping(value="login", produces="application/json")
     private ResponseEntity<?> login(@NonNull @RequestBody AuthRequestDto authRequestDto){
-        usersRepository.getUserById(1l);
         if (!phoneValidator.validate(authRequestDto.getPhone())) {
             MessageDto error = new MessageDto("INVALID_PHONE");
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
