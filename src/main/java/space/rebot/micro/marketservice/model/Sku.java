@@ -25,17 +25,17 @@ public class Sku {
     @Column(name = "weight", nullable = false)
     private double weight;
     @Column(name = "retail_price", nullable = false)
-    private double retail_price;
+    private double retailPrice;
     @Column(name = "group_price", nullable = false)
-    private double group_price;
+    private double groupPrice;
     @Column(name = "percent", nullable = false)
     private double percent;
     @Column(name = "min_count", nullable = false)
-    private int min_count;
+    private int minCount;
     @Column(name = "rating", nullable = false)
     private double rating;
     @Column(name = "created_at")
-    private Date created_at;
+    private Date createdAt;
     @Column(name = "updated_at")
-    private Date updated_at;
+    private Date updatedAt;
 }
