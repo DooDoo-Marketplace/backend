@@ -5,6 +5,7 @@ import space.rebot.micro.userservice.model.User;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -24,7 +25,7 @@ public class Sku {
     private int count;
     @Column(name = "weight", nullable = false)
     private double weight;
-    @Column(name = "retail_price", nullable = false)
+    @Column(name = "retail_price")
     private double retailPrice;
     @Column(name = "group_price", nullable = false)
     private double groupPrice;

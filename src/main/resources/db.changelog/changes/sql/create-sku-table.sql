@@ -8,13 +8,15 @@ create table if not exists sku
     region varchar(255) not null ,
     count int not null,
     weight float not null,
-    retail_price float not null,
+    retail_price float,
     group_price float not null,
     percent float not null,
     min_count int not null,
     rating float not null,
-    created_at timestamp,
-    updated_at     timestamp,
+    created_at timestamp
+        default now(),
+    updated_at timestamp
+        default now(),
     CHECK ( count >= 0 ),
     CHECK ( weight >= 0 ),
     CHECK ( retail_price >= 0 ),
