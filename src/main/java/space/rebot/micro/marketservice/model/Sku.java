@@ -22,6 +22,8 @@ public class Sku {
     private String region;
     @Column(name = "count", nullable = false)
     private int count;
+    @Column(name = "weight", nullable = false)
+    private double weight;
     @Column(name = "retail_price", nullable = false)
     private double retail_price;
     @Column(name = "group_price", nullable = false)
@@ -36,8 +38,5 @@ public class Sku {
     private Date created_at;
     @Column(name = "updated_at")
     private Date updated_at;
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
 
 }
