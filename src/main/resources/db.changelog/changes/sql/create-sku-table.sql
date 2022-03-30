@@ -22,3 +22,12 @@ create table if not exists sku
     CHECK ( percent >= 0 ),
     CHECK ( min_count >= 0 )
 );
+
+create index name_uindex
+    on sku (name);
+
+create index retail_price_uindex
+    on sku (retail_price);
+
+create index group_price_uindex
+    on sku (group_price);
