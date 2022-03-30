@@ -40,7 +40,7 @@
             <column name="percent" value="60"/>
             <column name="min_count" value="60"/>
             <column name="rating" value="60"/>
-            <column name="user_id" value="1"/>
+            <column name="weight" value="2"/>
         </insert>
     </changeSet>
     <changeSet id="insert data to sku 2" author="gkapelyushok">
@@ -54,7 +54,7 @@
             <column name="percent" value="50"/>
             <column name="min_count" value="50"/>
             <column name="rating" value="50"/>
-            <column name="user_id" value="1"/>
+            <column name="weight" value="5"/>
         </insert>
     </changeSet>
     <changeSet id="insert data to sku 3" author="gkapelyushok">
@@ -68,7 +68,7 @@
             <column name="percent" value="30"/>
             <column name="min_count" value="10"/>
             <column name="rating" value="0"/>
-            <column name="user_id" value="1"/>
+            <column name="weight" value="200"/>
         </insert>
     </changeSet>
 
