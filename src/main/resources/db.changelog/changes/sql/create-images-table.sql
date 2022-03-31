@@ -6,7 +6,7 @@ create table if not exists images
     filename varchar(256) not null,
     hashSum   varchar(256) not null,
     fileSize int not null
-        check ( fileSize > 0 ),
+        check ( fileSize > 0 and images.fileSize < 10485760 ),
     mimetype varchar(256) not null,
     encoding varchar(7) not null,
     extname   varchar(256) not null,
