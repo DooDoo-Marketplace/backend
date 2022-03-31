@@ -11,7 +11,6 @@ import space.rebot.micro.userservice.model.Role;
 import space.rebot.micro.userservice.model.Session;
 import space.rebot.micro.userservice.model.User;
 
-
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

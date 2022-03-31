@@ -3,12 +3,14 @@ package space.rebot.micro.marketservice.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.UUID;
+
 //it's example
 @Data
 @Builder
 public class SkuDTO {
 
-    private Long id;
+    private UUID id;
 
     private String name;
 

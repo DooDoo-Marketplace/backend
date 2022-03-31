@@ -1,7 +1,8 @@
 create table if not exists sku
 (
-    id bigserial not null
+    id uuid not null
         constraint sku_pk
+        default gen_random_uuid()
             primary key,
     name varchar(255) not null ,
     description varchar(255) ,

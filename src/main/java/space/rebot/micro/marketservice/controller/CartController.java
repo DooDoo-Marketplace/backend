@@ -17,6 +17,7 @@ import space.rebot.micro.marketservice.service.CartService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -30,7 +31,7 @@ public class CartController {
     private SkuMapper skuMapper;
 
     @PostMapping(value="add", produces="application/json")
-    public ResponseEntity<?> addSkuToCart(@RequestParam("sku_id") Long skuId, @RequestParam("cnt") int cnt) {
+    public ResponseEntity<?> addSkuToCart(@RequestParam("sku_id") UUID skuId, @RequestParam("cnt") int cnt) {
         Map<Object, Object> model = new HashMap<>();
         try {
             cartService.addSkuToCart(skuId, cnt);
@@ -50,7 +51,7 @@ public class CartController {
 
     @PostMapping(value="update", produces="application/json")
     //cnt is a new number of sku
-    public ResponseEntity<?> updateSkuCnt(@RequestParam("sku_id") Long skuId, @RequestParam("cnt") int cnt) {
+    public ResponseEntity<?> updateSkuCnt(@RequestParam("sku_id") UUID skuId, @RequestParam("cnt") int cnt) {
         Map<Object, Object> model = new HashMap<>();
         try {
             cartService.updateCart(skuId, cnt);
@@ -69,7 +70,7 @@ public class CartController {
     }
 
     @PostMapping(value="delete", produces="application/json")
-    public ResponseEntity<?> deleteUserSkuInCart(@RequestParam("sku_id") Long skuId) {
+    public ResponseEntity<?> deleteUserSkuInCart(@RequestParam("sku_id") UUID skuId) {
         Map<Object, Object> model = new HashMap<>();
         cartService.deleteUserSkuInCart(skuId);
         model.put("success", true);

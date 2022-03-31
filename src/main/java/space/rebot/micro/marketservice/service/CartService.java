@@ -14,6 +14,7 @@ import space.rebot.micro.userservice.model.User;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CartService {
@@ -27,7 +28,7 @@ public class CartService {
     @Autowired
     private HttpServletRequest context;
 
-    public void addSkuToCart(Long skuId, int cnt) throws SkuIsOverException, SkuNotFoundException {
+    public void addSkuToCart(UUID skuId, int cnt) throws SkuIsOverException, SkuNotFoundException {
         Sku sku = skuRepository.getSkuById(skuId);
         if (sku == null) {
             throw new SkuNotFoundException();
@@ -42,7 +43,7 @@ public class CartService {
         }
     }
 
-    public void updateCart(Long skuId, int cnt) throws SkuIsOverException, SkuNotFoundException {
+    public void updateCart(UUID skuId, int cnt) throws SkuIsOverException, SkuNotFoundException {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
         Long userId = user.getId();
         if (cnt == 0) {
@@ -61,14 +62,14 @@ public class CartService {
         }
     }
 
-    public void deleteUserSkuInCart(Long skuId) {
+    public void deleteUserSkuInCart(UUID skuId) {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
         cartRepository.markDelete(user.getId(), skuId);
     }
 
     public List<Sku> getUsersSku() {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
-        List<Long> ids = cartRepository.getSkuIdsByUserId(user.getId());
+        List<UUID> ids = cartRepository.getSkuIdsByUserId(user.getId());
         if (ids == null) {
             return Collections.emptyList();
         }

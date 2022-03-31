@@ -14,7 +14,7 @@ public class Sku {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private UUID id;
     @Column(name = "name", nullable = false)
     private String name;
     @Column(name = "description")
