@@ -1,5 +1,6 @@
 package space.rebot.micro.marketservice.repository;
 
+import org.hibernate.annotations.Type;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,7 +17,8 @@ import java.util.UUID;
 @Repository
 public interface CartRepository extends JpaRepository <Cart, Long> {
 
-    @Query(value = "select sku_id from cart c " +
+
+    @Query(value = "select Cast(sku_id as varchar) from cart c " +
             "where c.user_id = :userId and c.is_deleted = false", nativeQuery = true)
     List<UUID> getSkuIdsByUserId(@Param("userId") Long userId);
 
