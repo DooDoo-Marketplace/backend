@@ -22,4 +22,5 @@
     <include file="changes/DBEB-5-create-sku-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/DBEB-27-create-cart-status-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/DBEB-4-create-cart-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/DBEB-16-create-quartz-table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
