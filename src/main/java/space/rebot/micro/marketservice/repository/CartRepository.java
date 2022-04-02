@@ -19,15 +19,22 @@ public interface CartRepository extends JpaRepository <Cart, Long> {
             "where c.user_id = :userId and c.is_deleted = false", nativeQuery = true)
     List<Long> getSkuIdsByUserId(@Param("userId") Long userId);
 
-    @Modifying
-    @Transactional
-    @Query(value = "update cart c set count = :cnt " +
-            "where c.user_id = :userId and c.sku_id = :skuId and c.is_deleted = false", nativeQuery = true)
-    int updateSkuCnt(@Param("userId") Long userId, @Param("skuId") Long skuId, @Param("cnt") int cnt);
+    @Query(value = "select * from cart c where c.user_id = :userId and c.cart_status_id = :statusId", nativeQuery = true)
+    List<Cart> getCartByUserIdAndCartStatus(@Param("userId") Long userId, @Param("statusId") Long statusId);
 
     @Modifying
     @Transactional
-    @Query(value = "update cart c set is_deleted = true " +
-            "where c.user_id = :userId and c.sku_id = :skuId and c.is_deleted = false", nativeQuery = true)
-    int markDelete(@Param("userId") Long userId, @Param("skuId") Long skuId);
+    @Query(value = "update cart c set count = :cnt " +
+            "where c.user_id = :userId and c.sku_id = :skuId and c.cart_status_id = " +
+            "(select cs.id from cart_status cs where cs.name = :cartStatus)", nativeQuery = true)
+    int updateSkuCnt(@Param("userId") Long userId, @Param("skuId") Long skuId, @Param("cnt") int cnt,
+                     @Param("cartStatus") String status);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update cart c set cart_status_id = (select cs.id from cart_status cs where cs.name = :exposedStatus) " +
+            "where c.sku_id = :skuId and c.user_id = :userId" +
+            " and c.cart_status_id = (select cs.id from cart_status cs where cs.name = :updatedStatus)", nativeQuery = true)
+    int updateCartStatus(@Param("userId") Long userId, @Param("skuId") Long skuId, @Param("exposedStatus") String exposedStatus,
+                         @Param("updatedStatus") String updatedStatus);
 }

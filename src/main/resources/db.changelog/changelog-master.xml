@@ -14,11 +14,12 @@
 <!--    <changeSet id="" author="">-->
 <!--        <tagDatabase tag="users_init"/>-->
 <!--    </changeSet>-->
-<!--  LAST ID IS 6-->
+<!--  LAST ID IS 8-->
     <include file="changes/create-auth-requests-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/create-sessions-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/create-roles-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/create-users-roles-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/DBEB-5-create-sku-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/DBEB-27-create-cart-status-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/DBEB-4-create-cart-table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
