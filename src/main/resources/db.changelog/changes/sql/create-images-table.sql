@@ -10,9 +10,9 @@ create table if not exists images
     mimetype varchar(256) not null,
     encoding varchar(7) not null,
     extname   varchar(256) not null,
-    createdAt timestamp not null
+    created_at timestamp not null
         default now(),
-    updatedAt timestamp not null
+    updated_at timestamp not null
         default now()
 );
 

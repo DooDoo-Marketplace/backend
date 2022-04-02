@@ -30,7 +30,7 @@ public class PermissionsConfig {
 
         //ADMIN permissions
         String[] admin = {
-
+                ".*/api/v1/static.*"
         };
 
         //Do not edit this part if you are not adding new role
