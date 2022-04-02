@@ -8,10 +8,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import space.rebot.micro.marketservice.dto.CartDTO;
 import space.rebot.micro.marketservice.dto.SkuDTO;
 import space.rebot.micro.marketservice.exception.SkuIsOverException;
 import space.rebot.micro.marketservice.exception.SkuNotFoundException;
+import space.rebot.micro.marketservice.mapper.CartMapper;
 import space.rebot.micro.marketservice.mapper.SkuMapper;
+import space.rebot.micro.marketservice.model.Cart;
 import space.rebot.micro.marketservice.service.CartService;
 
 import java.util.HashMap;
@@ -27,7 +30,7 @@ public class CartController {
     private CartService cartService;
 
     @Autowired
-    private SkuMapper skuMapper;
+    private CartMapper cartMapper;
 
     @PostMapping(value="add", produces="application/json")
     public ResponseEntity<?> addSkuToCart(@RequestParam("sku_id") Long skuId, @RequestParam("cnt") int cnt) {
@@ -79,10 +82,11 @@ public class CartController {
     @GetMapping(value="get", produces="application/json")
     public ResponseEntity<?> getUserCart() {
         Map<Object, Object> model = new HashMap<>();
-        List<SkuDTO> skuDTOList = cartService.getUsersSku().stream()
-                .map(sku -> skuMapper.mapToSkuDto(sku)).collect(Collectors.toList());
+        List<CartDTO> cartDTOList = cartService.getUserCart().stream()
+                .map(cart -> cartMapper.mapToCartDto(cart))
+                .collect(Collectors.toList());
         model.put("success", true);
-        model.put("sku_list", skuDTOList);
+        model.put("cart", cartDTOList);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
