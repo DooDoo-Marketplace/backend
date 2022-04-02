@@ -1,6 +1,7 @@
 package space.rebot.micro.userservice.service;
 
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -19,15 +20,14 @@ import space.rebot.micro.userservice.validator.UserDtoValidator;
 
 
 @Service
+@RequiredArgsConstructor
 public class UsersService {
-    @Autowired
-    private UsersRepository usersRepository;
 
-    @Autowired
-    private RolesRepository rolesRepository;
+    private final UsersRepository usersRepository;
 
-    @Autowired
-    private DateService dateService;
+    private final RolesRepository rolesRepository;
+
+    private final DateService dateService;
 
     public User generateDefault(String phone) throws InvalidPhoneException {
         UserFactory factory = new UserFactory();

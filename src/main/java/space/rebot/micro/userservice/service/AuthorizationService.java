@@ -1,5 +1,6 @@
 package space.rebot.micro.userservice.service;
 
+import lombok.RequiredArgsConstructor;
 import space.rebot.micro.config.RoleConfig;
 import space.rebot.micro.userservice.dto.auth.AuthResponseDto;
 import space.rebot.micro.userservice.exception.*;
@@ -20,25 +21,25 @@ import javax.annotation.Resource;
 import java.util.Date;
 
 @Service
+@RequiredArgsConstructor
 public class AuthorizationService {
 
-    @Autowired
-    private SessionsRepository sessionRepository;
+    private final SessionsRepository sessionRepository;
 
-    @Autowired
-    private AuthRequestsRepository authRequestRepository;
 
-    @Autowired
-    private DateService dateService;
+    private final AuthRequestsRepository authRequestRepository;
 
-    @Autowired
-    private UsersService usersService;
 
-    @Autowired
-    private UsersRepository usersRepository;
+    private final DateService dateService;
+
+
+    private final UsersService usersService;
+
+
+    private final UsersRepository usersRepository;
 
     @Resource(name = "smsService")
-    SmsService smsService;
+    private final SmsService smsService;
 
 
     public void generateAuthRequest(String phone) throws TooFastRequestsException {
