@@ -4,33 +4,87 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
-    <changeSet id="insert data to users" author="gkapelyushok">
+    <changeSet id="insert data to users" author="gkapelyushok" context="test">
         <insert tableName="users">
+            <column name="id" value="1001"/>
             <column name="first_name" value="Gosha"/>
             <column name="last_name" value="Kapelyushok"/>
             <column name="email" value="kapgosha@gmail.com"/>
             <column name="phone" value="+79213335898"/>
         </insert>
     </changeSet>
-    <changeSet id="insert data to users 2" author="gkapelyushok">
+    <changeSet id="insert data to users 2" author="gkapelyushok" context="test">
         <insert tableName="users">
+            <column name="id" value="1002"/>
             <column name="first_name" value="fsjfjskfslk"/>
             <column name="last_name" value="fsklfjslfjsl"/>
             <column name="email" value="mmmmmmm@gmail.com"/>
             <column name="phone" value="+79217776655"/>
         </insert>
     </changeSet>
-    <changeSet id="insert data to users 3" author="gkapelyushok">
+    <changeSet id="insert data to users 3" author="gkapelyushok" context="test">
         <insert tableName="users">
+            <column name="id" value="1003"/>
             <column name="first_name" value="afkajalfjx"/>
             <column name="last_name" value="slkfjsljfls"/>
             <column name="email" value="kkkkkkkk@gmail.com"/>
             <column name="phone" value="+79214325568"/>
         </insert>
     </changeSet>
+    <changeSet id="insert data to users 4" author="gkapelyushok" context="test">
+        <insert tableName="users">
+            <column name="id" value="1004"/>
+            <column name="first_name" value="ofsfgsdfjg"/>
+            <column name="last_name" value="ksjglsdjgl;j"/>
+            <column name="email" value="skjngkljsdng@gmail.com"/>
+            <column name="phone" value="+79214326668"/>
+        </insert>
+    </changeSet>
+    <changeSet id="insert data to users 5" author="gkapelyushok" context="test">
+        <insert tableName="users">
+            <column name="id" value="1005"/>
+            <column name="first_name" value="dsdvnsljoi"/>
+            <column name="last_name" value="pwjiwjofskl"/>
+            <column name="email" value="n,slflsjflsk@gmail.com"/>
+            <column name="phone" value="+79214885568"/>
+        </insert>
+    </changeSet>
 
-    <changeSet id="insert data to sku 1" author="gkapelyushok">
+    <changeSet id="insert data to users-roles 1" author="gkapelyushok" context="test">
+        <insert tableName="users_roles">
+            <column name="user_id" value="1001"/>
+            <column name="roles_id" value="1"/>
+        </insert>
+    </changeSet>
+    <changeSet id="insert data to users-roles 2" author="gkapelyushok" context="test">
+        <insert tableName="users_roles">
+            <column name="user_id" value="1002"/>
+            <column name="roles_id" value="1"/>
+        </insert>
+    </changeSet>
+    <changeSet id="insert data to users-roles 3" author="gkapelyushok" context="test">
+        <insert tableName="users_roles">
+            <column name="user_id" value="1003"/>
+            <column name="roles_id" value="1"/>
+        </insert>
+    </changeSet>
+    <changeSet id="insert data to users-roles 4" author="gkapelyushok" context="test">
+        <insert tableName="users_roles">
+            <column name="user_id" value="1004"/>
+            <column name="roles_id" value="1"/>
+        </insert>
+    </changeSet>
+    <changeSet id="insert data to users-roles 5" author="gkapelyushok" context="test">
+        <insert tableName="users_roles">
+            <column name="user_id" value="1005"/>
+            <column name="roles_id" value="1"/>
+        </insert>
+    </changeSet>
+
+
+    <changeSet id="insert data to sku 1" author="gkapelyushok" context="test">
         <insert tableName="sku">
+            <column name="id" value="1001"/>
             <column name="name" value="Tomato"/>
             <column name="description" value="Red"/>
             <column name="region" value="Ukraine"/>
@@ -43,8 +97,9 @@
             <column name="weight" value="2"/>
         </insert>
     </changeSet>
-    <changeSet id="insert data to sku 2" author="gkapelyushok">
+    <changeSet id="insert data to sku 2" author="gkapelyushok" context="test">
         <insert tableName="sku">
+            <column name="id" value="1002"/>
             <column name="name" value="sfjksfhks"/>
             <column name="description" value="Rfsfsfsed"/>
             <column name="region" value="sfsfsfs"/>
@@ -57,8 +112,9 @@
             <column name="weight" value="5"/>
         </insert>
     </changeSet>
-    <changeSet id="insert data to sku 3" author="gkapelyushok">
+    <changeSet id="insert data to sku 3" author="gkapelyushok" context="test">
         <insert tableName="sku">
+            <column name="id" value="1003"/>
             <column name="name" value="nahgfklwhfl"/>
             <column name="description" value="dfslfjlasjf"/>
             <column name="region" value="afhlafhlas"/>
@@ -71,29 +127,83 @@
             <column name="weight" value="200"/>
         </insert>
     </changeSet>
+    <changeSet id="insert data to sku 4" author="gkapelyushok" context="test">
+        <insert tableName="sku">
+            <column name="id" value="1004"/>
+            <column name="name" value="mdnslsglkjg"/>
+            <column name="description" value="glsdkjgk;lds"/>
+            <column name="region" value="sdkjgl;dsjg"/>
+            <column name="count" value="300"/>
+            <column name="retail_price" value="35"/>
+            <column name="group_price" value="32"/>
+            <column name="percent" value="9"/>
+            <column name="min_count" value="8"/>
+            <column name="rating" value="10"/>
+            <column name="weight" value="500"/>
+        </insert>
+    </changeSet>
+    <changeSet id="insert data to sku 5" author="gkapelyushok" context="test">
+        <insert tableName="sku">
+            <column name="id" value="1005"/>
+            <column name="name" value="dsjgsljg"/>
+            <column name="description" value="sngsngkjsdglds"/>
+            <column name="region" value="skjfidnvj"/>
+            <column name="count" value="200"/>
+            <column name="retail_price" value="4900"/>
+            <column name="group_price" value="490"/>
+            <column name="percent" value="99"/>
+            <column name="min_count" value="2"/>
+            <column name="rating" value="8"/>
+            <column name="weight" value="5000"/>
+        </insert>
+    </changeSet>
 
-    <changeSet id="insert data to cart 1" author="gkapelyushok">
+    <changeSet id="insert data to cart 1" author="gkapelyushok" context="test">
         <insert tableName="cart">
-            <column name="user_id" value="2"/>
-            <column name="sku_id" value="2"/>
-            <column name="count" value="2"/>
-            <column name="is_deleted" value="false"/>
+            <column name="user_id" value="1001"/>
+            <column name="sku_id" value="1002"/>
+            <column name="count" value="1"/>
+            <column name="cart_status_id" value="1"/>
         </insert>
     </changeSet>
-    <changeSet id="insert data to cart 2" author="gkapelyushok">
+    <changeSet id="insert data to cart 2" author="gkapelyushok" context="test">
         <insert tableName="cart">
-            <column name="user_id" value="2"/>
-            <column name="sku_id" value="4"/>
+            <column name="user_id" value="1001"/>
+            <column name="sku_id" value="1003"/>
             <column name="count" value="3"/>
-            <column name="is_deleted" value="false"/>
+            <column name="cart_status_id" value="1"/>
         </insert>
     </changeSet>
-    <changeSet id="insert data to cart 3" author="gkapelyushok">
+    <changeSet id="insert data to cart 3" author="gkapelyushok" context="test">
         <insert tableName="cart">
-            <column name="user_id" value="3"/>
-            <column name="sku_id" value="5"/>
+            <column name="user_id" value="1001"/>
+            <column name="sku_id" value="1005"/>
             <column name="count" value="5"/>
-            <column name="is_deleted" value="false"/>
+            <column name="cart_status_id" value="1"/>
+        </insert>
+    </changeSet>
+    <changeSet id="insert data to cart 4" author="gkapelyushok" context="test">
+        <insert tableName="cart">
+            <column name="user_id" value="1002"/>
+            <column name="sku_id" value="1002"/>
+            <column name="count" value="5"/>
+            <column name="cart_status_id" value="1"/>
+        </insert>
+    </changeSet>
+    <changeSet id="insert data to cart 5" author="gkapelyushok" context="test">
+        <insert tableName="cart">
+            <column name="user_id" value="1002"/>
+            <column name="sku_id" value="1004"/>
+            <column name="count" value="10"/>
+            <column name="cart_status_id" value="1"/>
+        </insert>
+    </changeSet>
+    <changeSet id="insert data to cart 6" author="gkapelyushok" context="test">
+        <insert tableName="cart">
+            <column name="user_id" value="1003"/>
+            <column name="sku_id" value="1001"/>
+            <column name="count" value="7"/>
+            <column name="cart_status_id" value="1"/>
         </insert>
     </changeSet>
 </databaseChangeLog>
