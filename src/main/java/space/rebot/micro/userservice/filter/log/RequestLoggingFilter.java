@@ -27,7 +27,7 @@ import space.rebot.micro.userservice.model.User;
 @Order(12)
 public class RequestLoggingFilter implements Filter {
 
-    private final Logger logger = LogManager.getLogger(RequestLoggingFilter.class.getName());
+    private final Logger logger = LogManager.getLogger("MyLogger");
 
     private String extractRequestBody(HttpServletRequest request) {
         try {
