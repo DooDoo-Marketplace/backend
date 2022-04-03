@@ -1,15 +1,15 @@
 package space.rebot.micro.marketservice.enums;
 
 public enum CartStatusEnum {
-    ACTIVE(1L, "ACTIVE"),
-    DELETED(2L, "DELETED"),
-    IN_GROUP(3L, "IN_GROUP");
+    ACTIVE(1, "ACTIVE"),
+    DELETED(2, "DELETED"),
+    IN_GROUP(3, "IN_GROUP");
 
     private final String name;
 
-    private final Long id;
+    private final int id;
 
-    CartStatusEnum(Long id, String name){
+    CartStatusEnum(int id, String name){
         this.id = id;
         this.name = name;
     }
@@ -18,7 +18,7 @@ public enum CartStatusEnum {
         return name;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 }

@@ -83,8 +83,7 @@ public class CartService {
 
     public List<Cart> getUserCart() {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
-        Long cartStatusId = cartStatusRepository.getCartStatusId(CartStatusEnum.ACTIVE.getName());
-        List<Cart> userCarts = cartRepository.getCartByUserIdAndCartStatus(user.getId(), cartStatusId);
+        List<Cart> userCarts = cartRepository.getCartByUserIdAndCartStatus(user.getId(), CartStatusEnum.ACTIVE.getId());
         if (userCarts == null) {
             return Collections.emptyList();
         }

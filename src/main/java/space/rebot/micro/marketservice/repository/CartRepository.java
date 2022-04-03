@@ -21,22 +21,22 @@ public interface CartRepository extends JpaRepository <Cart, Long> {
 
     @Query(value = "select * from cart where user_id = :userId and sku_id = :skuId and cart_status_id = :cartStatusId", nativeQuery = true)
     Cart getCartIdBySkuCartStatus(@Param("userId") Long userId, @Param("skuId") Long skuId,
-                                          @Param("cartStatusId") Long cartStatusId);
+                                          @Param("cartStatusId") int cartStatusId);
 
     @Query(value = "select * from cart c where c.user_id = :userId and c.cart_status_id = :cartStatusId", nativeQuery = true)
-    List<Cart> getCartByUserIdAndCartStatus(@Param("userId") Long userId, @Param("cartStatusId") Long cartStatusId);
+    List<Cart> getCartByUserIdAndCartStatus(@Param("userId") Long userId, @Param("cartStatusId") int cartStatusId);
 
     @Modifying
     @Transactional
     @Query(value = "update cart c set count = :cnt " +
             "where c.user_id = :userId and c.sku_id = :skuId and c.cart_status_id = :cartStatusId", nativeQuery = true)
     int updateSkuCnt(@Param("userId") Long userId, @Param("skuId") Long skuId, @Param("cnt") int cnt,
-                             @Param("cartStatusId") Long cartStatusId);
+                             @Param("cartStatusId") int cartStatusId);
 
     @Modifying
     @Transactional
     @Query(value = "update cart c set cart_status_id = :exposedStatusId " +
             "where c.sku_id = :skuId and c.user_id = :userId and c.cart_status_id = :updatedStatusId", nativeQuery = true)
-    int updateCartStatus(@Param("userId") Long userId, @Param("skuId") Long skuId, @Param("exposedStatusId") Long exposedStatusId,
-                         @Param("updatedStatusId") Long updatedStatusId);
+    int updateCartStatus(@Param("userId") Long userId, @Param("skuId") Long skuId, @Param("exposedStatusId") int exposedStatusId,
+                         @Param("updatedStatusId") int updatedStatusId);
 }
