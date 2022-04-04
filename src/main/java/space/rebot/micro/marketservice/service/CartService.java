@@ -6,7 +6,6 @@ import space.rebot.micro.marketservice.enums.CartStatusEnum;
 import space.rebot.micro.marketservice.exception.SkuIsOverException;
 import space.rebot.micro.marketservice.exception.SkuNotFoundException;
 import space.rebot.micro.marketservice.model.Cart;
-import space.rebot.micro.marketservice.model.CartStatus;
 import space.rebot.micro.marketservice.model.Sku;
 import space.rebot.micro.marketservice.repository.CartRepository;
 import space.rebot.micro.marketservice.repository.CartStatusRepository;
@@ -38,11 +37,24 @@ public class CartService {
         if (sku == null) {
             throw new SkuNotFoundException();
         }
+        if (cnt <= 0) {
+            return;
+        }
         int skuCnt = sku.getCount();
         if (skuCnt >= cnt) {
             User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
-            Cart cart = new Cart(user, sku, cnt, cartStatusRepository.getCartStatus(CartStatusEnum.ACTIVE.getName()));
-            cartRepository.save(cart);
+            Cart cart = cartRepository.getCartIdBySkuCartStatus(user.getId(), skuId, CartStatusEnum.ACTIVE.getId());
+            if (cart == null) {
+                cart = new Cart(user, sku, cnt, cartStatusRepository.getCartStatus(CartStatusEnum.ACTIVE.getName()));
+                cartRepository.save(cart);
+            } else {
+                if (skuCnt >= cnt + cart.getCount()) {
+                    cartRepository.updateSkuCnt(user.getId(), skuId, cnt + cart.getCount(),
+                            CartStatusEnum.ACTIVE.getId());
+                } else {
+                    throw new SkuIsOverException(skuCnt);
+                }
+            }
         } else {
             throw new SkuIsOverException(skuCnt);
         }
@@ -51,8 +63,8 @@ public class CartService {
     public void updateCart(Long skuId, int cnt) throws SkuIsOverException, SkuNotFoundException {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
         Long userId = user.getId();
-        if (cnt == 0) {
-            cartRepository.updateCartStatus(userId, skuId, CartStatusEnum.DELETED.getName(), CartStatusEnum.ACTIVE.getName());
+        if (cnt <= 0) {
+            deleteUserSkuInCart(skuId);
             return;
         }
         Sku sku = skuRepository.getSkuById(skuId);
@@ -61,24 +73,22 @@ public class CartService {
         }
         int skuCnt = sku.getCount();
         if (skuCnt >= cnt) {
-            cartRepository.updateSkuCnt(userId, skuId, cnt, CartStatusEnum.ACTIVE.getName());
+            cartRepository.updateSkuCnt(userId, skuId, cnt, CartStatusEnum.ACTIVE.getId());
         } else {
-            cartRepository.updateCartStatus(userId, skuId, CartStatusEnum.DELETED.getName(),
-                    CartStatusEnum.ACTIVE.getName());
+            deleteUserSkuInCart(skuId);
             throw new SkuIsOverException(skuCnt);
         }
     }
 
     public void deleteUserSkuInCart(Long skuId) {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
-        cartRepository.updateCartStatus(user.getId(), skuId, CartStatusEnum.DELETED.getName(),
-                CartStatusEnum.ACTIVE.getName());
+        cartRepository.updateCartStatus(user.getId(), skuId, CartStatusEnum.DELETED.getId(),
+                CartStatusEnum.ACTIVE.getId());
     }
 
     public List<Cart> getUserCart() {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
-        Long cartStatusId = cartStatusRepository.getCartStatusId(CartStatusEnum.ACTIVE.getName());
-        List<Cart> userCarts = cartRepository.getCartByUserIdAndCartStatus(user.getId(), cartStatusId);
+        List<Cart> userCarts = cartRepository.getCartByUserIdAndCartStatus(user.getId(), CartStatusEnum.ACTIVE.getId());
         if (userCarts == null) {
             return Collections.emptyList();
         }
