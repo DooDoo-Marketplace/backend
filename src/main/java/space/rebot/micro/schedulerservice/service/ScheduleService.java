@@ -11,14 +11,14 @@ import java.util.List;
 
 @Service
 public class ScheduleService {
-    private final int BATCH = 1;
+    private final int BATCH = 10000;
 
     @Autowired
     private CartRepository cartRepository;
 
     public void cleanCart() {
         while (true) {
-            List<Long> ids = cartRepository.getCartByDeletedStatus(CartStatusEnum.DELETED.getName(), BATCH);
+            List<Long> ids = cartRepository.getCartByDeletedStatus(CartStatusEnum.DELETED.getId(), BATCH);
             if (ids.isEmpty()) {
                 break;
             }

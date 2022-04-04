@@ -1,6 +1,7 @@
 package space.rebot.micro.schedulerservice.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.quartz.QuartzProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +17,10 @@ import java.util.Properties;
 @Configuration
 @PropertySource("classpath:quartz.properties")
 public class QuartzConfig {
-    private final String PATH = "src/main/resources/quartz-config.xml";
+
+    @Value("${quartz.properties.file:src/main/resources/quartz-config.xml}")
+    private String PATH;
+
     @Autowired
     private QuartzProperties quartzProperties;
 
