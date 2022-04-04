@@ -2,6 +2,8 @@ package space.rebot.micro.schedulerservice.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import space.rebot.micro.marketservice.enums.CartStatusEnum;
+import space.rebot.micro.marketservice.model.CartStatus;
 import space.rebot.micro.marketservice.repository.CartRepository;
 import space.rebot.micro.schedulerservice.exceptions.CartCountNotCorrectException;
 
@@ -9,21 +11,21 @@ import java.util.List;
 
 @Service
 public class ScheduleService {
-    private final int BATCH = 10000;
+    private final int BATCH = 1;
 
     @Autowired
-    CartRepository cartRepository;
+    private CartRepository cartRepository;
 
     public void cleanCart() {
         while (true) {
-            List<Long> id = cartRepository.getCartByDeletedStatus(BATCH);
-            if (id.isEmpty()) {
+            List<Long> ids = cartRepository.getCartByDeletedStatus(CartStatusEnum.DELETED.getName(), BATCH);
+            if (ids.isEmpty()) {
                 break;
             }
             try {
-                int deleted = cartRepository.deleteById(id);
-                if (id.size() != deleted) {
-                    throw new CartCountNotCorrectException(id.size(), (int) deleted);
+                int deleted = cartRepository.deleteCartByIdList(ids);
+                if (ids.size() != deleted) {
+                    throw new CartCountNotCorrectException(ids.size(), deleted);
                 }
             } catch (CartCountNotCorrectException e) {
                 System.out.println("Should be deleted " +
