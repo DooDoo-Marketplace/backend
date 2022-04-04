@@ -15,6 +15,7 @@ public class CartMapper {
         return CartDTO.builder()
                 .skuDTO(skuMapper.mapToSkuDto(cart.getSku()))
                 .cnt(cart.getCount())
+                .isRetail(cart.isRetail())
                 .build();
     }
 

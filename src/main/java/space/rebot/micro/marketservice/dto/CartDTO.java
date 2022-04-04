@@ -10,4 +10,6 @@ public class CartDTO {
     private SkuDTO skuDTO;
 
     private int cnt;
+
+    private boolean isRetail;
 }

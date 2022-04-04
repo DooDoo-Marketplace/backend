@@ -32,7 +32,7 @@ public class CartService {
     @Autowired
     private HttpServletRequest context;
 
-    public void addSkuToCart(Long skuId, int cnt) throws SkuIsOverException, SkuNotFoundException {
+    public void addSkuToCart(Long skuId, int cnt, boolean isRetail) throws SkuIsOverException, SkuNotFoundException{
         Sku sku = skuRepository.getSkuById(skuId);
         if (sku == null) {
             throw new SkuNotFoundException();
@@ -43,14 +43,14 @@ public class CartService {
         int skuCnt = sku.getCount();
         if (skuCnt >= cnt) {
             User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
-            Cart cart = cartRepository.getCartIdBySkuCartStatus(user.getId(), skuId, CartStatusEnum.ACTIVE.getId());
+            Cart cart = cartRepository.getCartIdBySkuCartStatus(user.getId(), skuId, CartStatusEnum.ACTIVE.getId(), isRetail);
             if (cart == null) {
-                cart = new Cart(user, sku, cnt, cartStatusRepository.getCartStatus(CartStatusEnum.ACTIVE.getName()));
+                cart = new Cart(user, sku, cnt, cartStatusRepository.getCartStatus(CartStatusEnum.ACTIVE.getName()), isRetail);
                 cartRepository.save(cart);
             } else {
                 if (skuCnt >= cnt + cart.getCount()) {
                     cartRepository.updateSkuCnt(user.getId(), skuId, cnt + cart.getCount(),
-                            CartStatusEnum.ACTIVE.getId());
+                            CartStatusEnum.ACTIVE.getId(), isRetail);
                 } else {
                     throw new SkuIsOverException(skuCnt);
                 }
@@ -60,11 +60,11 @@ public class CartService {
         }
     }
 
-    public void updateCart(Long skuId, int cnt) throws SkuIsOverException, SkuNotFoundException {
+    public void updateCart(Long skuId, int cnt, boolean isRetail) throws SkuIsOverException, SkuNotFoundException {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
         Long userId = user.getId();
         if (cnt <= 0) {
-            deleteUserSkuInCart(skuId);
+            deleteUserSkuInCart(skuId, isRetail);
             return;
         }
         Sku sku = skuRepository.getSkuById(skuId);
@@ -73,17 +73,17 @@ public class CartService {
         }
         int skuCnt = sku.getCount();
         if (skuCnt >= cnt) {
-            cartRepository.updateSkuCnt(userId, skuId, cnt, CartStatusEnum.ACTIVE.getId());
+            cartRepository.updateSkuCnt(userId, skuId, cnt, CartStatusEnum.ACTIVE.getId(), isRetail);
         } else {
-            deleteUserSkuInCart(skuId);
+            deleteUserSkuInCart(skuId, isRetail);
             throw new SkuIsOverException(skuCnt);
         }
     }
 
-    public void deleteUserSkuInCart(Long skuId) {
+    public void deleteUserSkuInCart(Long skuId, boolean isRetail) {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
         cartRepository.updateCartStatus(user.getId(), skuId, CartStatusEnum.DELETED.getId(),
-                CartStatusEnum.ACTIVE.getId());
+                CartStatusEnum.ACTIVE.getId(), isRetail);
     }
 
     public List<Cart> getUserCart() {
