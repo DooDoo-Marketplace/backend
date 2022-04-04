@@ -3,6 +3,7 @@ package space.rebot.micro.marketservice.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import space.rebot.micro.marketservice.enums.CartStatusEnum;
+import space.rebot.micro.marketservice.exception.InvalidSkuCountException;
 import space.rebot.micro.marketservice.exception.SkuIsOverException;
 import space.rebot.micro.marketservice.exception.SkuNotFoundException;
 import space.rebot.micro.marketservice.model.Cart;
@@ -32,13 +33,13 @@ public class CartService {
     @Autowired
     private HttpServletRequest context;
 
-    public void addSkuToCart(Long skuId, int cnt, boolean isRetail) throws SkuIsOverException, SkuNotFoundException{
+    public void addSkuToCart(Long skuId, int cnt, boolean isRetail) throws SkuIsOverException, SkuNotFoundException, InvalidSkuCountException{
         Sku sku = skuRepository.getSkuById(skuId);
         if (sku == null) {
             throw new SkuNotFoundException();
         }
         if (cnt <= 0) {
-            return;
+            throw new InvalidSkuCountException(cnt);
         }
         int skuCnt = sku.getCount();
         if (skuCnt >= cnt) {

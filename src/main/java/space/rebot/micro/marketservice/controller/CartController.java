@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import space.rebot.micro.marketservice.dto.CartDTO;
+import space.rebot.micro.marketservice.exception.InvalidSkuCountException;
 import space.rebot.micro.marketservice.exception.SkuIsOverException;
 import space.rebot.micro.marketservice.exception.SkuNotFoundException;
 import space.rebot.micro.marketservice.mapper.CartMapper;
@@ -38,6 +39,11 @@ public class CartController {
         } catch (SkuIsOverException e) {
             model.put("success", false);
             model.put("message", "Sku is over");
+            model.put("cnt", e.getCnt());
+            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
+        } catch (InvalidSkuCountException e) {
+            model.put("success", false);
+            model.put("message", "Sku count must be more than 0");
             model.put("cnt", e.getCnt());
             return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         } catch (SkuNotFoundException e) {
