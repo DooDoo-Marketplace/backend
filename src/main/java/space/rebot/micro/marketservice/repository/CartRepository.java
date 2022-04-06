@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import space.rebot.micro.marketservice.model.Cart;
-import space.rebot.micro.marketservice.model.Sku;
-import space.rebot.micro.userservice.model.User;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -35,7 +33,6 @@ public interface CartRepository extends JpaRepository <Cart, Long> {
     int updateSkuCnt(@Param("userId") Long userId, @Param("skuId") Long skuId, @Param("cnt") int cnt,
                              @Param("cartStatusId") int cartStatusId, @Param("isRetail") boolean isRetail);
 
-    @Transactional
     @Query(value = "select c.id from cart c where c.cart_status_id = :cartStatus limit :count", nativeQuery = true)
     List<Long> getCartByDeletedStatus(@Param("cartStatus") int status, @Param("count") int count);
 
