@@ -1,4 +1,4 @@
 package space.rebot.micro.marketservice.exception;
 
-public class PaymentException {
+public class PaymentException extends Exception {
 }

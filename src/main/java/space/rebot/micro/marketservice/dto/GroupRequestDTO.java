@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Map;
 
 @Data
-public class GroupDTO {
+public class GroupRequestDTO {
 
     private String region;
 

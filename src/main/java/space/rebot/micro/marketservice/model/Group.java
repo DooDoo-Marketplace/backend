@@ -4,10 +4,7 @@ import lombok.Data;
 import space.rebot.micro.userservice.model.User;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Data
@@ -41,7 +38,7 @@ public class Group {
             joinColumns = {@JoinColumn(name = "group_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")}
     )
-    private List<User> users = new ArrayList<>();
+    private Set<User> users = new HashSet<>();
 
     public Group() {
     }

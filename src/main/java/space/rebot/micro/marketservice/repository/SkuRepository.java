@@ -13,7 +13,7 @@ public interface SkuRepository extends JpaRepository<Sku, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "update sku set count = count - :count where id = :skuId", nativeQuery = true)
+    @Query(value = "update sku set count = count + :count where id = :skuId", nativeQuery = true)
     int updateSkuCount(@Param("count") int count, @Param("skuId") Long skuId);
 
     @Query(value = "select * from sku s where s.id in :ids", nativeQuery = true)

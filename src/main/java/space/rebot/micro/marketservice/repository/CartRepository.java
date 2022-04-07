@@ -27,13 +27,26 @@ public interface CartRepository extends JpaRepository <Cart, Long> {
     @Query(value = "select * from cart c where c.user_id = :userId and c.cart_status_id = :cartStatusId", nativeQuery = true)
     List<Cart> getCartByUserIdAndCartStatus(@Param("userId") Long userId, @Param("cartStatusId") int cartStatusId);
 
+    @Query(value = "select * from cart c where c.user_id = :userId " +
+            "and c.cart_status_id = :cartStatusId and c.is_retail = :isRetail", nativeQuery = true)
+    List<Cart> getCartByPriceAndUserIdAndCartStatus(@Param("userId") Long userId, @Param("cartStatusId") int cartStatusId,
+                                                    @Param("isRetail") boolean isRetail);
+
     @Modifying
     @Transactional
     @Query(value = "update cart c set count = :cnt " +
             "where c.user_id = :userId and c.sku_id = :skuId " +
             "and c.cart_status_id = :cartStatusId and is_retail = :isRetail", nativeQuery = true)
+    int setSkuCnt(@Param("userId") Long userId, @Param("skuId") Long skuId, @Param("cnt") int cnt,
+                  @Param("cartStatusId") int cartStatusId, @Param("isRetail") boolean isRetail);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update cart c set count = count + :cnt " +
+            "where c.user_id = :userId and c.sku_id = :skuId " +
+            "and c.cart_status_id = :cartStatusId and is_retail = :isRetail", nativeQuery = true)
     int updateSkuCnt(@Param("userId") Long userId, @Param("skuId") Long skuId, @Param("cnt") int cnt,
-                             @Param("cartStatusId") int cartStatusId, @Param("isRetail") boolean isRetail);
+                  @Param("cartStatusId") int cartStatusId, @Param("isRetail") boolean isRetail);
 
     @Query(value = "select c.id from cart c where c.cart_status_id = :cartStatus limit :count", nativeQuery = true)
     List<Long> getCartByDeletedStatus(@Param("cartStatus") int status, @Param("count") int count);
@@ -41,18 +54,21 @@ public interface CartRepository extends JpaRepository <Cart, Long> {
     @Modifying
     @Transactional
     @Query(value = "update cart c set cart_status_id = :exposedStatusId " +
-            "where c.sku_id in :skuIds and c.user_id = :userId and c.cart_status_id = :updatedStatusId", nativeQuery = true)
+            "where c.sku_id in :skuIds and c.user_id = :userId " +
+            "and c.cart_status_id = :updatedStatusId and c.is_retail = :isRetail", nativeQuery = true)
     int updateCartStatus(@Param("userId") Long userId, @Param("skuIds") List<Long> skuIds, @Param("exposedStatusId") int exposedStatusId,
-                         @Param("updatedStatusId") int updatedStatusId);
+                         @Param("updatedStatusId") int updatedStatusId, @Param("isRetail") boolean isRetail);
 
     @Modifying
     @Transactional
     @Query(value = "delete from cart c where c.id in :ids", nativeQuery = true)
     int deleteCartByIdList(@Param("ids") List<Long> ids);
 
+    @Modifying
+    @Transactional
     @Query(value = "update cart c set cart_status_id = :exposedStatusId " +
             "where c.sku_id = :skuId and c.user_id = :userId " +
-            "and c.cart_status_id = :updatedStatusId and is_retail = :isRetail", nativeQuery = true)
+            "and c.cart_status_id = :updatedStatusId and c.is_retail = :isRetail", nativeQuery = true)
     int updateCartStatus(@Param("userId") Long userId, @Param("skuId") Long skuId, @Param("exposedStatusId") int exposedStatusId,
                          @Param("updatedStatusId") int updatedStatusId,  @Param("isRetail") boolean isRetail);
 }
