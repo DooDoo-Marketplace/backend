@@ -19,9 +19,10 @@ public interface CartRepository extends JpaRepository <Cart, Long> {
             "where c.user_id = :userId and c.is_deleted = false", nativeQuery = true)
     List<Long> getSkuIdsByUserId(@Param("userId") Long userId);
 
-    @Query(value = "select * from cart where user_id = :userId and sku_id = :skuId and cart_status_id = :cartStatusId", nativeQuery = true)
+    @Query(value = "select * from cart where user_id = :userId and sku_id = :skuId " +
+            "and cart_status_id = :cartStatusId and is_retail = :isRetail", nativeQuery = true)
     Cart getCartIdBySkuCartStatus(@Param("userId") Long userId, @Param("skuId") Long skuId,
-                                          @Param("cartStatusId") int cartStatusId);
+                                          @Param("cartStatusId") int cartStatusId, @Param("isRetail") boolean isRetail);
 
     @Query(value = "select * from cart c where c.user_id = :userId and c.cart_status_id = :cartStatusId", nativeQuery = true)
     List<Cart> getCartByUserIdAndCartStatus(@Param("userId") Long userId, @Param("cartStatusId") int cartStatusId);
@@ -29,16 +30,13 @@ public interface CartRepository extends JpaRepository <Cart, Long> {
     @Modifying
     @Transactional
     @Query(value = "update cart c set count = :cnt " +
-            "where c.user_id = :userId and c.sku_id = :skuId and c.cart_status_id = :cartStatusId", nativeQuery = true)
-    int setSkuCnt(@Param("userId") Long userId, @Param("skuId") Long skuId, @Param("cnt") int cnt,
-                  @Param("cartStatusId") int cartStatusId);
-
-    @Modifying
-    @Transactional
-    @Query(value = "update cart c set count = count + :cnt " +
-            "where c.user_id = :userId and c.sku_id = :skuId and c.cart_status_id = :cartStatusId", nativeQuery = true)
+            "where c.user_id = :userId and c.sku_id = :skuId " +
+            "and c.cart_status_id = :cartStatusId and is_retail = :isRetail", nativeQuery = true)
     int updateSkuCnt(@Param("userId") Long userId, @Param("skuId") Long skuId, @Param("cnt") int cnt,
-                  @Param("cartStatusId") int cartStatusId);
+                             @Param("cartStatusId") int cartStatusId, @Param("isRetail") boolean isRetail);
+
+    @Query(value = "select c.id from cart c where c.cart_status_id = :cartStatus limit :count", nativeQuery = true)
+    List<Long> getCartByDeletedStatus(@Param("cartStatus") int status, @Param("count") int count);
 
     @Modifying
     @Transactional
@@ -49,8 +47,12 @@ public interface CartRepository extends JpaRepository <Cart, Long> {
 
     @Modifying
     @Transactional
+    @Query(value = "delete from cart c where c.id in :ids", nativeQuery = true)
+    int deleteCartByIdList(@Param("ids") List<Long> ids);
+
     @Query(value = "update cart c set cart_status_id = :exposedStatusId " +
-            "where c.sku_id = :skuId and c.user_id = :userId and c.cart_status_id = :updatedStatusId", nativeQuery = true)
+            "where c.sku_id = :skuId and c.user_id = :userId " +
+            "and c.cart_status_id = :updatedStatusId and is_retail = :isRetail", nativeQuery = true)
     int updateCartStatus(@Param("userId") Long userId, @Param("skuId") Long skuId, @Param("exposedStatusId") int exposedStatusId,
-                         @Param("updatedStatusId") int updatedStatusId);
+                         @Param("updatedStatusId") int updatedStatusId,  @Param("isRetail") boolean isRetail);
 }

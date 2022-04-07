@@ -23,4 +23,5 @@
     <include file="changes/DBEB-27-create-cart-status-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/DBEB-4-create-cart-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/DBEB-31-create-group-tables.xml" relativeToChangelogFile="true"/>
+    <include file="changes/data.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

@@ -8,7 +8,8 @@ create table if not exists cart
     count int not null
         check (count >= 0),
     cart_status_id int not null
-        constraint cart_status_id_fk references cart_status
+        constraint cart_status_id_fk references cart_status,
+    is_retail boolean not null
 );
 
 
