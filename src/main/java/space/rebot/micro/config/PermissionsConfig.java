@@ -25,6 +25,7 @@ public class PermissionsConfig {
         String[] user = {
                 ".*/api/v1/hello.*",
                 ".*/api/v1/cart.*",
+                ".*/api/v1/group.*",
                 ".*/api/v1/auth/logout.*"
         };
 

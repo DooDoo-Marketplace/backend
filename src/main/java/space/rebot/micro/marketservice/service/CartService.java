@@ -49,7 +49,7 @@ public class CartService {
                 cartRepository.save(cart);
             } else {
                 if (skuCnt >= cnt + cart.getCount()) {
-                    cartRepository.updateSkuCnt(user.getId(), skuId, cnt + cart.getCount(),
+                    cartRepository.setSkuCnt(user.getId(), skuId, cnt + cart.getCount(),
                             CartStatusEnum.ACTIVE.getId());
                 } else {
                     throw new SkuIsOverException(skuCnt);
@@ -73,7 +73,7 @@ public class CartService {
         }
         int skuCnt = sku.getCount();
         if (skuCnt >= cnt) {
-            cartRepository.updateSkuCnt(userId, skuId, cnt, CartStatusEnum.ACTIVE.getId());
+            cartRepository.setSkuCnt(userId, skuId, cnt, CartStatusEnum.ACTIVE.getId());
         } else {
             deleteUserSkuInCart(skuId);
             throw new SkuIsOverException(skuCnt);

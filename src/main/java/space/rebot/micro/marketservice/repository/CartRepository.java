@@ -30,8 +30,22 @@ public interface CartRepository extends JpaRepository <Cart, Long> {
     @Transactional
     @Query(value = "update cart c set count = :cnt " +
             "where c.user_id = :userId and c.sku_id = :skuId and c.cart_status_id = :cartStatusId", nativeQuery = true)
+    int setSkuCnt(@Param("userId") Long userId, @Param("skuId") Long skuId, @Param("cnt") int cnt,
+                  @Param("cartStatusId") int cartStatusId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update cart c set count = count + :cnt " +
+            "where c.user_id = :userId and c.sku_id = :skuId and c.cart_status_id = :cartStatusId", nativeQuery = true)
     int updateSkuCnt(@Param("userId") Long userId, @Param("skuId") Long skuId, @Param("cnt") int cnt,
-                             @Param("cartStatusId") int cartStatusId);
+                  @Param("cartStatusId") int cartStatusId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update cart c set cart_status_id = :exposedStatusId " +
+            "where c.sku_id in :skuIds and c.user_id = :userId and c.cart_status_id = :updatedStatusId", nativeQuery = true)
+    int updateCartStatus(@Param("userId") Long userId, @Param("skuIds") List<Long> skuIds, @Param("exposedStatusId") int exposedStatusId,
+                         @Param("updatedStatusId") int updatedStatusId);
 
     @Modifying
     @Transactional
