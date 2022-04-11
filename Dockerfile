@@ -7,4 +7,5 @@ FROM openjdk:11
 
 VOLUME /tmp
 COPY target/*.jar app.jar
+ADD /src/main/resources/quartz-config.xml /src/main/resources/quartz-config.xml
 ENTRYPOINT ["java","-jar","/app.jar"]
