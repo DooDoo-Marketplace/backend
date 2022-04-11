@@ -1,4 +1,4 @@
-version: "3"
+version: "3.1"
 services:
   postgres:
     image: postgres:latest
@@ -13,9 +13,9 @@ services:
       - POSTGRES_DB=micro
     restart: unless-stopped
 
-  user-service:
-    image: user-service:latest
-    container_name: user-service
+  doo-doo-backend:
+    image: doo-doo-backend:latest
+    container_name: doo-doo-backend
 #    expose:
 #      - 8080
     ports:
