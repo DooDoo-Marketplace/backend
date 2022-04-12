@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job-scheduling-data
+        xmlns="http://www.quartz-scheduler.org/xml/JobSchedulingData"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.quartz-scheduler.org/xml/JobSchedulingData
+        http://www.quartz-scheduler.org/xml/job_scheduling_data_1_8.xsd"
+        version="1.8">
+    <!--
+    Cron example:
+        CRON_EVERY_MINUTE = "0 0/1 * ? * * *";
+        CRON_EVERY_MIDNIGHT = "0 0 0 * * ?";
+    -->
+
+    <schedule>
+        <job>
+            <name>CleanCart</name>
+            <group>CleanCartAtMidnight</group>
+            <description>Clean cart table job</description>
+            <job-class>space.rebot.micro.schedulerservice.jobs.CleanCartJob</job-class>
+        </job>
+
+        <trigger>
+            <cron>
+                <name>CleanCartTrigger</name>
+                <job-name>CleanCart</job-name>
+                <job-group>CleanCartAtMidnight</job-group>
+                <cron-expression>0 0 0 * * ?</cron-expression>
+            </cron>
+        </trigger>
+    </schedule>
+</job-scheduling-data>

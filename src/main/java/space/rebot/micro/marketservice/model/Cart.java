@@ -28,16 +28,21 @@ public class Cart {
     @Column(name = "count", nullable = false)
     private int count;
 
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted;
+    @ManyToOne (cascade = CascadeType.ALL)
+    @JoinColumn(name = "cart_status_id")
+    private CartStatus cartStatus;
+
+    @Column(name = "is_retail", nullable = false)
+    private boolean isRetail;
 
     public Cart() {
     }
 
-    public Cart(User user, Sku sku, int count, boolean isDeleted) {
+    public Cart(User user, Sku sku, int count, CartStatus cartStatus, boolean isRetail) {
         this.user = user;
         this.sku = sku;
         this.count = count;
-        this.isDeleted = isDeleted;
+        this.cartStatus = cartStatus;
+        this.isRetail = isRetail;
     }
 }
