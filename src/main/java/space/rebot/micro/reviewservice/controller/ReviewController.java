@@ -3,22 +3,17 @@ package space.rebot.micro.reviewservice.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import space.rebot.micro.marketservice.exception.SkuNotFoundException;
 import space.rebot.micro.reviewservice.dto.ReviewDTO;
-import space.rebot.micro.reviewservice.exception.InvalidTextException;
+import space.rebot.micro.reviewservice.exception.InvalidRatingException;
 import space.rebot.micro.reviewservice.exception.WrongUserException;
-import space.rebot.micro.reviewservice.mapper.ReviewMapper;
 import space.rebot.micro.reviewservice.service.ReviewService;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/review/")
@@ -27,36 +22,30 @@ public class ReviewController {
     @Autowired
     private ReviewService reviewService;
 
-    @Autowired
-    private ReviewMapper reviewMapper;
 
     @PostMapping(value = "get", produces = "application/json")
     public ResponseEntity<?> getSkuReviews(@RequestParam("sku_id") Long skuId) {
         Map<Object, Object> model = new HashMap<>();
-        List<ReviewDTO> reviewDTOList = reviewService.getSkuReview(skuId)
-                .stream().map(review -> reviewMapper.mapToReviewDto(review))
-                .collect(Collectors.toList());
+        List<ReviewDTO> reviewDTOList = reviewService.getSkuReview(skuId);
         model.put("success", true);
         model.put("reviews", reviewDTOList);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
     @PostMapping(value = "add", produces = "application/json")
-    public ResponseEntity<?> addReviewToSku(@RequestParam("sku_id") Long skuId,
-                                            @RequestParam("text") String text,
-                                            @RequestParam("photo_url") String photoUrl) {
+    public ResponseEntity<?> addReviewToSku(@RequestBody ReviewDTO reviewDTO) {
         Map<Object, Object> model = new HashMap<>();
         try {
-            UUID reviewId = reviewService.addReviewToSku(skuId, text, photoUrl);
+            UUID reviewId = reviewService.addReviewToSku(reviewDTO);
             model.put("success", true);
             model.put("uuid", reviewId);
         } catch (SkuNotFoundException e) {
             model.put("success", false);
-            model.put("message", "Sku not found");
+            model.put("message", "INVALID_SKU");
             return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
-        } catch (InvalidTextException e) {
+        } catch (InvalidRatingException e) {
             model.put("success", false);
-            model.put("message", "Text length is 0");
+            model.put("message", e.getMessage());
             return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         }
 
@@ -71,7 +60,7 @@ public class ReviewController {
             reviewService.deleteReview(uuid);
         } catch (WrongUserException e) {
             model.put("success", false);
-            model.put("message", "This isn't your comment");
+            model.put("message", e.getMessage());
             return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         }
 
@@ -81,14 +70,13 @@ public class ReviewController {
 
     @PostMapping(value = "update", produces = "application/json")
     public ResponseEntity<?> updateReview(@RequestParam("id") UUID uuid,
-                                          @RequestParam("text") String text,
-                                          @RequestParam("photo_url") String photoUrl) {
+                                          @RequestBody ReviewDTO reviewDTO) {
         Map<Object, Object> model = new HashMap<>();
         try {
-            reviewService.updateReview(uuid, text, photoUrl);
-        } catch (WrongUserException e) {
+            reviewService.updateReview(uuid, reviewDTO);
+        } catch (WrongUserException | InvalidRatingException e) {
             model.put("success", false);
-            model.put("message", "This isn't your comment");
+            model.put("message", e.getMessage());
             return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         }
 

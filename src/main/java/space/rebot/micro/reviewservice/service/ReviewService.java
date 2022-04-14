@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 import space.rebot.micro.marketservice.exception.SkuNotFoundException;
 import space.rebot.micro.marketservice.model.Sku;
 import space.rebot.micro.marketservice.repository.SkuRepository;
-import space.rebot.micro.reviewservice.exception.InvalidTextException;
+import space.rebot.micro.reviewservice.dto.ReviewDTO;
+import space.rebot.micro.reviewservice.exception.InvalidRatingException;
 import space.rebot.micro.reviewservice.exception.WrongUserException;
+import space.rebot.micro.reviewservice.mapper.ReviewMapper;
 import space.rebot.micro.reviewservice.model.Review;
 import space.rebot.micro.reviewservice.repository.ReviewRepository;
 import space.rebot.micro.userservice.model.Session;
@@ -18,6 +20,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ReviewService {
@@ -33,26 +36,31 @@ public class ReviewService {
     @Autowired
     private DateService dateService;
 
-    public List<Review> getSkuReview(Long skuId) {
+    @Autowired
+    private ReviewMapper reviewMapper;
+
+    public List<ReviewDTO> getSkuReview(Long skuId) {
         List<Review> skuReviews = reviewRepository.getReviewBySkuId(skuId);
         if (skuReviews == null) {
             return Collections.emptyList();
         }
-        return skuReviews;
+
+        return skuReviews.stream().map(review -> reviewMapper.mapToReviewDto(review))
+                .collect(Collectors.toList());
     }
 
-    public UUID addReviewToSku(Long skuId, String text, String photoUrl) throws SkuNotFoundException, InvalidTextException {
-        Sku sku = skuRepository.getSkuById(skuId);
+    public UUID addReviewToSku(ReviewDTO reviewDTO) throws SkuNotFoundException, InvalidRatingException {
+        Sku sku = skuRepository.getSkuById(reviewDTO.getSkuId());
         if (sku == null) {
             throw new SkuNotFoundException();
         }
-
-        if (text == null || text.equals("")) {
-            throw new InvalidTextException();
+        if (reviewDTO.getRating() < 0 || reviewDTO.getRating() > 5){
+            throw new InvalidRatingException("INVALID_RATING");
         }
         Date now = dateService.utcNow();
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
-        Review review = new Review(user, sku, text, photoUrl, now);
+        Review review = new Review(user, sku, reviewDTO.getText(),
+                reviewDTO.getPhotoUrl(), reviewDTO.getRating(), now);
         reviewRepository.save(review);
         return review.getId();
     }
@@ -60,21 +68,25 @@ public class ReviewService {
     public void deleteReview(UUID uuid) throws WrongUserException {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
         Review review = reviewRepository.getReviewById(uuid);
-        Long userId = review.getUser().getId();
+        long userId = review.getUser().getId();
         if (userId != user.getId()) {
-            throw new WrongUserException();
+            throw new WrongUserException("INVALID_USER");
         }
 
         reviewRepository.deleteById(uuid);
     }
 
-    public void updateReview(UUID uuid, String text, String photoUrl) throws WrongUserException {
+    public void updateReview(UUID uuid, ReviewDTO reviewDTO) throws WrongUserException, InvalidRatingException {
+        if (reviewDTO.getRating() < 0 || reviewDTO.getRating() > 5){
+            throw new InvalidRatingException("INVALID_RATING");
+        }
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
         Review review = reviewRepository.getReviewById(uuid);
-        Long userId = review.getUser().getId();
+        long userId = review.getUser().getId();
         if (userId != user.getId()) {
-            throw new WrongUserException();
+            throw new WrongUserException("INVALID_USER");
         }
-        reviewRepository.updateReviewTextAndPhoto(text, photoUrl, uuid);
+        reviewRepository.updateReview(reviewDTO.getText(), reviewDTO.getPhotoUrl(),
+                reviewDTO.getRating(), uuid);
     }
 }

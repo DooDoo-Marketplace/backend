@@ -16,10 +16,10 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "update reviews r set text = :text, photo_url = :photoUrl" +
-            " where r.id = :id", nativeQuery = true)
-    int updateReviewTextAndPhoto(@Param("text") String text, @Param("photoUrl") String photoUrl,
-                                 @Param("id") UUID id);
+    @Query(value = "update reviews r set text = :text, photo_url = :photoUrl, " +
+            "rating = :rating where r.id = :id", nativeQuery = true)
+    int updateReview(@Param("text") String text, @Param("photoUrl") String photoUrl,
+                                 @Param("rating") Double rating, @Param("id") UUID id);
 
     @Modifying
     @Transactional

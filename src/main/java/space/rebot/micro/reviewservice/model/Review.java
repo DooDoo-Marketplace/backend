@@ -36,17 +36,21 @@ public class Review {
     @Column(name = "photo_url")
     private String photoUrl;
 
+    @Column(name = "rating", nullable = false)
+    private Double rating;
+
     @Column(name = "created_at", nullable = false)
     private Date createdAt;
 
     public Review() {
     }
 
-    public Review(User user, Sku sku, String text, String photoUrl, Date createdAt) {
+    public Review(User user, Sku sku, String text, String photoUrl, Double rating, Date createdAt) {
         this.user = user;
         this.sku = sku;
         this.text = text;
         this.photoUrl = photoUrl;
+        this.rating = rating;
         this.createdAt = createdAt;
     }
 }
