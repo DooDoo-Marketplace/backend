@@ -14,7 +14,7 @@
 <!--    <changeSet id="" author="">-->
 <!--        <tagDatabase tag="users_init"/>-->
 <!--    </changeSet>-->
-<!--  LAST ID IS 8-->
+<!--  LAST ID IS 9-->
     <include file="changes/create-auth-requests-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/create-sessions-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/create-roles-table.xml" relativeToChangelogFile="true"/>
@@ -23,4 +23,5 @@
     <include file="changes/DBEB-27-create-cart-status-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/DBEB-4-create-cart-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/data.xml" relativeToChangelogFile="true"/>
+    <include file="changes/DBEB-40-create-review-table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
