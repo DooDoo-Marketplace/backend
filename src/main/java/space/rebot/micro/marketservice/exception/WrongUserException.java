@@ -1,4 +1,4 @@
-package space.rebot.micro.reviewservice.exception;
+package space.rebot.micro.marketservice.exception;
 
 public class WrongUserException extends Exception {
     public WrongUserException(String message){

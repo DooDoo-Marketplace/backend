@@ -1,4 +1,4 @@
-package space.rebot.micro.reviewservice.model;
+package space.rebot.micro.marketservice.model;
 
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;

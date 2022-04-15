@@ -1,8 +1,8 @@
-package space.rebot.micro.reviewservice.mapper;
+package space.rebot.micro.marketservice.mapper;
 
 import org.springframework.stereotype.Component;
-import space.rebot.micro.reviewservice.dto.ReviewDTO;
-import space.rebot.micro.reviewservice.model.Review;
+import space.rebot.micro.marketservice.dto.ReviewDTO;
+import space.rebot.micro.marketservice.model.Review;
 import space.rebot.micro.userservice.dto.user.UserDto;
 import space.rebot.micro.userservice.factory.UserFactory;
 
@@ -13,6 +13,7 @@ public class ReviewMapper {
         UserFactory userFactory = new UserFactory();
         UserDto userDto = userFactory.fromEntity(review.getUser());
         return ReviewDTO.builder()
+                .id(review.getId())
                 .skuId(review.getSku().getId())
                 .userDto(userDto)
                 .text(review.getText())

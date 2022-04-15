@@ -1,16 +1,16 @@
-package space.rebot.micro.reviewservice.service;
+package space.rebot.micro.marketservice.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import space.rebot.micro.marketservice.exception.SkuNotFoundException;
 import space.rebot.micro.marketservice.model.Sku;
 import space.rebot.micro.marketservice.repository.SkuRepository;
-import space.rebot.micro.reviewservice.dto.ReviewDTO;
-import space.rebot.micro.reviewservice.exception.InvalidRatingException;
-import space.rebot.micro.reviewservice.exception.WrongUserException;
-import space.rebot.micro.reviewservice.mapper.ReviewMapper;
-import space.rebot.micro.reviewservice.model.Review;
-import space.rebot.micro.reviewservice.repository.ReviewRepository;
+import space.rebot.micro.marketservice.dto.ReviewDTO;
+import space.rebot.micro.marketservice.exception.InvalidRatingException;
+import space.rebot.micro.marketservice.exception.WrongUserException;
+import space.rebot.micro.marketservice.mapper.ReviewMapper;
+import space.rebot.micro.marketservice.model.Review;
+import space.rebot.micro.marketservice.repository.ReviewRepository;
 import space.rebot.micro.userservice.model.Session;
 import space.rebot.micro.userservice.model.User;
 import space.rebot.micro.userservice.service.DateService;
@@ -76,17 +76,17 @@ public class ReviewService {
         reviewRepository.deleteById(uuid);
     }
 
-    public void updateReview(UUID uuid, ReviewDTO reviewDTO) throws WrongUserException, InvalidRatingException {
+    public void updateReview(ReviewDTO reviewDTO) throws WrongUserException, InvalidRatingException {
         if (reviewDTO.getRating() < 0 || reviewDTO.getRating() > 5){
             throw new InvalidRatingException("INVALID_RATING");
         }
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
-        Review review = reviewRepository.getReviewById(uuid);
+        Review review = reviewRepository.getReviewById(reviewDTO.getId());
         long userId = review.getUser().getId();
         if (userId != user.getId()) {
             throw new WrongUserException("INVALID_USER");
         }
         reviewRepository.updateReview(reviewDTO.getText(), reviewDTO.getPhotoUrl(),
-                reviewDTO.getRating(), uuid);
+                reviewDTO.getRating(), reviewDTO.getId());
     }
 }

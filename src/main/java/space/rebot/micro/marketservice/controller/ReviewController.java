@@ -1,14 +1,14 @@
-package space.rebot.micro.reviewservice.controller;
+package space.rebot.micro.marketservice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import space.rebot.micro.marketservice.exception.SkuNotFoundException;
-import space.rebot.micro.reviewservice.dto.ReviewDTO;
-import space.rebot.micro.reviewservice.exception.InvalidRatingException;
-import space.rebot.micro.reviewservice.exception.WrongUserException;
-import space.rebot.micro.reviewservice.service.ReviewService;
+import space.rebot.micro.marketservice.dto.ReviewDTO;
+import space.rebot.micro.marketservice.exception.InvalidRatingException;
+import space.rebot.micro.marketservice.exception.WrongUserException;
+import space.rebot.micro.marketservice.service.ReviewService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +24,7 @@ public class ReviewController {
 
 
     @PostMapping(value = "get", produces = "application/json")
-    public ResponseEntity<?> getSkuReviews(@RequestParam("sku_id") Long skuId) {
+    public ResponseEntity<?> getSkuReviews(@RequestParam("skuId") Long skuId) {
         Map<Object, Object> model = new HashMap<>();
         List<ReviewDTO> reviewDTOList = reviewService.getSkuReview(skuId);
         model.put("success", true);
@@ -69,11 +69,10 @@ public class ReviewController {
     }
 
     @PostMapping(value = "update", produces = "application/json")
-    public ResponseEntity<?> updateReview(@RequestParam("id") UUID uuid,
-                                          @RequestBody ReviewDTO reviewDTO) {
+    public ResponseEntity<?> updateReview(@RequestBody ReviewDTO reviewDTO) {
         Map<Object, Object> model = new HashMap<>();
         try {
-            reviewService.updateReview(uuid, reviewDTO);
+            reviewService.updateReview(reviewDTO);
         } catch (WrongUserException | InvalidRatingException e) {
             model.put("success", false);
             model.put("message", e.getMessage());
