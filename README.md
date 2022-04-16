@@ -1,13 +1,15 @@
 # Docker
-Пока самые базовые настройки докера. Чтобы запустить локальную бд просто в docker-compose.yml запускаете сервис postgres.
+Возможно, мы сделаем так, чтобы url бд не менялся строкой, но не суть... 
 
-Для того, чтобы запустить образ приложения в докере (это скорее для фронта), то в пропертях меняете url бд, выполняете команду: 
+Вот команда для запуска всего:
 ```bash
-mvn clean package -DskipTests && docker build -t user-service .
+docker-compose up --build
 ```
 И также в docker-compose.yml запускаете сервис.
 
 # Liquibase
+Чтобы запуститься с заполненными чем-то таблицами - в resources/application.properties пишете spring.liquibase.contexts=test, если без - spring.liquibase.contexts=prod
+
 Вам нужно накатить изменения в бд для выполнения такси - создаете sql скрипт и rollback к нему.
 Создаете в директории changes xml файл с назаванием ветки и комментарием (например DBEB-10-create-logs-table.xml), где добавляете changeSet с sql скриптами.
 И этот файл включаем в главный changelog-master.xml. При больших изменениях ставьте тег, чтобы потом к нему вернуться если что.

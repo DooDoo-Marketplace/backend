@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import space.rebot.micro.marketservice.dto.SkuDTO;
+import space.rebot.micro.marketservice.dto.CartDTO;
+import space.rebot.micro.marketservice.exception.InvalidSkuCountException;
 import space.rebot.micro.marketservice.exception.SkuIsOverException;
 import space.rebot.micro.marketservice.exception.SkuNotFoundException;
-import space.rebot.micro.marketservice.mapper.SkuMapper;
+import space.rebot.micro.marketservice.mapper.CartMapper;
 import space.rebot.micro.marketservice.service.CartService;
 
 import java.util.HashMap;
@@ -27,16 +28,22 @@ public class CartController {
     private CartService cartService;
 
     @Autowired
-    private SkuMapper skuMapper;
+    private CartMapper cartMapper;
 
-    @PostMapping(value="add", produces="application/json")
-    public ResponseEntity<?> addSkuToCart(@RequestParam("sku_id") Long skuId, @RequestParam("cnt") int cnt) {
+    @PostMapping(value = "add", produces = "application/json")
+    public ResponseEntity<?> addSkuToCart(@RequestParam("sku_id") Long skuId, @RequestParam("cnt") int cnt,
+                                          @RequestParam("isRetail") boolean isRetail) {
         Map<Object, Object> model = new HashMap<>();
         try {
-            cartService.addSkuToCart(skuId, cnt);
+            cartService.addSkuToCart(skuId, cnt, isRetail);
         } catch (SkuIsOverException e) {
             model.put("success", false);
             model.put("message", "Sku is over");
+            model.put("cnt", e.getCnt());
+            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
+        } catch (InvalidSkuCountException e) {
+            model.put("success", false);
+            model.put("message", "Sku count must be more than 0");
             model.put("cnt", e.getCnt());
             return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         } catch (SkuNotFoundException e) {
@@ -48,12 +55,13 @@ public class CartController {
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
-    @PostMapping(value="update", produces="application/json")
+    @PostMapping(value = "update", produces = "application/json")
     //cnt is a new number of sku
-    public ResponseEntity<?> updateSkuCnt(@RequestParam("sku_id") Long skuId, @RequestParam("cnt") int cnt) {
+    public ResponseEntity<?> updateSkuCnt(@RequestParam("sku_id") Long skuId, @RequestParam("cnt") int cnt,
+                                          @RequestParam("isRetail") boolean isRetail) {
         Map<Object, Object> model = new HashMap<>();
         try {
-            cartService.updateCart(skuId, cnt);
+            cartService.updateCart(skuId, cnt, isRetail);
         } catch (SkuIsOverException e) {
             model.put("success", false);
             model.put("message", "Sku is over");
@@ -68,21 +76,23 @@ public class CartController {
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
-    @PostMapping(value="delete", produces="application/json")
-    public ResponseEntity<?> deleteUserSkuInCart(@RequestParam("sku_id") Long skuId) {
+    @PostMapping(value = "delete", produces = "application/json")
+    public ResponseEntity<?> deleteUserSkuInCart(@RequestParam("sku_id") Long skuId,
+                                                 @RequestParam("isRetail") boolean isRetail) {
         Map<Object, Object> model = new HashMap<>();
-        cartService.deleteUserSkuInCart(skuId);
+        cartService.deleteUserSkuInCart(skuId, isRetail);
         model.put("success", true);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
-    @GetMapping(value="get", produces="application/json")
+    @GetMapping(value = "get", produces = "application/json")
     public ResponseEntity<?> getUserCart() {
         Map<Object, Object> model = new HashMap<>();
-        List<SkuDTO> skuDTOList = cartService.getUsersSku().stream()
-                .map(sku -> skuMapper.mapToSkuDto(sku)).collect(Collectors.toList());
+        List<CartDTO> cartDTOList = cartService.getUserCart().stream()
+                .map(cart -> cartMapper.mapToCartDto(cart))
+                .collect(Collectors.toList());
         model.put("success", true);
-        model.put("sku_list", skuDTOList);
+        model.put("cart", cartDTOList);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 

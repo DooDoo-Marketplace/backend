@@ -6,6 +6,7 @@ import space.rebot.micro.userservice.dto.auth.CodeRequestDto;
 import space.rebot.micro.common.dto.MessageDto;
 import space.rebot.micro.userservice.exception.*;
 import space.rebot.micro.userservice.model.Session;
+import space.rebot.micro.userservice.repository.UsersRepository;
 import space.rebot.micro.userservice.service.AuthorizationService;
 import space.rebot.micro.userservice.validator.PhoneValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class AuthController {
 
     @Autowired
     private HttpServletRequest context;
+
 
     PhoneValidator phoneValidator;
     public AuthController(){

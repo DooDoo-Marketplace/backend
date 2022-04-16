@@ -2,11 +2,14 @@ package space.rebot.micro.marketservice.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import space.rebot.micro.marketservice.enums.CartStatusEnum;
+import space.rebot.micro.marketservice.exception.InvalidSkuCountException;
 import space.rebot.micro.marketservice.exception.SkuIsOverException;
 import space.rebot.micro.marketservice.exception.SkuNotFoundException;
 import space.rebot.micro.marketservice.model.Cart;
 import space.rebot.micro.marketservice.model.Sku;
 import space.rebot.micro.marketservice.repository.CartRepository;
+import space.rebot.micro.marketservice.repository.CartStatusRepository;
 import space.rebot.micro.marketservice.repository.SkuRepository;
 import space.rebot.micro.userservice.model.Session;
 import space.rebot.micro.userservice.model.User;
@@ -25,28 +28,44 @@ public class CartService {
     private SkuRepository skuRepository;
 
     @Autowired
+    private CartStatusRepository cartStatusRepository;
+
+    @Autowired
     private HttpServletRequest context;
 
-    public void addSkuToCart(Long skuId, int cnt) throws SkuIsOverException, SkuNotFoundException {
+    public void addSkuToCart(Long skuId, int cnt, boolean isRetail) throws SkuIsOverException, SkuNotFoundException, InvalidSkuCountException{
         Sku sku = skuRepository.getSkuById(skuId);
         if (sku == null) {
             throw new SkuNotFoundException();
         }
+        if (cnt <= 0) {
+            throw new InvalidSkuCountException(cnt);
+        }
         int skuCnt = sku.getCount();
         if (skuCnt >= cnt) {
             User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
-            Cart cart = new Cart(user, sku, cnt, false);
-            cartRepository.save(cart);
+            Cart cart = cartRepository.getCartIdBySkuCartStatus(user.getId(), skuId, CartStatusEnum.ACTIVE.getId(), isRetail);
+            if (cart == null) {
+                cart = new Cart(user, sku, cnt, cartStatusRepository.getCartStatus(CartStatusEnum.ACTIVE.getName()), isRetail);
+                cartRepository.save(cart);
+            } else {
+                if (skuCnt >= cnt + cart.getCount()) {
+                    cartRepository.updateSkuCnt(user.getId(), skuId, cnt + cart.getCount(),
+                            CartStatusEnum.ACTIVE.getId(), isRetail);
+                } else {
+                    throw new SkuIsOverException(skuCnt);
+                }
+            }
         } else {
             throw new SkuIsOverException(skuCnt);
         }
     }
 
-    public void updateCart(Long skuId, int cnt) throws SkuIsOverException, SkuNotFoundException {
+    public void updateCart(Long skuId, int cnt, boolean isRetail) throws SkuIsOverException, SkuNotFoundException {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
         Long userId = user.getId();
-        if (cnt == 0) {
-            cartRepository.markDelete(userId, skuId);
+        if (cnt <= 0) {
+            deleteUserSkuInCart(skuId, isRetail);
             return;
         }
         Sku sku = skuRepository.getSkuById(skuId);
@@ -55,23 +74,25 @@ public class CartService {
         }
         int skuCnt = sku.getCount();
         if (skuCnt >= cnt) {
-            cartRepository.updateSkuCnt(userId, skuId, cnt);
+            cartRepository.updateSkuCnt(userId, skuId, cnt, CartStatusEnum.ACTIVE.getId(), isRetail);
         } else {
+            deleteUserSkuInCart(skuId, isRetail);
             throw new SkuIsOverException(skuCnt);
         }
     }
 
-    public void deleteUserSkuInCart(Long skuId) {
+    public void deleteUserSkuInCart(Long skuId, boolean isRetail) {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
-        cartRepository.markDelete(user.getId(), skuId);
+        cartRepository.updateCartStatus(user.getId(), skuId, CartStatusEnum.DELETED.getId(),
+                CartStatusEnum.ACTIVE.getId(), isRetail);
     }
 
-    public List<Sku> getUsersSku() {
+    public List<Cart> getUserCart() {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
-        List<Long> ids = cartRepository.getSkuIdsByUserId(user.getId());
-        if (ids == null) {
+        List<Cart> userCarts = cartRepository.getCartByUserIdAndCartStatus(user.getId(), CartStatusEnum.ACTIVE.getId());
+        if (userCarts == null) {
             return Collections.emptyList();
         }
-        return skuRepository.getSkusByIds(ids);
+        return userCarts;
     }
 }
