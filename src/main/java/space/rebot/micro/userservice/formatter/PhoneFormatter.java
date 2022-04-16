@@ -4,9 +4,9 @@ import space.rebot.micro.userservice.exception.InvalidPhoneException;
 import space.rebot.micro.userservice.validator.PhoneValidator;
 
 public class PhoneFormatter {
-    public String format(String phone) throws Exception {
+    public String format(String phone) throws InvalidPhoneException {
         PhoneValidator phoneValidator = new PhoneValidator();
-        if (phoneValidator.validate(phone, false)) {
+        if (!phoneValidator.validate(phone, false)) {
             throw new InvalidPhoneException();
         }
         if (phone.charAt(0) == '8' || phone.charAt(0) == '7') {

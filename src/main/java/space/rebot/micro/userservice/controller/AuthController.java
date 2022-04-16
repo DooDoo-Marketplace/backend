@@ -28,21 +28,18 @@ public class AuthController {
     private HttpServletRequest context;
 
 
-    PhoneValidator phoneValidator;
-    public AuthController(){
-        this.phoneValidator = new PhoneValidator();
-    }
     @PostMapping(value="login", produces="application/json")
     private ResponseEntity<?> login(@NonNull @RequestBody AuthRequestDto authRequestDto){
-        if (!phoneValidator.validate(authRequestDto.getPhone(), true)) {
-            MessageDto error = new MessageDto("INVALID_PHONE");
-            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-        }
+
         try{
             authorizationService.generateAuthRequest(authRequestDto.getPhone());
         }catch (TooFastRequestsException ex) {
             MessageDto error = new MessageDto("TOO_FAST_RESPONSES");
             return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+        }
+        catch (InvalidPhoneException ex){
+            MessageDto error = new MessageDto("INVALID_PHONE");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(new MessageDto("REQUEST_CREATED"));
 

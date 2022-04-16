@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import space.rebot.micro.config.RoleConfig;
 import space.rebot.micro.userservice.dto.auth.AuthResponseDto;
 import space.rebot.micro.userservice.exception.*;
+import space.rebot.micro.userservice.formatter.PhoneFormatter;
 import space.rebot.micro.userservice.model.AuthRequest;
 import space.rebot.micro.userservice.model.Role;
 import space.rebot.micro.userservice.model.Session;
@@ -42,7 +43,9 @@ public class AuthorizationService {
     private final SmsService smsService;
 
 
-    public void generateAuthRequest(String phone) throws TooFastRequestsException {
+    public void generateAuthRequest(String phone) throws TooFastRequestsException, InvalidPhoneException {
+        PhoneFormatter formatter = new PhoneFormatter();
+        phone = formatter.format(phone);
         AuthRequest authRequest = authRequestRepository.getAuthRequestByPhone(phone);
         Date now = dateService.utcNow();
         if (authRequest != null) {
@@ -68,6 +71,8 @@ public class AuthorizationService {
             AttemptsLimitException,
             InvalidCodeException,
             InvalidPhoneException {
+        PhoneFormatter formatter = new PhoneFormatter();
+        phone = formatter.format(phone);
         AuthRequest authRequest = authRequestRepository.getAuthRequestByPhone(phone);
         Date now = dateService.utcNow();
         if (authRequest == null) {
