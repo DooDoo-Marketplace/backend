@@ -16,7 +16,7 @@ public class SkuDTO {
 
     private String region;
 
-    private double retailPrice;
+    private Double retailPrice;
 
     private double groupPrice;
 
