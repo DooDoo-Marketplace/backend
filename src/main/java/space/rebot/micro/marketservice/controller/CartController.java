@@ -31,7 +31,7 @@ public class CartController {
     private CartMapper cartMapper;
 
     @PostMapping(value = "add", produces = "application/json")
-    public ResponseEntity<?> addSkuToCart(@RequestParam("sku_id") Long skuId, @RequestParam("cnt") int cnt,
+    public ResponseEntity<?> addSkuToCart(@RequestParam("skuId") Long skuId, @RequestParam("cnt") int cnt,
                                           @RequestParam("isRetail") boolean isRetail) {
         Map<Object, Object> model = new HashMap<>();
         try {
@@ -57,7 +57,7 @@ public class CartController {
 
     @PostMapping(value = "update", produces = "application/json")
     //cnt is a new number of sku
-    public ResponseEntity<?> updateSkuCnt(@RequestParam("sku_id") Long skuId, @RequestParam("cnt") int cnt,
+    public ResponseEntity<?> updateSkuCnt(@RequestParam("skuId") Long skuId, @RequestParam("cnt") int cnt,
                                           @RequestParam("isRetail") boolean isRetail) {
         Map<Object, Object> model = new HashMap<>();
         try {
@@ -77,7 +77,7 @@ public class CartController {
     }
 
     @PostMapping(value = "delete", produces = "application/json")
-    public ResponseEntity<?> deleteUserSkuInCart(@RequestParam("sku_id") Long skuId,
+    public ResponseEntity<?> deleteUserSkuInCart(@RequestParam("skuId") Long skuId,
                                                  @RequestParam("isRetail") boolean isRetail) {
         Map<Object, Object> model = new HashMap<>();
         cartService.deleteUserSkuInCart(skuId, isRetail);

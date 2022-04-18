@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import space.rebot.micro.common.dto.MessageDto;
+import space.rebot.micro.marketservice.dto.GroupResponseDTO;
+import space.rebot.micro.marketservice.service.GroupService;
 import space.rebot.micro.userservice.dto.auth.AuthRequestDto;
 import space.rebot.micro.userservice.dto.auth.AuthResponseDto;
 import space.rebot.micro.userservice.dto.auth.CodeRequestDto;
@@ -18,9 +20,12 @@ import space.rebot.micro.userservice.service.UsersService;
 import space.rebot.micro.userservice.validator.PhoneValidator;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("api/v1/")
+@RequestMapping("api/v1/user")
 public class UsersController {
 
     @Autowired
@@ -29,14 +34,17 @@ public class UsersController {
     @Autowired
     private UsersService usersService;
 
-    @GetMapping(value="user", produces="application/json")
+    @Autowired
+    private GroupService groupService;
+
+    @GetMapping(value="", produces="application/json")
     private ResponseEntity<?> getUser(){
         Session session = (Session) context.getAttribute(Session.SESSION);
         User user = session.getUser();
         return new ResponseEntity<>(usersService.getUserDto(user), HttpStatus.OK);
 
     }
-    @PutMapping(value="user", produces="application/json")
+    @PutMapping(value="", produces="application/json")
     private ResponseEntity<?> updateUser(@NonNull @RequestBody UserDto userDto){
         Session session = (Session) context.getAttribute(Session.SESSION);
         User user = session.getUser();
@@ -49,6 +57,15 @@ public class UsersController {
         }
 
         return new ResponseEntity<>(usersService.getUserDto(user), HttpStatus.OK);
+    }
+
+    @GetMapping(value="groups", produces="application/json")
+    public ResponseEntity<?> getUserGroups() {
+        Map<Object, Object> model = new HashMap<>();
+        List<GroupResponseDTO> groups = groupService.getUserGroups();
+        model.put("success", true);
+        model.put("groups", groups);
+        return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
 }
