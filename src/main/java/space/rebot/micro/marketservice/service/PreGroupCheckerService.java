@@ -18,6 +18,7 @@ import space.rebot.micro.userservice.model.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class PreGroupCheckerService {
@@ -32,7 +33,7 @@ public class PreGroupCheckerService {
     private SkuRepository skuRepository;
 
     //проверяем валидные ли пришли данные
-    public List<Cart> check(String region, User user, Map<Long, Long> skuGroups) throws CartCheckException, SkuGroupMatchException {
+    public List<Cart> check(String region, User user, Map<Long, UUID> skuGroups) throws CartCheckException, SkuGroupMatchException {
         List<Long> invalidGroupSkuId = checkSkuGroups(skuGroups);
         List<Cart> carts = checkUserCart(region, user);
         if (invalidGroupSkuId.isEmpty()) {
@@ -49,9 +50,9 @@ public class PreGroupCheckerService {
 
 
     // проверка, что все группы существуют и состоят из данного товара
-    private List<Long> checkSkuGroups(Map<Long, Long> skuGroups) {
+    private List<Long> checkSkuGroups(Map<Long, UUID> skuGroups) {
         List<Long> invalidGroupSkuId = new ArrayList<>();
-        for (Map.Entry<Long, Long> skuGroup : skuGroups.entrySet()) {
+        for (Map.Entry<Long, UUID> skuGroup : skuGroups.entrySet()) {
             Group group = groupRepository.getGroup(skuGroup.getValue());
             if (group == null) {
                 invalidGroupSkuId.add(skuGroup.getKey());

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import space.rebot.micro.marketservice.model.Group;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
@@ -24,19 +25,19 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     Group getUserGroupBySkuId(@Param("userId") Long userId, @Param("skuId") Long skuId);
 
     @Query(value = "select * from groups g where g.id = :id", nativeQuery = true)
-    Group getGroup(@Param("id") Long groupId);
+    Group getGroup(@Param("id") UUID groupId);
 
     @Query(value = "select group_id from groups_users where group_id = :groupId and user_id = :userId", nativeQuery = true)
-    Long existsUserInGroup(@Param("groupId") Long groupId, @Param("userId") Long userId);
+    Long existsUserInGroup(@Param("groupId") UUID groupId, @Param("userId") Long userId);
 
     @Query(value = "update groups set count = :count where id = :groupId", nativeQuery = true)
     @Modifying
     @Transactional
-    int updateGroupCount(@Param("count") int count, @Param("groupId") Long groupId);
+    int updateGroupCount(@Param("count") int count, @Param("groupId") UUID groupId);
 
     @Modifying
     @Transactional
     @Query(value = "delete from groups_users where group_id = :groupId and user_id = :userId", nativeQuery = true)
-    int deleteUserFromGroup(@Param("groupId") Long groupId, @Param("userId") Long userId);
+    int deleteUserFromGroup(@Param("groupId") UUID groupId, @Param("userId") Long userId);
 
 }

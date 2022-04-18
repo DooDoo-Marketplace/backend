@@ -1,6 +1,7 @@
 package space.rebot.micro.marketservice.model;
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 import space.rebot.micro.userservice.model.User;
 
 import javax.persistence.*;
@@ -13,8 +14,12 @@ public class Group {
 
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    private UUID id;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "sku_id")

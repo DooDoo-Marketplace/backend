@@ -1,6 +1,6 @@
 create table if not exists groups
 (
-    id         bigserial primary key,
+    id         uuid primary key default gen_random_uuid(),
     sku_id     bigint       not null
         constraint group_sku_id_fk references sku,
     count      int        not null,
@@ -11,7 +11,7 @@ create table if not exists groups
 
 create table if not exists groups_users
 (
-    group_id bigint not null
+    group_id uuid not null
         constraint groups_users_group_id_fk references groups,
     user_id  bigint not null
         constraint groups_users_user_id_fk references users,
