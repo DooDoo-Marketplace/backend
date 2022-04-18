@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,7 +55,7 @@ public class GroupService {
     @Autowired
     private GroupMapper groupMapper;
 
-    public List<GroupResponseDTO> findGroups(List<Cart> carts, Map<Long, Long> skuGroup,
+    public List<GroupResponseDTO> findGroups(List<Cart> carts, Map<Long, UUID> skuGroup,
                                              User user, String region) throws PaymentException, GroupSearchException {
         paymentService.spend();
         //ответ для фронта, группа под каждый товар в корзине
@@ -70,7 +71,7 @@ public class GroupService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void find(List<Cart> carts, Map<Long, Long> skuGroup, User user,
+    public void find(List<Cart> carts, Map<Long, UUID> skuGroup, User user,
                      String region, List<Group> groups) {
         for (Cart cart : carts) {
             // для каждого элемента корзины проверяем, если есть ссылка на вступление в группу, то вступаем, а иначе вступаем в рандомную группу
@@ -104,7 +105,7 @@ public class GroupService {
         return group;
     }
 
-    private Group joinGroup(int cnt, User user, Long groupId) {
+    private Group joinGroup(int cnt, User user, UUID groupId) {
         Group group = groupRepository.getGroup(groupId);
         addUserToGroup(group, user, cnt);
         return group;
