@@ -81,9 +81,8 @@ public class GroupService {
             } else {
                 groups.add(joinGroup(skuId, cart.getCount(), region, user));
             }
-            // помечаем товар из корзины в группу и уменьшем кол-во ску на складе
-            cartRepository.updateCartStatus(user.getId(), skuId,
-                    CartStatusEnum.IN_GROUP.getId(), CartStatusEnum.ACTIVE.getId(), false);
+            // помечаем товар из корзины в группу
+            cartRepository.updateCartStatusById(cart.getId(), CartStatusEnum.IN_GROUP.getId());
         }
     }
 
@@ -119,8 +118,6 @@ public class GroupService {
             group.getUsers().add(user);
             group.setCount(group.getCount() + cnt);
             groupRepository.save(group);
-            cartRepository.updateCartStatus(user.getId(), group.getSku().getId(),
-                    CartStatusEnum.IN_GROUP.getId(), CartStatusEnum.ACTIVE.getId(), false);
         } else {
             groupRepository.updateGroupCount(group.getCount() + cnt, group.getId());
             cartRepository.updateCartStatus(user.getId(), group.getSku().getId(),

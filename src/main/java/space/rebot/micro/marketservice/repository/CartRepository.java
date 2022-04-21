@@ -71,4 +71,10 @@ public interface CartRepository extends JpaRepository <Cart, Long> {
             "and c.cart_status_id = :updatedStatusId and c.is_retail = :isRetail", nativeQuery = true)
     int updateCartStatus(@Param("userId") Long userId, @Param("skuId") Long skuId, @Param("exposedStatusId") int exposedStatusId,
                          @Param("updatedStatusId") int updatedStatusId,  @Param("isRetail") boolean isRetail);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update cart c set cart_status_id = :exposedStatusId " +
+            "where c.id = :cartId", nativeQuery = true)
+    int updateCartStatusById(@Param("cartId") Long cartId, @Param("exposedStatusId") int exposedStatusId);
 }
