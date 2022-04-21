@@ -23,4 +23,8 @@
     <changeSet id="insert data to cart" author="gkapelyushok" context="test">
         <sqlFile path="sql/insert-cart.sql" relativeToChangelogFile="true"/>
     </changeSet>
+
+    <changeSet id="insert data to favorite" author="gkapelyushok" context="test">
+        <sqlFile path="sql/insert-users-favorite.sql" relativeToChangelogFile="true"/>
+    </changeSet>
 </databaseChangeLog>
