@@ -50,7 +50,7 @@ public class PreOrderCheckerService {
 
 
     // проверка, что все группы существуют и состоят из данного товара
-    private List<Long> checkSkuGroups(Map<Long, UUID> skuGroups) {
+    public List<Long> checkSkuGroups(Map<Long, UUID> skuGroups) {
         List<Long> invalidGroupSkuId = new ArrayList<>();
         for (Map.Entry<Long, UUID> skuGroup : skuGroups.entrySet()) {
             Group group = groupRepository.getGroup(skuGroup.getValue());
@@ -59,7 +59,7 @@ public class PreOrderCheckerService {
                 continue;
             }
             Sku sku = group.getSku();
-            if (sku.getId() != skuGroup.getKey()) {
+            if (!skuGroup.getKey().equals(sku.getId())) {
                 invalidGroupSkuId.add(skuGroup.getKey());
             }
         }
@@ -82,7 +82,7 @@ public class PreOrderCheckerService {
     }
 
     // проверка, что все товары в корзине в регионе ску
-    private List<Long> checkUserCartRegions(List<Cart> carts, String region) {
+    public List<Long> checkUserCartRegions(List<Cart> carts, String region) {
         List<Long> invalidRegionSkuId = new ArrayList<>();
         carts.forEach(cart -> {
             Sku sku = cart.getSku();
@@ -94,7 +94,7 @@ public class PreOrderCheckerService {
     }
 
     // проверка, что на складе есть такое количество товара
-    private List<Long> checkUserCartSkuCount(List<Cart> carts) {
+    public List<Long> checkUserCartSkuCount(List<Cart> carts) {
         List<Long> invalidCountSkuId = new ArrayList<>();
         carts.forEach(cart -> {
             Sku sku = cart.getSku();
