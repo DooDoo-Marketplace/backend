@@ -1,9 +1,9 @@
 package space.rebot.micro.userservice.dto.auth;
 
-import org.wildfly.common.annotation.NotNull;
+import lombok.NonNull;
 
 public class AuthRequestDto {
-    @NotNull
+    @NonNull
     private String phone;
 
     public String getPhone() {
