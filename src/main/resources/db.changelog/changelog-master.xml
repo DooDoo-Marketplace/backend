@@ -25,4 +25,6 @@
     <include file="changes/DBEB-31-create-group-tables.xml" relativeToChangelogFile="true"/>
     <include file="changes/data.xml" relativeToChangelogFile="true"/>
     <include file="changes/DBEB-30-create-review-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/DBEB-15-create-dictionary-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/DBEB-15-create-dictionary-skus-table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
