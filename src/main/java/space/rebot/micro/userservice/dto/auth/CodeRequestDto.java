@@ -1,16 +1,15 @@
 package space.rebot.micro.userservice.dto.auth;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import org.wildfly.common.annotation.NotNull;
+import lombok.NonNull;
 
 @JsonView
 public class CodeRequestDto {
     @JsonView
-    @NotNull
+    @NonNull
     private String phone;
 
     @JsonView
-    @NotNull
     private int code;
 
     public int getCode() {
