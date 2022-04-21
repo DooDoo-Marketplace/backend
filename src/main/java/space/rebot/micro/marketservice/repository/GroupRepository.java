@@ -10,7 +10,7 @@ import space.rebot.micro.marketservice.model.Group;
 import java.util.List;
 import java.util.UUID;
 
-public interface GroupRepository extends JpaRepository<Group, Long> {
+public interface GroupRepository extends JpaRepository<Group, UUID> {
 
     @Query(value = "select * from groups g where g.sku_id = :skuId and region = :region", nativeQuery = true)
     Group getGroup(@Param("skuId") Long skuId, @Param("region") String region);
@@ -28,7 +28,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     Group getGroup(@Param("id") UUID groupId);
 
     @Query(value = "select group_id from groups_users where group_id = :groupId and user_id = :userId", nativeQuery = true)
-    Long existsUserInGroup(@Param("groupId") UUID groupId, @Param("userId") Long userId);
+    Group existsUserInGroup(@Param("groupId") UUID groupId, @Param("userId") Long userId);
 
     @Query(value = "update groups set count = :count where id = :groupId", nativeQuery = true)
     @Modifying

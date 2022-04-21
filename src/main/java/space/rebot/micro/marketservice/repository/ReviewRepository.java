@@ -10,7 +10,7 @@ import space.rebot.micro.marketservice.model.Review;
 import java.util.List;
 import java.util.UUID;
 
-public interface ReviewRepository extends JpaRepository<Review, Long> {
+public interface ReviewRepository extends JpaRepository<Review, UUID> {
     @Query(value = "select * from reviews where sku_id = :skuId", nativeQuery = true)
     List<Review> getReviewBySkuId(@Param("skuId") Long skuId);
 
@@ -24,7 +24,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Modifying
     @Transactional
     @Query(value = "delete from reviews r where r.id = :id", nativeQuery = true)
-    int deleteById(@Param("id") UUID id);
+    void deleteById(@Param("id") UUID id);
 
 
     @Query(value = "select * from reviews where id = :id", nativeQuery = true)

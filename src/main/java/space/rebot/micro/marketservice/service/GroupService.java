@@ -77,9 +77,9 @@ public class GroupService {
             // для каждого элемента корзины проверяем, если есть ссылка на вступление в группу, то вступаем, а иначе вступаем в рандомную группу
             Long skuId = cart.getSku().getId();
             if (skuGroup.containsKey(skuId)) {
-                groups.add(joinGroup(cart.getCount(), user, skuGroup.get(skuId)));
+                groups.add(joinGroup(cart.getCount(), user, skuGroup.get(skuId), cart));
             } else {
-                groups.add(joinGroup(skuId, cart.getCount(), region, user));
+                groups.add(joinGroup(skuId, cart.getCount(), region, user, cart));
             }
             // помечаем товар из корзины в группу
             cartRepository.updateCartStatusById(cart.getId(), CartStatusEnum.IN_GROUP.getId());
@@ -91,7 +91,7 @@ public class GroupService {
     }
 
 
-    private Group joinGroup(Long skuId, int cnt, String region, User user) {
+    private Group joinGroup(Long skuId, int cnt, String region, User user, Cart cart) {
         Group group = groupRepository.getGroup(skuId, region);
         if (group == null) {
             group = new Group(skuRepository.getSkuById(skuId), dateService.utcNow(),
@@ -99,18 +99,18 @@ public class GroupService {
             group.getUsers().add(user);
             groupRepository.save(group);
         } else {
-            addUserToGroup(group, user, cnt);
+            addUserToGroup(group, user, cnt, cart);
         }
         return group;
     }
 
-    private Group joinGroup(int cnt, User user, UUID groupId) {
+    private Group joinGroup(int cnt, User user, UUID groupId, Cart cart) {
         Group group = groupRepository.getGroup(groupId);
-        addUserToGroup(group, user, cnt);
+        addUserToGroup(group, user, cnt, cart);
         return group;
     }
 
-    private void addUserToGroup(Group group, User user, int cnt) {
+    private void addUserToGroup(Group group, User user, int cnt, Cart cart) {
          /* если пользователя нет в этой группе, то добавляем его туда и помечаем его товар из корзины, что он в группе
          увеличиваем количество товара в группе
          если уже есть в этой группе, то в корзине удаляем этот товар и увеличиваем, количество товара в группе у этого пользователя*/
@@ -120,8 +120,7 @@ public class GroupService {
             groupRepository.save(group);
         } else {
             groupRepository.updateGroupCount(group.getCount() + cnt, group.getId());
-            cartRepository.updateCartStatus(user.getId(), group.getSku().getId(),
-                    CartStatusEnum.DELETED.getId(), CartStatusEnum.ACTIVE.getId(), false);
+            cartRepository.updateCartStatusById(cart.getId(), CartStatusEnum.DELETED.getId());
             cartRepository.updateSkuCnt(user.getId(), group.getSku().getId(), cnt,
                     CartStatusEnum.IN_GROUP.getId(), false);
         }
