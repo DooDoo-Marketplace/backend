@@ -141,8 +141,7 @@ public class GroupService {
         } else {
             groupRepository.save(group);
         }
-        cartRepository.updateCartStatus(user.getId(), sku.getId(), CartStatusEnum.DELETED.getId(),
-                CartStatusEnum.IN_GROUP.getId(), false);
+        cartRepository.updateCartStatusById(cart.getId(), CartStatusEnum.DELETED.getId());
         skuRepository.updateSkuCount(cart.getCount(), sku.getId());
     }
 
