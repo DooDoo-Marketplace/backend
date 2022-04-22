@@ -14,10 +14,7 @@ import space.rebot.micro.userservice.model.Session;
 import space.rebot.micro.userservice.model.User;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("api/v1/group/")
@@ -69,11 +66,11 @@ public class GroupController {
     }
 
     @PostMapping(value = "leave", produces = "application/json")
-    public ResponseEntity<?> leaveGroup(@RequestParam("skuId") Long skuId) {
+    public ResponseEntity<?> leaveGroup(@RequestParam("groupId") UUID groupId) {
         Map<Object, Object> model = new HashMap<>();
         try {
-            groupService.leaveGroup(skuId);
-        } catch (WrongUserException e) {
+            groupService.leaveGroup(groupId);
+        } catch (InvalidGroupException e) {
             model.put("success", false);
             model.put("message", e.getMessage());
             return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);

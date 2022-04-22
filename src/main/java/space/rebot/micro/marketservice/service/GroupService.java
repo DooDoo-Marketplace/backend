@@ -8,12 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import space.rebot.micro.marketservice.dto.GroupRequestDTO;
 import space.rebot.micro.marketservice.dto.GroupResponseDTO;
 import space.rebot.micro.marketservice.enums.CartStatusEnum;
-import space.rebot.micro.marketservice.exception.GroupSearchException;
-import space.rebot.micro.marketservice.exception.PaymentException;
-import space.rebot.micro.marketservice.exception.WrongUserException;
+import space.rebot.micro.marketservice.exception.*;
 import space.rebot.micro.marketservice.mapper.GroupMapper;
 import space.rebot.micro.marketservice.model.Cart;
 import space.rebot.micro.marketservice.model.Group;
+import space.rebot.micro.marketservice.model.Sku;
 import space.rebot.micro.marketservice.repository.CartRepository;
 import space.rebot.micro.marketservice.repository.GroupRepository;
 import space.rebot.micro.marketservice.repository.SkuRepository;
@@ -128,20 +127,25 @@ public class GroupService {
     }
 
     @Transactional
-    public void leaveGroup(Long skuId) throws WrongUserException {
+    public void leaveGroup(UUID groupId) throws InvalidGroupException{
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
-        Cart cart = cartRepository.getCartIdBySkuCartStatus(user.getId(), skuId,
-                CartStatusEnum.IN_GROUP.getId(), false);
-        if (cart == null) {
-            throw new WrongUserException("WRONG_USER");
+        Group group = groupRepository.getGroupByUserIdAndGroupId(groupId, user.getId());
+        if (group == null) {
+            throw new InvalidGroupException("INVALID_GROUP");
         }
-        Group group = groupRepository.getUserGroupBySkuId(user.getId(), skuId);
+        Sku sku = group.getSku();
+        Cart cart = cartRepository.getCartIdBySkuCartStatus(user.getId(), sku.getId(),
+                CartStatusEnum.IN_GROUP.getId(), false);
         groupRepository.deleteUserFromGroup(group.getId(), user.getId());
         group.setCount(group.getCount() - cart.getCount());
-        groupRepository.save(group);
-        cartRepository.updateCartStatus(user.getId(), skuId, CartStatusEnum.DELETED.getId(),
+        if (group.getCount() == 0){
+            groupRepository.delete(group);
+        }else{
+            groupRepository.save(group);
+        }
+        cartRepository.updateCartStatus(user.getId(), sku.getId(), CartStatusEnum.DELETED.getId(),
                 CartStatusEnum.IN_GROUP.getId(), false);
-        skuRepository.updateSkuCount(cart.getCount(), skuId);
+        skuRepository.updateSkuCount(cart.getCount(), sku.getId());
     }
 
     public List<GroupResponseDTO> getUserGroups() {
