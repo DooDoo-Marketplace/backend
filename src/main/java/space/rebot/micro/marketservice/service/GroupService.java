@@ -21,10 +21,7 @@ import space.rebot.micro.userservice.model.User;
 import space.rebot.micro.userservice.service.DateService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -127,20 +124,21 @@ public class GroupService {
     }
 
     @Transactional
-    public void leaveGroup(UUID groupId) throws InvalidGroupException{
+    public void leaveGroup(UUID groupId) throws InvalidGroupException {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
-        Group group = groupRepository.getGroupByUserIdAndGroupId(groupId, user.getId());
-        if (group == null) {
-            throw new InvalidGroupException("INVALID_GROUP");
-        }
+        Set<Group> userGroups = new HashSet<>(groupRepository.getUserGroups(user.getId()));
+
+        Group group = userGroups.stream().filter(g -> g.getId().equals(groupId)).findFirst()
+                .orElseThrow(() -> new InvalidGroupException("INVALID_GROUP"));
+
         Sku sku = group.getSku();
         Cart cart = cartRepository.getCartIdBySkuCartStatus(user.getId(), sku.getId(),
                 CartStatusEnum.IN_GROUP.getId(), false);
         groupRepository.deleteUserFromGroup(group.getId(), user.getId());
         group.setCount(group.getCount() - cart.getCount());
-        if (group.getCount() == 0){
+        if (group.getCount() == 0) {
             groupRepository.delete(group);
-        }else{
+        } else {
             groupRepository.save(group);
         }
         cartRepository.updateCartStatus(user.getId(), sku.getId(), CartStatusEnum.DELETED.getId(),
