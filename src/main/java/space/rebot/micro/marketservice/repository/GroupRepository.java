@@ -27,7 +27,7 @@ public interface GroupRepository extends JpaRepository<Group, UUID> {
     @Query(value = "select * from groups g where g.id = :id", nativeQuery = true)
     Group getGroup(@Param("id") UUID groupId);
 
-    @Query(value = "select group_id from groups_users where group_id = :groupId and user_id = :userId", nativeQuery = true)
+    @Query(value = "select * from groups_users where group_id = :groupId and user_id = :userId", nativeQuery = true)
     Group existsUserInGroup(@Param("groupId") UUID groupId, @Param("userId") Long userId);
 
     @Query(value = "update groups set count = :count where id = :groupId", nativeQuery = true)

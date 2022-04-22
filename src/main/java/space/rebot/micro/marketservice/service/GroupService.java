@@ -10,6 +10,7 @@ import space.rebot.micro.marketservice.dto.GroupResponseDTO;
 import space.rebot.micro.marketservice.enums.CartStatusEnum;
 import space.rebot.micro.marketservice.exception.GroupSearchException;
 import space.rebot.micro.marketservice.exception.PaymentException;
+import space.rebot.micro.marketservice.exception.WrongUserException;
 import space.rebot.micro.marketservice.mapper.GroupMapper;
 import space.rebot.micro.marketservice.model.Cart;
 import space.rebot.micro.marketservice.model.Group;
@@ -127,10 +128,13 @@ public class GroupService {
     }
 
     @Transactional
-    public void leaveGroup(Long skuId) {
+    public void leaveGroup(Long skuId) throws WrongUserException {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
         Cart cart = cartRepository.getCartIdBySkuCartStatus(user.getId(), skuId,
                 CartStatusEnum.IN_GROUP.getId(), false);
+        if (cart == null) {
+            throw new WrongUserException("WRONG_USER");
+        }
         Group group = groupRepository.getUserGroupBySkuId(user.getId(), skuId);
         groupRepository.deleteUserFromGroup(group.getId(), user.getId());
         group.setCount(group.getCount() - cart.getCount());
