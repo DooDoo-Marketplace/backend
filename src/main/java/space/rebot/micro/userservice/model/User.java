@@ -3,9 +3,7 @@ package space.rebot.micro.userservice.model;
 import space.rebot.micro.marketservice.model.Sku;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 
 @Entity
@@ -35,18 +33,9 @@ public class User {
     )
     List<Role> roles;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
-    @JoinTable(
-            name = "users_favorite",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "favorite_id") }
-    )
-    List<Sku> favorite;
-
 
     public User(){
         this.roles = new LinkedList<>();
-        this.favorite = new LinkedList<>();
     }
 
     public long getId() {
@@ -116,13 +105,5 @@ public class User {
 
     public void addRole(Role role){
         this.roles.add(role);
-    }
-
-    public List<Sku> getFavorite() {
-        return favorite;
-    }
-
-    public void setFavorite(List<Sku> favorite) {
-        this.favorite = favorite;
     }
 }
