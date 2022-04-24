@@ -15,17 +15,13 @@ public interface UsersRepository extends JpaRepository<User, Long> {
     User getUserByPhone(String phone);
     User getUserById(Long id);
 
-    @Query(value = "select favorite_id from users_favorite uf " +
-            "where uf.user_id = :userId", nativeQuery = true)
-    List<Long> getFavoriteIdsByUserId(@Param("userId") Long userId);
-
     @Modifying
     @Transactional
-    @Query(value = "insert into users_favorite (user_id, favorite_id) values (:userId, :skuId)", nativeQuery = true)
+    @Query(value = "insert into users_favorite (user_id, sku_id) values (:userId, :skuId)", nativeQuery = true)
     void addFavoriteByUserIdAndSkuId(@Param("userId") Long userId, @Param("skuId") Long skuId);
 
     @Modifying
     @Transactional
-    @Query(value = "delete from users_favorite uf where uf.user_id = :userId and favorite_id = :favoriteId", nativeQuery = true)
-    int deleteFavoriteByUserIdAndFavoriteId(@Param("userId") Long userId, @Param("favoriteId") Long favoriteId);
+    @Query(value = "delete from users_favorite uf where uf.user_id = :userId and sku_id = :skuId", nativeQuery = true)
+    int deleteFavoriteByUserIdAndFavoriteId(@Param("userId") Long userId, @Param("skuId") Long skuId);
 }

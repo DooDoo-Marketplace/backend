@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import space.rebot.micro.marketservice.dto.SkuDTO;
-import space.rebot.micro.marketservice.dto.SkuIdDTO;
 import space.rebot.micro.marketservice.exception.SkuNotFoundException;
 import space.rebot.micro.marketservice.mapper.SkuMapper;
 import space.rebot.micro.marketservice.service.FavoriteService;
@@ -13,10 +12,9 @@ import space.rebot.micro.marketservice.service.FavoriteService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/v1/")
+@RequestMapping("api/v1/favorite")
 public class FavoriteController {
     @Autowired
     private FavoriteService favoriteService;
@@ -24,35 +22,39 @@ public class FavoriteController {
     @Autowired
     private SkuMapper skuMapper;
 
-    @GetMapping(value = "favorite", produces = "application/json")
+    @GetMapping(value = "get", produces = "application/json")
     public ResponseEntity<?> getFavorite() {
         Map<Object, Object> model = new HashMap<>();
-        List<SkuDTO> skuDTOList = favoriteService.getUserFavorite().stream()
-                .map(sku -> skuMapper.mapToSkuDto(sku))
-                .collect(Collectors.toList());
+        List<SkuDTO> skuDTOList = favoriteService.getUserFavorite();
         model.put("success", true);
         model.put("favorite", skuDTOList);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
-    @PostMapping(value = "favorite", produces = "application/json")
-    public ResponseEntity<?> addFavorite(@RequestBody SkuIdDTO skuIdDTO) {
+    @PostMapping(value = "add", produces = "application/json")
+    public ResponseEntity<?> addFavorite(@RequestParam("skuId") Long skuId) {
         Map<Object, Object> model = new HashMap<>();
         try {
-            favoriteService.addFavorite(skuIdDTO.getSkuId());
+            favoriteService.addFavorite(skuId);
         } catch (SkuNotFoundException e) {
             model.put("success", false);
-            model.put("message", "Sku not found");
+            model.put("message", "SKU_NOT_FOUND");
             return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         }
         model.put("success", true);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "favorite", produces = "application/json")
-    public ResponseEntity<?> deleteFavorite(@RequestBody SkuIdDTO skuIdDTO) {
+    @PostMapping(value = "delete", produces = "application/json")
+    public ResponseEntity<?> deleteFavorite(@RequestParam("skuId") Long skuId) {
         Map<Object, Object> model = new HashMap<>();
-        favoriteService.deleteFavorite(skuIdDTO.getSkuId());
+        try {
+            favoriteService.deleteFavorite(skuId);
+        } catch (SkuNotFoundException e) {
+            model.put("success", false);
+            model.put("message", "SKU_NOT_FOUND");
+            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
+        }
         model.put("success", true);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
