@@ -28,7 +28,8 @@ public class PermissionsConfig {
                 ".*/api/v1/group.*",
                 ".*/api/v1/user.*",
                 ".*/api/v1/auth/logout.*",
-                ".*/api/v1/review.*"
+                ".*/api/v1/review.*",
+                ".*/api/v1/favorite.*"
         };
 
         //ADMIN permissions

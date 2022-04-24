@@ -19,5 +19,8 @@ public interface SkuRepository extends JpaRepository<Sku, Long> {
     @Query(value = "select * from sku s where s.id in :ids", nativeQuery = true)
     List<Sku> getSkusByIds(@Param("ids") List<Long> ids);
 
+    @Query(value = "select * from sku s where s.id in (select sku_id from users_favorite uf where uf.user_id = :userId)", nativeQuery = true)
+    List<Sku> getFavoriteSkusByUserId(@Param("userId") Long userId);
+
     Sku getSkuById(Long id);
 }
