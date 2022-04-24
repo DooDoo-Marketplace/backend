@@ -3,6 +3,7 @@ package space.rebot.micro.marketservice.service;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import space.rebot.micro.marketservice.dto.GroupResponseDTO;
@@ -26,7 +27,8 @@ import java.util.stream.Collectors;
 @Service
 public class GroupService {
 
-    private final int groupHoursLifeTime = 24;
+    @Value("${groups.group-life-time:24}")
+    private int groupHoursLifeTime;
 
     private final Logger logger = LogManager.getLogger("MyLogger");
 
@@ -43,17 +45,13 @@ public class GroupService {
     private DateService dateService;
 
     @Autowired
-    private PaymentService paymentService;
-
-    @Autowired
     private HttpServletRequest context;
 
     @Autowired
     private GroupMapper groupMapper;
 
     public List<GroupResponseDTO> findGroups(List<Cart> carts, Map<Long, UUID> skuGroup,
-                                             User user, String region) throws PaymentException, GroupSearchException {
-        paymentService.spend();
+                                             User user, String region) throws GroupSearchException {
         //ответ для фронта, группа под каждый товар в корзине
         List<Group> groups = new ArrayList<>();
         try {
@@ -123,8 +121,7 @@ public class GroupService {
     }
 
     @Transactional
-    public void leaveGroup(UUID groupId) throws InvalidGroupException {
-        User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
+    public void leaveGroup(UUID groupId, User user) throws InvalidGroupException {
         Set<Group> userGroups = new HashSet<>(groupRepository.getUserGroups(user.getId()));
 
         Group group = userGroups.stream().filter(g -> g.getId().equals(groupId)).findFirst()
@@ -144,8 +141,9 @@ public class GroupService {
         skuRepository.updateSkuCount(cart.getCount(), sku.getId());
     }
 
-    public List<GroupResponseDTO> getUserGroups() {
-        User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
-        return groupRepository.getUserGroups(user.getId()).stream().map(groupMapper::mapToDTO).collect(Collectors.toList());
+    public List<GroupResponseDTO> getUserGroups(User user) {
+        return groupRepository.getUserGroups(user.getId())
+                .stream().map(groupMapper::mapToDTO)
+                .collect(Collectors.toList());
     }
 }
