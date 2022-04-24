@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.IdClass;
 import java.io.Serializable;
-import java.util.Objects;
 
 @Data
 @NoArgsConstructor
@@ -15,17 +14,4 @@ import java.util.Objects;
 public class WordSkusPk implements Serializable {
     private long dictionary;
     private long sku;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        WordSkusPk that = (WordSkusPk) o;
-        return dictionary == that.dictionary && sku == that.sku;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(dictionary, sku);
-    }
 }
