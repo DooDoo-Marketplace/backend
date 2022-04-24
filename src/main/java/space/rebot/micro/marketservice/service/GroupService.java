@@ -45,9 +45,6 @@ public class GroupService {
     private DateService dateService;
 
     @Autowired
-    private HttpServletRequest context;
-
-    @Autowired
     private GroupMapper groupMapper;
 
     public List<GroupResponseDTO> findGroups(List<Cart> carts, Map<Long, UUID> skuGroup,
