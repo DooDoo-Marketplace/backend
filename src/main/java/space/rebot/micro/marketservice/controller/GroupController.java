@@ -1,14 +1,12 @@
 package space.rebot.micro.marketservice.controller;
 
+import liquibase.pro.packaged.P;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import space.rebot.micro.marketservice.dto.GroupRequestDTO;
-import space.rebot.micro.marketservice.exception.CartCheckException;
-import space.rebot.micro.marketservice.exception.GroupSearchException;
-import space.rebot.micro.marketservice.exception.PaymentException;
-import space.rebot.micro.marketservice.exception.SkuGroupMatchException;
+import space.rebot.micro.marketservice.exception.*;
 import space.rebot.micro.marketservice.model.Cart;
 import space.rebot.micro.marketservice.service.GroupService;
 import space.rebot.micro.marketservice.service.PreGroupCheckerService;
@@ -16,10 +14,7 @@ import space.rebot.micro.userservice.model.Session;
 import space.rebot.micro.userservice.model.User;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("api/v1/group/")
@@ -71,9 +66,16 @@ public class GroupController {
     }
 
     @PostMapping(value = "leave", produces = "application/json")
-    public ResponseEntity<?> leaveGroup(@RequestParam("skuId") Long skuId) {
+    public ResponseEntity<?> leaveGroup(@RequestParam("groupId") UUID groupId) {
         Map<Object, Object> model = new HashMap<>();
-        groupService.leaveGroup(skuId);
+        try {
+            groupService.leaveGroup(groupId);
+        } catch (InvalidGroupException e) {
+            model.put("success", false);
+            model.put("message", e.getMessage());
+            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
+        }
+
         model.put("success", true);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
