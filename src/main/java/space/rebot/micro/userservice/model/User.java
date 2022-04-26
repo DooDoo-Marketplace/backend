@@ -1,9 +1,9 @@
 package space.rebot.micro.userservice.model;
 
+import space.rebot.micro.marketservice.model.Sku;
+
 import javax.persistence.*;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 
 @Entity
@@ -32,9 +32,12 @@ public class User {
             inverseJoinColumns = { @JoinColumn(name = "roles_id") }
     )
     List<Role> roles;
+
+
     public User(){
         this.roles = new LinkedList<>();
     }
+
     public long getId() {
         return id;
     }

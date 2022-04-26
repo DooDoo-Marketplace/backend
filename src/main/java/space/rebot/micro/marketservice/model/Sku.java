@@ -26,7 +26,7 @@ public class Sku {
     @Column(name = "weight", nullable = false)
     private double weight;
     @Column(name = "retail_price")
-    private double retailPrice;
+    private Double retailPrice;
     @Column(name = "group_price", nullable = false)
     private double groupPrice;
     @Column(name = "percent", nullable = false)
