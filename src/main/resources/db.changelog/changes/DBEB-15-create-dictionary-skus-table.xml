@@ -5,7 +5,7 @@
         xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-    <changeSet id="12" author="Bulat Khafizov">
+    <changeSet id="13" author="Bulat Khafizov">
         <sqlFile path="sql/create-dictionary-skus-table.sql" relativeToChangelogFile="true"/>
         <rollback>
             <sqlFile path="sql-rollback/drop-dictionary-skus-table.sql" relativeToChangelogFile="true"/>

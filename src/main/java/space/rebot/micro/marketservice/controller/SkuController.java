@@ -5,26 +5,51 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import space.rebot.micro.marketservice.dto.SkuDTO;
+import space.rebot.micro.marketservice.mapper.SkuMapper;
 import space.rebot.micro.marketservice.model.Sku;
-import space.rebot.micro.marketservice.service.DictionaryService;
+import space.rebot.micro.marketservice.service.SkuService;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/sku")
 public class SkuController {
 
     @Autowired
-    private DictionaryService dictionaryService;
+    private SkuService skuService;
+
+    @Autowired
+    private SkuMapper skuMapper;
 
     @GetMapping(value = "get", produces = "application/json")
-    private ResponseEntity<?> getByName(@NonNull @RequestParam("name") String name) {
+    private ResponseEntity<?> getByName(@NonNull @RequestParam("name") String name, @RequestParam(value = "region", required = false) String region,
+                                        @RequestParam(value = "lowPrice", required = false) String lowPrice,
+                                        @RequestParam(value = "upperPrice", required = false) String upperPrice,
+                                        @RequestParam(value = "rating", required = false) String rating) {
         Map<Object, Object> model = new HashMap<>();
-        List<Sku> skus = dictionaryService.findSimilarWords(name);
+        try {
+            String reg = "";
+            if (region != null) reg = region;
+            double lPrice = -1.0;
+            if (lowPrice != null) lPrice = Double.parseDouble(lowPrice);
+            double uPrice = 1000000.0;
+            if (upperPrice != null) uPrice = Double.parseDouble(upperPrice);
+            double rate = 0.0;
+            if (rating != null) rate = Double.parseDouble(rating);
+            List<SkuDTO> skusDTO = skuService.findSimilarWords(name, reg, lPrice, uPrice, rate).stream()
+                    .map(sku -> skuMapper.mapToSkuDto(sku))
+                    .collect(Collectors.toList());
+            model.put("sku", skusDTO);
+        } catch (NumberFormatException e) {
+            model.put("success", false);
+            model.put("message", "Invalid request parameters");
+            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
+        }
         model.put("success", true);
-        model.put("sku", skus);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 }
