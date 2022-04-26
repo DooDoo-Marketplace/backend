@@ -30,6 +30,7 @@ public class PermissionsConfig {
                 ".*/api/v1/user.*",
                 ".*/api/v1/auth/logout.*",
                 ".*/api/v1/review.*",
+                ".*/api/v1/favorite.*",
                 ".*/api/v1/sku/get.*"
         };
 
