@@ -95,11 +95,7 @@ public class RequestLoggingFilter implements Filter {
         ContentCachingResponseWrapper responseCacheWrapperObject =
                 new ContentCachingResponseWrapper((HttpServletResponse) servletResponse);
 
-//        try {
-            filterChain.doFilter(wrappedRequest, responseCacheWrapperObject);
-//        } catch (Exception e) {
-//            logger.error(e.getStackTrace());
-//        }
+        filterChain.doFilter(wrappedRequest, responseCacheWrapperObject);
 
 
         byte[] responseArray = responseCacheWrapperObject.getContentAsByteArray();

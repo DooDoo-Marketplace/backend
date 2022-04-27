@@ -1,1 +1,1 @@
-drop table images;
+drop table if exists images;

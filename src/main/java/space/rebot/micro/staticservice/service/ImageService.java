@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import space.rebot.micro.staticservice.exception.ImageNotFoundException;
 import space.rebot.micro.staticservice.model.Image;
 import space.rebot.micro.staticservice.repository.ImagesRepository;
 import space.rebot.micro.userservice.model.Session;
@@ -29,16 +30,19 @@ public class ImageService {
     @Autowired
     private ImagesRepository imagesRepository;
 
-    @Value("${upload.path.dev}")
+    @Value("${upload.path}")
     private String uploadPath;
 
-    public void deleteImage(UUID id) {
-        //User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
-        imagesRepository.deleteById(id);
+    public void deleteImage(UUID id) throws ImageNotFoundException {
+        try {
+            imagesRepository.deleteById(id);
+        } catch (Exception e)  {
+            throw new ImageNotFoundException();
+        }
     }
     public String addImage(MultipartFile file) {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
-        String hashSum = "123";//null;
+        String hashSum = "123";
 //        try {
             // TODO CREATE HASH SUM
 //            MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -49,7 +53,7 @@ public class ImageService {
 //            e.printStackTrace();
 //        }
         Image image = new Image(
-                user.getId() + "_" + file.getName(),
+                user.getId() + "_" + file.getOriginalFilename(),
                 hashSum,
                 file.getSize(),
                 file.getContentType(),
@@ -57,7 +61,7 @@ public class ImageService {
                 dateService.utcNow()
                 );
         try {
-            file.transferTo(new File(uploadPath + "/" + user.getId() + "_" + file.getName()));
+            file.transferTo(new File(uploadPath + "/" + user.getId() + "_" + file.getOriginalFilename()));
             Image saved = imagesRepository.save(image);
             return saved.getId().toString();
         } catch (Exception e) {
