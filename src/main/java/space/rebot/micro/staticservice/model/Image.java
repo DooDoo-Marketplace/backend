@@ -15,7 +15,7 @@ import java.util.UUID;
 public class Image {
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Type(type="pg-uuid")
     private UUID id;
 
@@ -26,16 +26,16 @@ public class Image {
     private String hashsum;
 
     @Column(name = "filesize")
-    private int filesize;
+    private long filesize;
 
     @Column(name = "mimetype")
     private String mimetype;
 
-    @Column(name = "encoding")
-    private String encoding;
+//    @Column(name = "encoding")
+//    private String encoding;
 
-    @Column(name = "extname")
-    private String extname;
+//    @Column(name = "extname")
+//    private String extname;
 
     @Column(name = "created_at")
     private Date createdAt;
@@ -46,12 +46,13 @@ public class Image {
     public Image() {
     }
 
-    public Image(String filename, String hashsum, int filesize, String mimetype, String encoding) {
+    public Image(String filename, String hashsum, long filesize, String mimetype, Date createdAt, Date updatedAt) {
         this.filename = filename;
         this.hashsum = hashsum;
         this.filesize = filesize;
         this.mimetype = mimetype;
-        this.encoding = encoding;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public UUID getId() {
@@ -78,11 +79,11 @@ public class Image {
         this.hashsum = hashsum;
     }
 
-    public int getFilesize() {
+    public long getFilesize() {
         return filesize;
     }
 
-    public void setFilesize(int filesize) {
+    public void setFilesize(long filesize) {
         this.filesize = filesize;
     }
 
@@ -94,21 +95,21 @@ public class Image {
         this.mimetype = mimetype;
     }
 
-    public String getEncoding() {
-        return encoding;
-    }
+//    public String getEncoding() {
+//        return encoding;
+//    }
+//
+//    public void setEncoding(String encoding) {
+//        this.encoding = encoding;
+//    }
 
-    public void setEncoding(String encoding) {
-        this.encoding = encoding;
-    }
-
-    public String getExtname() {
-        return extname;
-    }
-
-    public void setExtname(String extname) {
-        this.extname = extname;
-    }
+//    public String getExtname() {
+//        return extname;
+//    }
+//
+//    public void setExtname(String extname) {
+//        this.extname = extname;
+//    }
 
     public Date getCreatedAt() {
         return createdAt;

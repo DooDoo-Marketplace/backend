@@ -28,14 +28,13 @@ public class ImageController {
     public ImageController() {
     }
 
-    @PostMapping(value = "addImage"/*, produces=MediaType.IMAGE_JPEG_VALUE/*, produces = "application/json"/*, consumes = MediaType.APPLICATION_JSON_VALUEconsumes = {MULTIPART_FORM_DATA_VALUE}*/)
+    @PostMapping(value = "addImage")
     private ResponseEntity<?> add(
             @RequestParam("file") MultipartFile file
     ) {
-//        System.out.println(file.getOriginalFilename());
         Map<Object, Object> model = new HashMap<>();
-        String response = imageService.save(file);
-        model.put("filename uploading", response);
+        String response = imageService.addImage(file);
+        model.put("file id", response);
         model.put("success", true);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
@@ -51,11 +50,4 @@ public class ImageController {
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
-    @GetMapping(value = "testing")
-    private ResponseEntity<?> testingUUID() {
-        Map<Object, Object> model = new HashMap<>();
-        imageService.test();
-
-        return new ResponseEntity<>(model, HttpStatus.OK);
-    }
 }
