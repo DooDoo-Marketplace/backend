@@ -1,1 +1,1 @@
-DROP table cart;
+drop table if exists cart;

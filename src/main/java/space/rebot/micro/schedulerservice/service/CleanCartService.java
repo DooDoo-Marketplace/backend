@@ -1,8 +1,7 @@
 package space.rebot.micro.schedulerservice.service;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import space.rebot.micro.marketservice.enums.CartStatusEnum;
@@ -12,27 +11,18 @@ import java.util.List;
 
 @Service
 public class CleanCartService {
-    private final Logger logger = LogManager.getLogger("MyLogger");
-    private final int BATCH = 10000;
+    @Value("${scheduler.delete.batch}")
+    private int BATCH;
 
     @Autowired
     private CartRepository cartRepository;
 
     @Transactional
     public void cleanCart() {
-        while (true) {
-            List<Long> ids = cartRepository.getCartByDeletedStatus(CartStatusEnum.DELETED.getId(), BATCH);
-            if (ids.isEmpty()) {
-                break;
-            }
-            int deleted = cartRepository.deleteCartByIdList(ids);
-            if (ids.size() != deleted) {
-                logger.error("Should be deleted " +
-                        ids.size() +
-                        "cart. But there were deleted " +
-                        deleted + "cart.");
-            }
-
-        }
+        List<Long> ids;
+        do {
+            ids = cartRepository.getCartByDeletedStatus(CartStatusEnum.DELETED.getId(), BATCH);
+            cartRepository.deleteCartByIdList(ids);
+        } while (!ids.isEmpty());
     }
 }
