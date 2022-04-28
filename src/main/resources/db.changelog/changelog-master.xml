@@ -22,10 +22,10 @@
     <include file="changes/DBEB-5-create-sku-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/DBEB-27-create-cart-status-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/DBEB-4-create-cart-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/DD-50-create-group-status-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/DBEB-31-create-group-tables.xml" relativeToChangelogFile="true"/>
     <include file="changes/DBEB-37-create-users-favorite-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/DBEB-30-create-review-table.xml" relativeToChangelogFile="true"/>
-    <include file="changes/DD-50-create-group-status-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/data.xml" relativeToChangelogFile="true"/>
 
 

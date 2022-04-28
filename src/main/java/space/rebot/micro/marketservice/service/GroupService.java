@@ -99,7 +99,7 @@ public class GroupService {
 
 
     private Group joinGroup(Long skuId, int cnt, String region, User user, Cart cart) {
-        Group group = groupRepository.getGroup(skuId, region);
+        Group group = groupRepository.getGroup(skuId, region, GroupStatusEnum.ACTIVE.getId());
         if (group == null) {
             group = new Group(skuRepository.getSkuById(skuId), dateService.utcNow(),
                     dateService.addTimeForCurrent(groupHoursLifeTime), cnt, region,
@@ -127,15 +127,15 @@ public class GroupService {
             group.getUsers().add(user);
             group.setCount(group.getCount() + cnt);
             groupRepository.save(group);
-            if (group.getCount() >= group.getSku().getMinCount()) {
-                groupRepository.updateGroupStatus(group.getId(), GroupStatusEnum.EXTRA.getId());
-                startJobsService.setCompletedStatusToGroup(group.getId());
-            }
         } else {
             groupRepository.updateGroupCount(group.getCount() + cnt, group.getId());
             cartRepository.updateCartStatusById(cart.getId(), CartStatusEnum.DELETED.getId());
             cartRepository.updateSkuCnt(user.getId(), group.getSku().getId(), cnt,
                     CartStatusEnum.IN_GROUP.getId(), false);
+        }
+        if (group.getCount() >= group.getSku().getMinCount()) {
+            groupRepository.updateGroupStatus(group.getId(), GroupStatusEnum.EXTRA.getId());
+            startJobsService.setCompletedStatusToGroup(group.getId());
         }
     }
 

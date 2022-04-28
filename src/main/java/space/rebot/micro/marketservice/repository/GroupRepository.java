@@ -12,8 +12,9 @@ import java.util.UUID;
 
 public interface GroupRepository extends JpaRepository<Group, UUID> {
 
-    @Query(value = "select * from groups g where g.sku_id = :skuId and region = :region", nativeQuery = true)
-    Group getGroup(@Param("skuId") Long skuId, @Param("region") String region);
+    @Query(value = "select * from groups g where g.sku_id = :skuId and region = :region" +
+            " and g.group_status_id = :status", nativeQuery = true)
+    Group getGroup(@Param("skuId") Long skuId, @Param("region") String region, @Param("status") int status);
 
     @Transactional
     @Query(value = "select * from groups g where g.id in (select gs.group_id from groups_users gs where gs.user_id = :userId)", nativeQuery = true)

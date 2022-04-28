@@ -9,14 +9,14 @@ import javax.transaction.Transactional;
 import java.util.UUID;
 
 @Service
-public class SetCanceledStatusGroupService {
+public class SetStatusGroupService {
     @Autowired
     private GroupRepository groupRepository;
 
     @Transactional
-    public void setCanceledStatusToGroup(UUID groupId) {
-        if (groupRepository.getGroup(groupId).getGroupStatus().getId() == GroupStatusEnum.ACTIVE.getId()) {
-            groupRepository.updateGroupStatus(groupId, GroupStatusEnum.CANCELED.getId());
+    public void setStatusToGroup(UUID groupId, GroupStatusEnum newStatus, GroupStatusEnum comparedStatus) {
+        if (groupRepository.getGroup(groupId).getGroupStatus().getId() == comparedStatus.getId()) {
+            groupRepository.updateGroupStatus(groupId, newStatus.getId());
         }
     }
 }
