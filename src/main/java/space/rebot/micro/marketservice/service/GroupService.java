@@ -5,17 +5,21 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import space.rebot.micro.marketservice.dto.GroupRequestDTO;
 import space.rebot.micro.marketservice.dto.GroupResponseDTO;
 import space.rebot.micro.marketservice.enums.CartStatusEnum;
-import space.rebot.micro.marketservice.exception.*;
+import space.rebot.micro.marketservice.enums.GroupStatusEnum;
+import space.rebot.micro.marketservice.exception.GroupSearchException;
+import space.rebot.micro.marketservice.exception.InvalidGroupException;
+import space.rebot.micro.marketservice.exception.PaymentException;
 import space.rebot.micro.marketservice.mapper.GroupMapper;
 import space.rebot.micro.marketservice.model.Cart;
 import space.rebot.micro.marketservice.model.Group;
 import space.rebot.micro.marketservice.model.Sku;
 import space.rebot.micro.marketservice.repository.CartRepository;
 import space.rebot.micro.marketservice.repository.GroupRepository;
+import space.rebot.micro.marketservice.repository.GroupStatusRepository;
 import space.rebot.micro.marketservice.repository.SkuRepository;
+import space.rebot.micro.schedulerservice.service.StartJobsService;
 import space.rebot.micro.userservice.model.Session;
 import space.rebot.micro.userservice.model.User;
 import space.rebot.micro.userservice.service.DateService;
@@ -51,6 +55,12 @@ public class GroupService {
 
     @Autowired
     private GroupMapper groupMapper;
+
+    @Autowired
+    private GroupStatusRepository groupStatusRepository;
+
+    @Autowired
+    private StartJobsService startJobsService;
 
     public List<GroupResponseDTO> findGroups(List<Cart> carts, Map<Long, UUID> skuGroup,
                                              User user, String region) throws PaymentException, GroupSearchException {
@@ -92,9 +102,11 @@ public class GroupService {
         Group group = groupRepository.getGroup(skuId, region);
         if (group == null) {
             group = new Group(skuRepository.getSkuById(skuId), dateService.utcNow(),
-                    dateService.addTimeForCurrent(groupHoursLifeTime), cnt, region);
+                    dateService.addTimeForCurrent(groupHoursLifeTime), cnt, region,
+                    groupStatusRepository.getGroupStatus(GroupStatusEnum.ACTIVE.getName()));
             group.getUsers().add(user);
             groupRepository.save(group);
+            startJobsService.setCanceledStatusToGroup(group.getId());
         } else {
             addUserToGroup(group, user, cnt, cart);
         }
@@ -115,6 +127,10 @@ public class GroupService {
             group.getUsers().add(user);
             group.setCount(group.getCount() + cnt);
             groupRepository.save(group);
+            if (group.getCount() >= group.getSku().getMinCount()) {
+                groupRepository.updateGroupStatus(group.getId(), GroupStatusEnum.EXTRA.getId());
+                startJobsService.setCompletedStatusToGroup(group.getId());
+            }
         } else {
             groupRepository.updateGroupCount(group.getCount() + cnt, group.getId());
             cartRepository.updateCartStatusById(cart.getId(), CartStatusEnum.DELETED.getId());
@@ -137,7 +153,7 @@ public class GroupService {
         groupRepository.deleteUserFromGroup(group.getId(), user.getId());
         group.setCount(group.getCount() - cart.getCount());
         if (group.getCount() == 0) {
-            groupRepository.delete(group);
+            groupRepository.updateGroupStatus(group.getId(), GroupStatusEnum.CANCELED.getId());
         } else {
             groupRepository.save(group);
         }

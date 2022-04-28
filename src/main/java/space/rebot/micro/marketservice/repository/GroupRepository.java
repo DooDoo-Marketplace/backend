@@ -40,4 +40,22 @@ public interface GroupRepository extends JpaRepository<Group, UUID> {
     @Query(value = "delete from groups_users where group_id = :groupId and user_id = :userId", nativeQuery = true)
     int deleteUserFromGroup(@Param("groupId") UUID groupId, @Param("userId") Long userId);
 
+    @Modifying
+    @Transactional
+    @Query(value = "update groups set group_status_id = :exposedStatusId " +
+            "where id = :groupId", nativeQuery = true)
+    int updateGroupStatus(@Param("groupId") UUID groupId, @Param("exposedStatusId") int exposedStatusId);
+
+    @Query(value = "select * from groups g where g.group_status_id = :groupStatus limit :count", nativeQuery = true)
+    List<Group> getGroupByStatus(@Param("groupStatus") int status, @Param("count") int count);
+
+    @Modifying
+    @Transactional
+    @Query(value = "delete from groups_users where group_id in :ids " , nativeQuery = true)
+    int deleteGroupsFromGroupsUsersByIds(@Param("ids") List<UUID> ids);
+
+    @Modifying
+    @Transactional
+    @Query(value = "delete from groups where id in :ids ", nativeQuery = true)
+    int deleteGroupsFromGroupsByIds(@Param("ids") List<UUID> ids);
 }
