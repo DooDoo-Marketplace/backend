@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class OrderResponseDTO {
+public class GroupResponseDTO {
 
     private UUID id;
 

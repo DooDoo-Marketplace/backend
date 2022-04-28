@@ -18,7 +18,7 @@ create index if not exists user_index
 create table if not exists groups_orders
 (
     id         uuid primary key default gen_random_uuid(),
-    group_id     UUID
+    group_id     uuid
         constraint orders_cart_id_fk references groups,
     user_id bigint not null
         constraint groups_orders_users_id_fk references users,

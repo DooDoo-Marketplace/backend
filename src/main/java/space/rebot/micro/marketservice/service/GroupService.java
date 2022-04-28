@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import space.rebot.micro.marketservice.dto.OrderResponseDTO;
+import space.rebot.micro.marketservice.dto.GroupResponseDTO;
 import space.rebot.micro.marketservice.enums.CartStatusEnum;
 import space.rebot.micro.marketservice.exception.*;
 import space.rebot.micro.marketservice.mapper.GroupMapper;
@@ -51,7 +51,7 @@ public class GroupService {
     @Autowired
     private GroupMapper groupMapper;
 
-    public List<OrderResponseDTO> findGroups(List<Cart> carts, Map<Long, UUID> skuGroup,
+    public List<GroupResponseDTO> findGroups(List<Cart> carts, Map<Long, UUID> skuGroup,
                                              User user, String region) throws PaymentException, GroupSearchException {
         paymentService.spend();
         //ответ для фронта, группа под каждый товар в корзине
@@ -144,7 +144,7 @@ public class GroupService {
         skuRepository.updateSkuCount(cart.getCount(), sku.getId());
     }
 
-    public List<OrderResponseDTO> getUserGroups() {
+    public List<GroupResponseDTO> getUserGroups() {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
         return groupRepository.getUserGroups(user.getId()).stream().map(groupMapper::mapToDTO).collect(Collectors.toList());
     }

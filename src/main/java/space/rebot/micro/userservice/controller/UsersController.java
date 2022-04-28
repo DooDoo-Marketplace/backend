@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import space.rebot.micro.common.dto.MessageDto;
-import space.rebot.micro.marketservice.dto.OrderResponseDTO;
+import space.rebot.micro.marketservice.dto.GroupResponseDTO;
 import space.rebot.micro.marketservice.service.GroupService;
 import space.rebot.micro.userservice.dto.user.UserDto;
 import space.rebot.micro.userservice.exception.*;
@@ -57,7 +57,7 @@ public class UsersController {
     @GetMapping(value="groups", produces="application/json")
     public ResponseEntity<?> getUserGroups() {
         Map<Object, Object> model = new HashMap<>();
-        List<OrderResponseDTO> groups = groupService.getUserGroups();
+        List<GroupResponseDTO> groups = groupService.getUserGroups();
         model.put("success", true);
         model.put("groups", groups);
         return new ResponseEntity<>(model, HttpStatus.OK);
