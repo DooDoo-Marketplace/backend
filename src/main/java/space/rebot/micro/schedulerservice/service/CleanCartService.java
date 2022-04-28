@@ -21,7 +21,7 @@ public class CleanCartService {
     public void cleanCart() {
         List<Long> ids;
         do {
-            ids = cartRepository.getCartByDeletedStatus(CartStatusEnum.DELETED.getId(), BATCH);
+            ids = cartRepository.getCartByStatus(CartStatusEnum.DELETED.getId(), BATCH);
             cartRepository.deleteCartByIdList(ids);
         } while (!ids.isEmpty());
     }
