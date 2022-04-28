@@ -21,7 +21,7 @@ public class CleanCartService {
     @Transactional
     public void cleanCart() {
         while (true) {
-            List<Long> ids = cartRepository.getCartByDeletedStatus(CartStatusEnum.DELETED.getId(), BATCH);
+            List<Long> ids = cartRepository.getCartByStatus(CartStatusEnum.DELETED.getId(), BATCH);
             if (ids.isEmpty()) {
                 break;
             }

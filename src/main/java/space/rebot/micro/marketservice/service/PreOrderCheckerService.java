@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class PreGroupCheckerService {
+public class PreOrderCheckerService {
 
     @Autowired
     private CartRepository cartRepository;
@@ -68,8 +68,7 @@ public class PreGroupCheckerService {
 
     // проверка корзины
     private List<Cart> checkUserCart(String region, User user) throws CartCheckException {
-        List<Cart> carts = cartRepository.getCartByPriceAndUserIdAndCartStatus(user.getId(),
-                CartStatusEnum.ACTIVE.getId(), false);
+        List<Cart> carts = cartRepository.getCartByUserIdAndCartStatus(user.getId(), CartStatusEnum.ACTIVE.getId());
         List<Long> invalidRegionSkuId = checkUserCartRegions(carts, region);
         List<Long> invalidCountSkuId = checkUserCartSkuCount(carts);
         if (invalidCountSkuId.isEmpty() && invalidRegionSkuId.isEmpty()) {

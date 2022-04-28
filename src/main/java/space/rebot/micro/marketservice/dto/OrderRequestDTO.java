@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Data
-public class GroupRequestDTO {
+public class OrderRequestDTO {
 
     private String region;
 

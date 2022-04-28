@@ -20,7 +20,7 @@ public class Cart {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne (cascade = CascadeType.ALL)
+    @ManyToOne (cascade = CascadeType.MERGE)
     @JoinColumn(name = "sku_id")
     private Sku sku;
 
@@ -28,7 +28,7 @@ public class Cart {
     @Column(name = "count", nullable = false)
     private int count;
 
-    @ManyToOne (cascade = CascadeType.ALL)
+    @ManyToOne (cascade = CascadeType.MERGE)
     @JoinColumn(name = "cart_status_id")
     private CartStatus cartStatus;
 
