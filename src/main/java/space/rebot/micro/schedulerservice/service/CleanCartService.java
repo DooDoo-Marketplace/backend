@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 public class CleanCartService {
-    @Value("${batch_of_delete}")
+    @Value("${scheduler.delete.batch}")
     private int BATCH;
 
     @Autowired

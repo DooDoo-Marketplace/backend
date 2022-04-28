@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class CleanGroupService {
-    @Value("${batch_of_delete}")
+    @Value("${scheduler.delete.batch}")
     private int BATCH;
 
     @Autowired

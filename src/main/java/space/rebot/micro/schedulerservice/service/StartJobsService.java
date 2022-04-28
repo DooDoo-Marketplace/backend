@@ -7,6 +7,7 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SimpleTrigger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 import space.rebot.micro.marketservice.enums.GroupStatusEnum;
@@ -27,6 +28,12 @@ public class StartJobsService {
     @Autowired
     private DateService dateService;
 
+    @Value("${scheduler.time.extra}")
+    private int EXTRA_HOUR;
+
+    @Value("${scheduler.time.existing}")
+    private int EXISTING_DAY;
+
     public void setCanceledStatusToGroup(UUID id) {
         JobDetail job = JobFactory.createJob(SetStatusGroupJob.class,
                 "SetCanceledStatus " + id, "SetCanceledStatusAfterDay",
@@ -36,7 +43,7 @@ public class StartJobsService {
         job.getJobDataMap().put("comparedStatus", GroupStatusEnum.ACTIVE.getName());
 
         SimpleTrigger trigger = SimpleTriggerFactory.createTrigger("SetCanceledToGroupTrigger " + id,
-                "SetCanceledAfterDay", dateService.addTimeForCurrent(24), job);
+                "SetCanceledAfterDay", dateService.addTimeForCurrent(EXISTING_DAY), job);
 
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
         try {
@@ -55,7 +62,7 @@ public class StartJobsService {
         job.getJobDataMap().put("comparedStatus", GroupStatusEnum.EXTRA.getName());
 
         SimpleTrigger trigger = SimpleTriggerFactory.createTrigger("SetCompletedToGroupTrigger " + id,
-                "SetCompletedAfterHour", dateService.addTimeForCurrent(1), job);
+                "SetCompletedAfterHour", dateService.addTimeForCurrent(EXTRA_HOUR), job);
 
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
         try {
