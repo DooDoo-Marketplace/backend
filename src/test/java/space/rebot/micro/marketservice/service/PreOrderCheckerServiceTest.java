@@ -19,13 +19,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
-public class PreGroupCheckerServiceTest {
+public class PreOrderCheckerServiceTest {
 
     @Mock
     private GroupRepository groupRepository;
 
     @InjectMocks
-    private PreGroupCheckerService checkerService;
+    private PreOrderCheckerService checkerService;
 
     //checkUserCartSkuCount
 
