@@ -57,7 +57,9 @@ public class UsersController {
     @GetMapping(value="groups", produces="application/json")
     public ResponseEntity<?> getUserGroups() {
         Map<Object, Object> model = new HashMap<>();
-        List<GroupResponseDTO> groups = groupService.getUserGroups();
+        Session session = (Session) context.getAttribute(Session.SESSION);
+        User user = session.getUser();
+        List<GroupResponseDTO> groups = groupService.getUserGroups(user);
         model.put("success", true);
         model.put("groups", groups);
         return new ResponseEntity<>(model, HttpStatus.OK);

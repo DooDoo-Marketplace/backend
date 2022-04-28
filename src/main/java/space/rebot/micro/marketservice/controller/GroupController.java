@@ -51,10 +51,6 @@ public class GroupController {
             model.put("getInvalidGroupSkuId", e.getInvalidGroupSkuId());
             model.put("message", "INVALID_GROUPS");
             return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
-        } catch (PaymentException e) {
-            model.put("success", false);
-            model.put("message", "PAYMENT_PROBLEMS");
-            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         } catch (GroupSearchException e) {
             model.put("success", false);
             model.put("message", "GROUP_SEARCH_ERROR");
@@ -67,8 +63,9 @@ public class GroupController {
     @PostMapping(value = "leave", produces = "application/json")
     public ResponseEntity<?> leaveGroup(@RequestParam("groupId") UUID groupId) {
         Map<Object, Object> model = new HashMap<>();
+        User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
         try {
-            groupService.leaveGroup(groupId);
+            groupService.leaveGroup(groupId, user);
         } catch (InvalidGroupException e) {
             model.put("success", false);
             model.put("message", e.getMessage());
