@@ -8,16 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import space.rebot.micro.common.dto.MessageDto;
 import space.rebot.micro.marketservice.dto.GroupResponseDTO;
 import space.rebot.micro.marketservice.service.GroupService;
-import space.rebot.micro.userservice.dto.auth.AuthRequestDto;
-import space.rebot.micro.userservice.dto.auth.AuthResponseDto;
-import space.rebot.micro.userservice.dto.auth.CodeRequestDto;
 import space.rebot.micro.userservice.dto.user.UserDto;
 import space.rebot.micro.userservice.exception.*;
 import space.rebot.micro.userservice.model.Session;
 import space.rebot.micro.userservice.model.User;
-import space.rebot.micro.userservice.service.AuthorizationService;
 import space.rebot.micro.userservice.service.UsersService;
-import space.rebot.micro.userservice.validator.PhoneValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -62,7 +57,9 @@ public class UsersController {
     @GetMapping(value="groups", produces="application/json")
     public ResponseEntity<?> getUserGroups() {
         Map<Object, Object> model = new HashMap<>();
-        List<GroupResponseDTO> groups = groupService.getUserGroups();
+        Session session = (Session) context.getAttribute(Session.SESSION);
+        User user = session.getUser();
+        List<GroupResponseDTO> groups = groupService.getUserGroups(user);
         model.put("success", true);
         model.put("groups", groups);
         return new ResponseEntity<>(model, HttpStatus.OK);

@@ -49,7 +49,7 @@ public interface CartRepository extends JpaRepository <Cart, Long> {
                   @Param("cartStatusId") int cartStatusId, @Param("isRetail") boolean isRetail);
 
     @Query(value = "select c.id from cart c where c.cart_status_id = :cartStatus limit :count", nativeQuery = true)
-    List<Long> getCartByDeletedStatus(@Param("cartStatus") int status, @Param("count") int count);
+    List<Long> getCartByStatus(@Param("cartStatus") int status, @Param("count") int count);
 
     @Modifying
     @Transactional
@@ -71,4 +71,10 @@ public interface CartRepository extends JpaRepository <Cart, Long> {
             "and c.cart_status_id = :updatedStatusId and c.is_retail = :isRetail", nativeQuery = true)
     int updateCartStatus(@Param("userId") Long userId, @Param("skuId") Long skuId, @Param("exposedStatusId") int exposedStatusId,
                          @Param("updatedStatusId") int updatedStatusId,  @Param("isRetail") boolean isRetail);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update cart c set cart_status_id = :exposedStatusId " +
+            "where c.id = :cartId", nativeQuery = true)
+    int updateCartStatusById(@Param("cartId") Long cartId, @Param("exposedStatusId") int exposedStatusId);
 }

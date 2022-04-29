@@ -4,22 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import space.rebot.micro.marketservice.dto.GroupRequestDTO;
-import space.rebot.micro.marketservice.exception.CartCheckException;
-import space.rebot.micro.marketservice.exception.GroupSearchException;
-import space.rebot.micro.marketservice.exception.PaymentException;
-import space.rebot.micro.marketservice.exception.SkuGroupMatchException;
+import space.rebot.micro.marketservice.dto.OrderRequestDTO;
+import space.rebot.micro.marketservice.exception.*;
 import space.rebot.micro.marketservice.model.Cart;
 import space.rebot.micro.marketservice.service.GroupService;
-import space.rebot.micro.marketservice.service.PreGroupCheckerService;
+import space.rebot.micro.marketservice.service.PreOrderCheckerService;
 import space.rebot.micro.userservice.model.Session;
 import space.rebot.micro.userservice.model.User;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("api/v1/group/")
@@ -29,7 +23,7 @@ public class GroupController {
     private GroupService groupService;
 
     @Autowired
-    private PreGroupCheckerService preGroupCheckerService;
+    private PreOrderCheckerService preOrderCheckerService;
 
     @Autowired
     private HttpServletRequest context;
@@ -37,15 +31,15 @@ public class GroupController {
     //пользователь передает регион и мапу с ску из корзины и номер группы, которой хочет присоединиться
     // это иммитация код приглашения в группу, надо будет переделать под uuid
     @PostMapping(value = "join", produces = "application/json")
-    public ResponseEntity<?> joinGroup(@RequestBody GroupRequestDTO groupRequestDTOS) {
+    public ResponseEntity<?> joinGroup(@RequestBody OrderRequestDTO orderRequestDTOS) {
         Map<Object, Object> model = new HashMap<>();
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
-        if (groupRequestDTOS.getSkuGroup() == null) {
-            groupRequestDTOS.setSkuGroup(Collections.emptyMap());
+        if (orderRequestDTOS.getSkuGroup() == null) {
+            orderRequestDTOS.setSkuGroup(Collections.emptyMap());
         }
         try {
-            List<Cart> carts = preGroupCheckerService.check(groupRequestDTOS.getRegion(), user, groupRequestDTOS.getSkuGroup());
-            model.put("groups", groupService.findGroups(carts, groupRequestDTOS.getSkuGroup(), user, groupRequestDTOS.getRegion()));
+            List<Cart> carts = preOrderCheckerService.check(orderRequestDTOS.getRegion(), user, orderRequestDTOS.getSkuGroup());
+            model.put("groups", groupService.findGroups(carts, orderRequestDTOS.getSkuGroup(), user, orderRequestDTOS.getRegion()));
         } catch (CartCheckException e) {
             model.put("success", false);
             model.put("invalidRegionSkuId", e.getInvalidRegionSkuId());
@@ -57,10 +51,6 @@ public class GroupController {
             model.put("getInvalidGroupSkuId", e.getInvalidGroupSkuId());
             model.put("message", "INVALID_GROUPS");
             return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
-        } catch (PaymentException e) {
-            model.put("success", false);
-            model.put("message", "PAYMENT_PROBLEMS");
-            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         } catch (GroupSearchException e) {
             model.put("success", false);
             model.put("message", "GROUP_SEARCH_ERROR");
@@ -71,9 +61,17 @@ public class GroupController {
     }
 
     @PostMapping(value = "leave", produces = "application/json")
-    public ResponseEntity<?> leaveGroup(@RequestParam("skuId") Long skuId) {
+    public ResponseEntity<?> leaveGroup(@RequestParam("groupId") UUID groupId) {
         Map<Object, Object> model = new HashMap<>();
-        groupService.leaveGroup(skuId);
+        User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
+        try {
+            groupService.leaveGroup(groupId, user);
+        } catch (InvalidGroupException e) {
+            model.put("success", false);
+            model.put("message", e.getMessage());
+            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
+        }
+
         model.put("success", true);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }

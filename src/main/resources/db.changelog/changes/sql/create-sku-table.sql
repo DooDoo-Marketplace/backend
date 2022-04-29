@@ -25,11 +25,11 @@ create table if not exists sku
     CHECK ( min_count >= 0 )
 );
 
-create index name_uindex
+create index if not exists name_uindex
     on sku (name);
 
-create index retail_price_uindex
+create index if not exists retail_price_uindex
     on sku (retail_price);
 
-create index group_price_uindex
+create index if not exists group_price_uindex
     on sku (group_price);
