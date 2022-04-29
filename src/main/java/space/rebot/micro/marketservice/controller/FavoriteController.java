@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import space.rebot.micro.marketservice.dto.SkuDTO;
+import space.rebot.micro.marketservice.exception.SkuIsAlreadyFavoriteException;
 import space.rebot.micro.marketservice.exception.SkuNotFoundException;
 import space.rebot.micro.marketservice.mapper.SkuMapper;
 import space.rebot.micro.marketservice.service.FavoriteService;
@@ -36,7 +37,11 @@ public class FavoriteController {
         Map<Object, Object> model = new HashMap<>();
         try {
             favoriteService.addFavorite(skuId);
-        } catch (SkuNotFoundException e) {
+        }catch (SkuIsAlreadyFavoriteException e) {
+            model.put("success", false);
+            model.put("message", "SKU_IS_ALREADY_FAVORITE");
+            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
+        }catch (SkuNotFoundException e) {
             model.put("success", false);
             model.put("message", "SKU_NOT_FOUND");
             return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);

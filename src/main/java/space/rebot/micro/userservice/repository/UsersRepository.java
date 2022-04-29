@@ -17,8 +17,7 @@ public interface UsersRepository extends JpaRepository<User, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "insert into users_favorite (user_id, sku_id) values (:userId, :skuId) " +
-            "on conflict do nothing", nativeQuery = true)
+    @Query(value = "insert into users_favorite (user_id, sku_id) values (:userId, :skuId)", nativeQuery = true)
     void addFavoriteByUserIdAndSkuId(@Param("userId") Long userId, @Param("skuId") Long skuId);
 
     @Modifying
