@@ -5,16 +5,16 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import space.rebot.micro.schedulerservice.service.CleanGroupService;
+import space.rebot.micro.schedulerservice.service.CleanOrderService;
 
 @Component
-public class CleanGroupJob implements Job {
+public class CleanOrderJob implements Job {
     @Autowired
-    private CleanGroupService cleanGroupService;
+    private CleanOrderService cleanOrderService;
 
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        cleanGroupService.cleanGroup();
+        cleanOrderService.cleanOrder();
     }
 }

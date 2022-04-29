@@ -123,17 +123,19 @@ public class GroupService {
          /* если пользователя нет в этой группе, то добавляем его туда и помечаем его товар из корзины, что он в группе
          увеличиваем количество товара в группе
          если уже есть в этой группе, то в корзине удаляем этот товар и увеличиваем, количество товара в группе у этого пользователя*/
-        if (groupRepository.existsUserInGroup(group.getId(), user.getId()) == null) {
+        if (groupRepository.existsUserInGroup(group.getId(), user.getId()) == 0) {
             group.getUsers().add(user);
             group.setCount(group.getCount() + cnt);
             groupRepository.save(group);
         } else {
-            groupRepository.updateGroupCount(group.getCount() + cnt, group.getId());
+            group.setCount(group.getCount() + cnt);
+            groupRepository.save(group);
             cartRepository.updateCartStatusById(cart.getId(), CartStatusEnum.DELETED.getId());
             cartRepository.updateSkuCnt(user.getId(), group.getSku().getId(), cnt,
                     CartStatusEnum.IN_GROUP.getId(), false);
         }
-        if (group.getCount() >= group.getSku().getMinCount()) {
+        if (group.getCount() >= group.getSku().getMinCount()
+                && group.getGroupStatus().getId() != GroupStatusEnum.EXTRA.getId()) {
             groupRepository.updateGroupStatus(group.getId(), GroupStatusEnum.EXTRA.getId());
             startJobsService.setCompletedStatusToGroup(group.getId());
         }

@@ -31,14 +31,14 @@
             <name>CleanGroup</name>
             <group>CleanGroupAtMidnight</group>
             <description>Clean group table job</description>
-            <job-class>space.rebot.micro.schedulerservice.jobs.CleanGroupJob</job-class>
+            <job-class>space.rebot.micro.schedulerservice.jobs.CleanOrderJob</job-class>
         </job>
         <trigger>
             <cron>
                 <name>CleanGroupTrigger</name>
                 <job-name>CleanGroup</job-name>
                 <job-group>CleanGroupAtMidnight</job-group>
-                <cron-expression>0 0 0 * * ?</cron-expression>
+                <cron-expression>0 0/1 * ? * * *</cron-expression>
             </cron>
         </trigger>
     </schedule>
