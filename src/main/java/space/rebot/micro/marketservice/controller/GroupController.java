@@ -41,22 +41,18 @@ public class GroupController {
             List<Cart> carts = preOrderCheckerService.check(orderRequestDTOS.getRegion(), user, orderRequestDTOS.getSkuGroup());
             model.put("groups", groupService.findGroups(carts, orderRequestDTOS.getSkuGroup(), user, orderRequestDTOS.getRegion()));
         } catch (CartCheckException e) {
-            model.put("success", false);
             model.put("invalidRegionSkuId", e.getInvalidRegionSkuId());
             model.put("invalidCountSkuId", e.getInvalidCountSkuId());
             model.put("message", "INVALID_CART");
-            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(model, HttpStatus.NOT_ACCEPTABLE);
         } catch (SkuGroupMatchException e) {
-            model.put("success", false);
             model.put("getInvalidGroupSkuId", e.getInvalidGroupSkuId());
             model.put("message", "INVALID_GROUPS");
-            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(model, HttpStatus.PROXY_AUTHENTICATION_REQUIRED);
         } catch (GroupSearchException e) {
-            model.put("success", false);
             model.put("message", "GROUP_SEARCH_ERROR");
             return new ResponseEntity<>(model, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        model.put("success", true);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
@@ -67,12 +63,9 @@ public class GroupController {
         try {
             groupService.leaveGroup(groupId, user);
         } catch (InvalidGroupException e) {
-            model.put("success", false);
             model.put("message", e.getMessage());
-            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(model, HttpStatus.NOT_ACCEPTABLE);
         }
-
-        model.put("success", true);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 

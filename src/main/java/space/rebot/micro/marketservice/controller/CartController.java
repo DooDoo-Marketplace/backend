@@ -37,21 +37,17 @@ public class CartController {
         try {
             cartService.addSkuToCart(skuId, cnt, isRetail);
         } catch (SkuIsOverException e) {
-            model.put("success", false);
-            model.put("message", "Sku is over");
+            model.put("message", "SKU_IS_OVER");
             model.put("cnt", e.getCnt());
-            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(model, HttpStatus.NOT_ACCEPTABLE);
         } catch (InvalidSkuCountException e) {
-            model.put("success", false);
             model.put("message", "Sku count must be more than 0");
             model.put("cnt", e.getCnt());
-            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(model, HttpStatus.PROXY_AUTHENTICATION_REQUIRED);
         } catch (SkuNotFoundException e) {
-            model.put("success", false);
-            model.put("message", "Sku not found");
-            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
+            model.put("message", "SKU_NOT_FOUND");
+            return new ResponseEntity<>(model, HttpStatus.REQUEST_TIMEOUT);
         }
-        model.put("success", true);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
@@ -63,16 +59,13 @@ public class CartController {
         try {
             cartService.updateCart(skuId, cnt, isRetail);
         } catch (SkuIsOverException e) {
-            model.put("success", false);
-            model.put("message", "Sku is over");
+            model.put("message", "SKU_IS_OVER");
             model.put("cnt", e.getCnt());
-            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(model, HttpStatus.NOT_ACCEPTABLE);
         } catch (SkuNotFoundException e) {
-            model.put("success", false);
-            model.put("message", "Sku not found");
-            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
+            model.put("message", "SKU_NOT_FOUND");
+            return new ResponseEntity<>(model, HttpStatus.PROXY_AUTHENTICATION_REQUIRED);
         }
-        model.put("success", true);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
@@ -81,7 +74,6 @@ public class CartController {
                                                  @RequestParam("isRetail") boolean isRetail) {
         Map<Object, Object> model = new HashMap<>();
         cartService.deleteUserSkuInCart(skuId, isRetail);
-        model.put("success", true);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
@@ -91,7 +83,6 @@ public class CartController {
         List<CartDTO> cartDTOList = cartService.getUserCart().stream()
                 .map(cart -> cartMapper.mapToCartDto(cart))
                 .collect(Collectors.toList());
-        model.put("success", true);
         model.put("cart", cartDTOList);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
