@@ -63,8 +63,9 @@ public class GroupController {
     @PostMapping(value = "leave", produces = "application/json")
     public ResponseEntity<?> leaveGroup(@RequestParam("groupId") UUID groupId) {
         Map<Object, Object> model = new HashMap<>();
+        User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
         try {
-            groupService.leaveGroup(groupId);
+            groupService.leaveGroup(groupId, user);
         } catch (InvalidGroupException e) {
             model.put("success", false);
             model.put("message", e.getMessage());
