@@ -51,10 +51,6 @@ public class GroupController {
             model.put("getInvalidGroupSkuId", e.getInvalidGroupSkuId());
             model.put("message", "INVALID_GROUPS");
             return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
-        } catch (PaymentException e) {
-            model.put("success", false);
-            model.put("message", "PAYMENT_PROBLEMS");
-            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         } catch (GroupSearchException e) {
             model.put("success", false);
             model.put("message", "GROUP_SEARCH_ERROR");

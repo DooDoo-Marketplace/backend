@@ -48,9 +48,6 @@ public class GroupService {
     private DateService dateService;
 
     @Autowired
-    private PaymentService paymentService;
-
-    @Autowired
     private HttpServletRequest context;
 
     @Autowired
@@ -63,8 +60,7 @@ public class GroupService {
     private StartJobsService startJobsService;
 
     public List<GroupResponseDTO> findGroups(List<Cart> carts, Map<Long, UUID> skuGroup,
-                                             User user, String region) throws PaymentException, GroupSearchException {
-        paymentService.spend();
+                                             User user, String region) throws GroupSearchException {
         //ответ для фронта, группа под каждый товар в корзине
         List<Group> groups = new ArrayList<>();
         try {
@@ -123,7 +119,7 @@ public class GroupService {
          /* если пользователя нет в этой группе, то добавляем его туда и помечаем его товар из корзины, что он в группе
          увеличиваем количество товара в группе
          если уже есть в этой группе, то в корзине удаляем этот товар и увеличиваем, количество товара в группе у этого пользователя*/
-        if (groupRepository.existsUserInGroup(group.getId(), user.getId()) == 0) {
+        if (groupRepository.existsUserInGroup(group.getId(), user.getId()) == null) {
             group.getUsers().add(user);
             group.setCount(group.getCount() + cnt);
             groupRepository.save(group);
