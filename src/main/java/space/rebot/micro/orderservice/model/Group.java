@@ -1,9 +1,8 @@
-package space.rebot.micro.marketservice.model;
+package space.rebot.micro.orderservice.model;
 
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
-import space.rebot.micro.marketservice.enums.GroupStatusEnum;
+import space.rebot.micro.marketservice.model.Sku;
 import space.rebot.micro.userservice.model.User;
 
 import javax.persistence.*;

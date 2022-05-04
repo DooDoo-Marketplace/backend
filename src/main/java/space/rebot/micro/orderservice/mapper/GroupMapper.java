@@ -1,9 +1,10 @@
-package space.rebot.micro.marketservice.mapper;
+package space.rebot.micro.orderservice.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import space.rebot.micro.marketservice.dto.GroupResponseDTO;
-import space.rebot.micro.marketservice.model.Group;
+import space.rebot.micro.orderservice.dto.GroupResponseDTO;
+import space.rebot.micro.marketservice.mapper.SkuMapper;
+import space.rebot.micro.orderservice.model.Group;
 
 @Component
 public class GroupMapper {

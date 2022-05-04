@@ -1,4 +1,4 @@
-package space.rebot.micro.marketservice.service;
+package space.rebot.micro.orderservice.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -7,9 +7,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import space.rebot.micro.marketservice.model.Cart;
-import space.rebot.micro.marketservice.model.Group;
+import space.rebot.micro.orderservice.model.Group;
 import space.rebot.micro.marketservice.model.Sku;
-import space.rebot.micro.marketservice.repository.GroupRepository;
+import space.rebot.micro.orderservice.repository.GroupRepository;
 
 import java.util.*;
 import java.util.stream.Collectors;

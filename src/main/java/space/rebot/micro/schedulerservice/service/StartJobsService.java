@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
-import space.rebot.micro.marketservice.enums.GroupStatusEnum;
+import space.rebot.micro.orderservice.enums.GroupStatusEnum;
 import space.rebot.micro.schedulerservice.factory.JobFactory;
 import space.rebot.micro.schedulerservice.factory.SimpleTriggerFactory;
 import space.rebot.micro.schedulerservice.jobs.SetStatusGroupJob;

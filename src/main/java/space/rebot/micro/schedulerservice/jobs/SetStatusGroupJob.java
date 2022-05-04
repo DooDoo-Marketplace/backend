@@ -4,7 +4,7 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import space.rebot.micro.marketservice.enums.GroupStatusEnum;
+import space.rebot.micro.orderservice.enums.GroupStatusEnum;
 import space.rebot.micro.schedulerservice.service.SetStatusGroupService;
 
 import java.util.UUID;

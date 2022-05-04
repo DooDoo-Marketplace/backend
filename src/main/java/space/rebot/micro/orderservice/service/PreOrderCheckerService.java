@@ -1,17 +1,17 @@
-package space.rebot.micro.marketservice.service;
+package space.rebot.micro.orderservice.service;
 
-import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import space.rebot.micro.marketservice.enums.CartStatusEnum;
-import space.rebot.micro.marketservice.exception.CartCheckException;
-import space.rebot.micro.marketservice.exception.SkuGroupMatchException;
+import space.rebot.micro.orderservice.enums.GroupStatusEnum;
+import space.rebot.micro.orderservice.exception.CartCheckException;
+import space.rebot.micro.orderservice.exception.SkuGroupMatchException;
 import space.rebot.micro.marketservice.model.Cart;
-import space.rebot.micro.marketservice.model.Group;
+import space.rebot.micro.orderservice.model.Group;
 import space.rebot.micro.marketservice.model.Sku;
 import space.rebot.micro.marketservice.repository.CartRepository;
-import space.rebot.micro.marketservice.repository.GroupRepository;
+import space.rebot.micro.orderservice.repository.GroupRepository;
 import space.rebot.micro.marketservice.repository.SkuRepository;
 import space.rebot.micro.userservice.model.User;
 
@@ -59,7 +59,9 @@ public class PreOrderCheckerService {
                 continue;
             }
             Sku sku = group.getSku();
-            if (!skuGroup.getKey().equals(sku.getId())) {
+            if (!skuGroup.getKey().equals(sku.getId()) ||
+                    group.getGroupStatus().getId() != GroupStatusEnum.ACTIVE.getId() &&
+                            group.getGroupStatus().getId() != GroupStatusEnum.EXTRA.getId()) {
                 invalidGroupSkuId.add(skuGroup.getKey());
             }
         }
