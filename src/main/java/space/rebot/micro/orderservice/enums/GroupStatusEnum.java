@@ -1,4 +1,4 @@
-package space.rebot.micro.marketservice.enums;
+package space.rebot.micro.orderservice.enums;
 
 public enum GroupStatusEnum {
     ACTIVE(1, "ACTIVE"),

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import space.rebot.micro.marketservice.repository.GroupRepository;
+import space.rebot.micro.orderservice.repository.GroupRepository;
 import space.rebot.micro.orderservice.enums.OrdersStatusEnum;
 import space.rebot.micro.orderservice.model.GroupsOrders;
 import space.rebot.micro.orderservice.repository.GroupsOrdersRepository;

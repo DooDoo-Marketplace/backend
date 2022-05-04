@@ -1,4 +1,4 @@
-package space.rebot.micro.marketservice.dto;
+package space.rebot.micro.orderservice.dto;
 
 import lombok.Data;
 

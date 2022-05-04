@@ -1,4 +1,4 @@
-package space.rebot.micro.marketservice.model;
+package space.rebot.micro.orderservice.model;
 
 import lombok.Data;
 

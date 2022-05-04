@@ -2,8 +2,8 @@ package space.rebot.micro.schedulerservice.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import space.rebot.micro.marketservice.enums.GroupStatusEnum;
-import space.rebot.micro.marketservice.repository.GroupRepository;
+import space.rebot.micro.orderservice.enums.GroupStatusEnum;
+import space.rebot.micro.orderservice.repository.GroupRepository;
 
 import javax.transaction.Transactional;
 import java.util.UUID;
