@@ -3,6 +3,7 @@ package space.rebot.micro.marketservice.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import space.rebot.micro.marketservice.dto.SkuDTO;
+import space.rebot.micro.marketservice.exception.SkuIsAlreadyFavoriteException;
 import space.rebot.micro.marketservice.exception.SkuNotFoundException;
 import space.rebot.micro.marketservice.mapper.SkuMapper;
 import space.rebot.micro.marketservice.model.Sku;
@@ -40,8 +41,11 @@ public class FavoriteService {
                 .collect(Collectors.toList());
     }
 
-    public void addFavorite(Long skuId) throws SkuNotFoundException {
+    public void addFavorite(Long skuId) throws SkuNotFoundException, SkuIsAlreadyFavoriteException {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
+        if (skuRepository.existsFavoriteBySkuId(user.getId(), skuId)) {
+            throw new SkuIsAlreadyFavoriteException();
+        }
         Sku sku = skuRepository.getSkuById(skuId);
         if (sku == null) {
             throw new SkuNotFoundException();
