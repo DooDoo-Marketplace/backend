@@ -60,7 +60,6 @@ public class UsersController {
         Session session = (Session) context.getAttribute(Session.SESSION);
         User user = session.getUser();
         List<GroupResponseDTO> groups = groupService.getUserGroups(user);
-        model.put("success", true);
         model.put("groups", groups);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
