@@ -43,7 +43,7 @@ public class CartController {
         } catch (InvalidSkuCountException e) {
             model.put("message", "Sku count must be more than 0");
             model.put("cnt", e.getCnt());
-            return new ResponseEntity<>(model, HttpStatus.PROXY_AUTHENTICATION_REQUIRED);
+            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         } catch (SkuNotFoundException e) {
             model.put("message", "SKU_NOT_FOUND");
             return new ResponseEntity<>(model, HttpStatus.REQUEST_TIMEOUT);
@@ -64,7 +64,7 @@ public class CartController {
             return new ResponseEntity<>(model, HttpStatus.NOT_ACCEPTABLE);
         } catch (SkuNotFoundException e) {
             model.put("message", "SKU_NOT_FOUND");
-            return new ResponseEntity<>(model, HttpStatus.PROXY_AUTHENTICATION_REQUIRED);
+            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
@@ -72,9 +72,8 @@ public class CartController {
     @PostMapping(value = "delete", produces = "application/json")
     public ResponseEntity<?> deleteUserSkuInCart(@RequestParam("skuId") Long skuId,
                                                  @RequestParam("isRetail") boolean isRetail) {
-        Map<Object, Object> model = new HashMap<>();
         cartService.deleteUserSkuInCart(skuId, isRetail);
-        return new ResponseEntity<>(model, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(value = "get", produces = "application/json")

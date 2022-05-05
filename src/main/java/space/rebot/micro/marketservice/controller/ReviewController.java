@@ -39,10 +39,10 @@ public class ReviewController {
             model.put("uuid", reviewId);
         } catch (SkuNotFoundException e) {
             model.put("message", "INVALID_SKU");
-            return new ResponseEntity<>(model, HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         } catch (InvalidRatingException e) {
             model.put("message", e.getMessage());
-            return new ResponseEntity<>(model, HttpStatus.PROXY_AUTHENTICATION_REQUIRED);
+            return new ResponseEntity<>(model, HttpStatus.NOT_ACCEPTABLE);
         }
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
@@ -70,7 +70,7 @@ public class ReviewController {
             return new ResponseEntity<>(model, HttpStatus.NOT_ACCEPTABLE);
         } catch (InvalidRatingException e) {
             model.put("message", e.getMessage());
-            return new ResponseEntity<>(model, HttpStatus.PROXY_AUTHENTICATION_REQUIRED);
+            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(model, HttpStatus.OK);
     }

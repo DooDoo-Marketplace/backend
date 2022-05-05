@@ -51,10 +51,10 @@ public class GroupController {
         } catch (SkuGroupMatchException e) {
             model.put("getInvalidGroupSkuId", e.getInvalidGroupSkuId());
             model.put("message", "INVALID_GROUPS");
-            return new ResponseEntity<>(model, HttpStatus.PROXY_AUTHENTICATION_REQUIRED);
+            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         } catch (GroupSearchException e) {
             model.put("message", "GROUP_SEARCH_ERROR");
-            return new ResponseEntity<>(model, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(model, HttpStatus.REQUEST_TIMEOUT);
         }
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
@@ -67,7 +67,7 @@ public class GroupController {
             groupService.leaveGroup(groupId, user);
         } catch (InvalidGroupException e) {
             model.put("message", e.getMessage());
-            return new ResponseEntity<>(model, HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
