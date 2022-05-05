@@ -3,7 +3,6 @@ package space.rebot.micro.orderservice.model;
 import lombok.Data;
 import org.hibernate.annotations.Type;
 import space.rebot.micro.marketservice.model.Cart;
-import space.rebot.micro.marketservice.model.Group;
 import space.rebot.micro.userservice.model.User;
 
 import javax.persistence.CascadeType;

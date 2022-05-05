@@ -27,6 +27,7 @@ public class FavoriteController {
     public ResponseEntity<?> getFavorite() {
         Map<Object, Object> model = new HashMap<>();
         List<SkuDTO> skuDTOList = favoriteService.getUserFavorite();
+        model.put("success", true);
         model.put("favorite", skuDTOList);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
@@ -37,12 +38,15 @@ public class FavoriteController {
         try {
             favoriteService.addFavorite(skuId);
         }catch (SkuIsAlreadyFavoriteException e) {
+            model.put("success", false);
             model.put("message", "SKU_IS_ALREADY_FAVORITE");
-            return new ResponseEntity<>(model, HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         }catch (SkuNotFoundException e) {
+            model.put("success", false);
             model.put("message", "SKU_NOT_FOUND");
-            return new ResponseEntity<>(model, HttpStatus.PROXY_AUTHENTICATION_REQUIRED);
+            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         }
+        model.put("success", true);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
@@ -52,9 +56,11 @@ public class FavoriteController {
         try {
             favoriteService.deleteFavorite(skuId);
         } catch (SkuNotFoundException e) {
+            model.put("success", false);
             model.put("message", "SKU_NOT_FOUND");
-            return new ResponseEntity<>(model, HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         }
+        model.put("success", true);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 }

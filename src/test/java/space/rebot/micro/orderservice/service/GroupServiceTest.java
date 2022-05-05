@@ -1,4 +1,4 @@
-package space.rebot.micro.marketservice.service;
+package space.rebot.micro.orderservice.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -6,13 +6,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import space.rebot.micro.marketservice.exception.GroupSearchException;
-import space.rebot.micro.marketservice.exception.InvalidGroupException;
+import space.rebot.micro.orderservice.exception.GroupSearchException;
+import space.rebot.micro.orderservice.exception.InvalidGroupException;
 import space.rebot.micro.marketservice.model.Cart;
-import space.rebot.micro.marketservice.model.Group;
+import space.rebot.micro.orderservice.model.Group;
 import space.rebot.micro.marketservice.model.Sku;
 import space.rebot.micro.marketservice.repository.CartRepository;
-import space.rebot.micro.marketservice.repository.GroupRepository;
+import space.rebot.micro.orderservice.repository.GroupRepository;
 import space.rebot.micro.marketservice.repository.SkuRepository;
 import space.rebot.micro.userservice.model.User;
 
