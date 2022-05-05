@@ -38,7 +38,7 @@ public class FavoriteController {
             favoriteService.addFavorite(skuId);
         }catch (SkuIsAlreadyFavoriteException e) {
             model.put("message", "SKU_IS_ALREADY_FAVORITE");
-            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(model, HttpStatus.NOT_ACCEPTABLE);
         }catch (SkuNotFoundException e) {
             model.put("message", "SKU_NOT_FOUND");
             return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
