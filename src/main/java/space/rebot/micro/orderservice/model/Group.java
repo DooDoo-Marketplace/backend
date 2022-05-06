@@ -1,7 +1,8 @@
-package space.rebot.micro.marketservice.model;
+package space.rebot.micro.orderservice.model;
 
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+import space.rebot.micro.marketservice.model.Sku;
 import space.rebot.micro.userservice.model.User;
 
 import javax.persistence.*;
@@ -14,11 +15,8 @@ public class Group {
 
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Type(type = "pg-uuid")
     private UUID id;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -45,14 +43,19 @@ public class Group {
     )
     private Set<User> users = new HashSet<>();
 
+    @ManyToOne (cascade = CascadeType.MERGE)
+    @JoinColumn(name = "group_status_id")
+    private GroupStatus groupStatus;
+
     public Group() {
     }
 
-    public Group(Sku sku, Date createdAt, Date expiredAt, int count, String region) {
+    public Group(Sku sku, Date createdAt, Date expiredAt, int count, String region, GroupStatus groupStatus) {
         this.sku = sku;
         this.createdAt = createdAt;
         this.expiredAt = expiredAt;
         this.count = count;
         this.region = region;
+        this.groupStatus = groupStatus;
     }
 }

@@ -1,17 +1,17 @@
-package space.rebot.micro.marketservice.service;
+package space.rebot.micro.orderservice.service;
 
-import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import space.rebot.micro.marketservice.enums.CartStatusEnum;
-import space.rebot.micro.marketservice.exception.CartCheckException;
-import space.rebot.micro.marketservice.exception.SkuGroupMatchException;
+import space.rebot.micro.orderservice.enums.GroupStatusEnum;
+import space.rebot.micro.orderservice.exception.CartCheckException;
+import space.rebot.micro.orderservice.exception.SkuGroupMatchException;
 import space.rebot.micro.marketservice.model.Cart;
-import space.rebot.micro.marketservice.model.Group;
+import space.rebot.micro.orderservice.model.Group;
 import space.rebot.micro.marketservice.model.Sku;
 import space.rebot.micro.marketservice.repository.CartRepository;
-import space.rebot.micro.marketservice.repository.GroupRepository;
+import space.rebot.micro.orderservice.repository.GroupRepository;
 import space.rebot.micro.marketservice.repository.SkuRepository;
 import space.rebot.micro.userservice.model.User;
 
@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class PreGroupCheckerService {
+public class PreOrderCheckerService {
 
     @Autowired
     private CartRepository cartRepository;
@@ -50,7 +50,7 @@ public class PreGroupCheckerService {
 
 
     // проверка, что все группы существуют и состоят из данного товара
-    private List<Long> checkSkuGroups(Map<Long, UUID> skuGroups) {
+    public List<Long> checkSkuGroups(Map<Long, UUID> skuGroups) {
         List<Long> invalidGroupSkuId = new ArrayList<>();
         for (Map.Entry<Long, UUID> skuGroup : skuGroups.entrySet()) {
             Group group = groupRepository.getGroup(skuGroup.getValue());
@@ -59,7 +59,9 @@ public class PreGroupCheckerService {
                 continue;
             }
             Sku sku = group.getSku();
-            if (sku.getId() != skuGroup.getKey()) {
+            if (!skuGroup.getKey().equals(sku.getId()) ||
+                    group.getGroupStatus().getId() != GroupStatusEnum.ACTIVE.getId() &&
+                            group.getGroupStatus().getId() != GroupStatusEnum.EXTRA.getId()) {
                 invalidGroupSkuId.add(skuGroup.getKey());
             }
         }
@@ -68,8 +70,7 @@ public class PreGroupCheckerService {
 
     // проверка корзины
     private List<Cart> checkUserCart(String region, User user) throws CartCheckException {
-        List<Cart> carts = cartRepository.getCartByPriceAndUserIdAndCartStatus(user.getId(),
-                CartStatusEnum.ACTIVE.getId(), false);
+        List<Cart> carts = cartRepository.getCartByUserIdAndCartStatus(user.getId(), CartStatusEnum.ACTIVE.getId());
         List<Long> invalidRegionSkuId = checkUserCartRegions(carts, region);
         List<Long> invalidCountSkuId = checkUserCartSkuCount(carts);
         if (invalidCountSkuId.isEmpty() && invalidRegionSkuId.isEmpty()) {
@@ -83,7 +84,7 @@ public class PreGroupCheckerService {
     }
 
     // проверка, что все товары в корзине в регионе ску
-    private List<Long> checkUserCartRegions(List<Cart> carts, String region) {
+    public List<Long> checkUserCartRegions(List<Cart> carts, String region) {
         List<Long> invalidRegionSkuId = new ArrayList<>();
         carts.forEach(cart -> {
             Sku sku = cart.getSku();
@@ -95,7 +96,7 @@ public class PreGroupCheckerService {
     }
 
     // проверка, что на складе есть такое количество товара
-    private List<Long> checkUserCartSkuCount(List<Cart> carts) {
+    public List<Long> checkUserCartSkuCount(List<Cart> carts) {
         List<Long> invalidCountSkuId = new ArrayList<>();
         carts.forEach(cart -> {
             Sku sku = cart.getSku();

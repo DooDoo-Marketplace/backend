@@ -1,7 +1,8 @@
-package space.rebot.micro.marketservice.dto;
+package space.rebot.micro.orderservice.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import space.rebot.micro.marketservice.dto.SkuDTO;
 
 import java.util.Date;
 import java.util.UUID;

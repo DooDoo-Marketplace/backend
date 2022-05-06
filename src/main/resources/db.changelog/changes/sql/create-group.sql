@@ -6,7 +6,9 @@ create table if not exists groups
     count      int        not null,
     region     varchar(255) not null,
     created_at timestamp    not null default current_timestamp,
-    expired_at timestamp    not null default current_timestamp + interval '1 day'
+    expired_at timestamp    not null default current_timestamp + interval '1 day',
+    group_status_id int not null
+        constraint group_status_id_fk references group_status
 );
 
 create table if not exists groups_users

@@ -27,7 +27,6 @@ public class ReviewController {
     public ResponseEntity<?> getSkuReviews(@RequestParam("skuId") Long skuId) {
         Map<Object, Object> model = new HashMap<>();
         List<ReviewDTO> reviewDTOList = reviewService.getSkuReview(skuId);
-        model.put("success", true);
         model.put("reviews", reviewDTOList);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
@@ -37,18 +36,14 @@ public class ReviewController {
         Map<Object, Object> model = new HashMap<>();
         try {
             UUID reviewId = reviewService.addReviewToSku(reviewDTO);
-            model.put("success", true);
             model.put("uuid", reviewId);
         } catch (SkuNotFoundException e) {
-            model.put("success", false);
             model.put("message", "INVALID_SKU");
             return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         } catch (InvalidRatingException e) {
-            model.put("success", false);
             model.put("message", e.getMessage());
-            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(model, HttpStatus.NOT_ACCEPTABLE);
         }
-
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
@@ -59,12 +54,9 @@ public class ReviewController {
         try {
             reviewService.deleteReview(uuid);
         } catch (WrongUserException e) {
-            model.put("success", false);
             model.put("message", e.getMessage());
-            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(model, HttpStatus.NOT_ACCEPTABLE);
         }
-
-        model.put("success", true);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
@@ -73,13 +65,13 @@ public class ReviewController {
         Map<Object, Object> model = new HashMap<>();
         try {
             reviewService.updateReview(reviewDTO);
-        } catch (WrongUserException | InvalidRatingException e) {
-            model.put("success", false);
+        } catch (WrongUserException e) {
+            model.put("message", e.getMessage());
+            return new ResponseEntity<>(model, HttpStatus.NOT_ACCEPTABLE);
+        } catch (InvalidRatingException e) {
             model.put("message", e.getMessage());
             return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         }
-
-        model.put("success", true);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 }
