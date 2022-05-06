@@ -11,6 +11,6 @@ import java.util.UUID;
 @Repository
 public interface ImagesRepository extends JpaRepository<Image, UUID> {
 
-    @Query(value = "SELECT images.id from images", nativeQuery = true)
-    public List<UUID> getUUIDByName();
+    @Query(value = "select images.id from images", nativeQuery = true)
+    List<UUID> getUUIDByName();
 }

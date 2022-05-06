@@ -40,7 +40,7 @@ public class ImageController {
             model.put("success", true);
         } catch (ImageNotFoundException e) {
             model.put("success", false);
-            model.put("message", "Image not found");
+            model.put("message", e.getMessage());
             return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(model, HttpStatus.OK);
