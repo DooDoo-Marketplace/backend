@@ -27,4 +27,8 @@ public interface SkuRepository extends JpaRepository<Sku, Long> {
     boolean existsFavoriteBySkuId(@Param("userId") Long userId, @Param("skuId") Long skuId);
 
     Sku getSkuById(Long id);
+
+    @Query(value = "select * from sku s where s.name like :name and s.region like :region and s.rating >= :rate and ((s.group_price >= :lPrice and s.group_price <= :uPrice) or (s.retail_price >= :lPrice and s.retail_price <= :uPrice)) limit :limit offset :offset", nativeQuery = true)
+    List<Sku> getSkusByNameAndFilters(@Param("name") String name, @Param("region") String region, @Param("lPrice") Double lPrice, @Param("uPrice") Double uPrice,
+                                      @Param("rate") Double rate,  @Param("limit") int limit, @Param("offset") int offset);
 }

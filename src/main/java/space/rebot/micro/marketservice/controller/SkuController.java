@@ -29,21 +29,14 @@ public class SkuController {
     private ResponseEntity<?> getByName(@NonNull @RequestParam("name") String name, @RequestParam(value = "region", required = false) String region,
                                         @RequestParam(value = "lowPrice", required = false) String lowPrice,
                                         @RequestParam(value = "upperPrice", required = false) String upperPrice,
-                                        @RequestParam(value = "rating", required = false) String rating) {
+                                        @RequestParam(value = "rating", required = false) String rating,
+                                        @RequestParam(value = "page") String page) {
         Map<Object, Object> model = new HashMap<>();
         try {
-            String reg = "";
-            if (region != null) reg = region;
-            double lPrice = -1.0;
-            if (lowPrice != null) lPrice = Double.parseDouble(lowPrice);
-            double uPrice = 1000000.0;
-            if (upperPrice != null) uPrice = Double.parseDouble(upperPrice);
-            double rate = 0.0;
-            if (rating != null) rate = Double.parseDouble(rating);
-            List<SkuDTO> skusDTO = skuService.findSimilarWords(name, reg, lPrice, uPrice, rate).stream()
+            List<SkuDTO> skuDTOList = skuService.getSku(name, region, lowPrice, upperPrice, rating, page).stream()
                     .map(sku -> skuMapper.mapToSkuDto(sku))
                     .collect(Collectors.toList());
-            model.put("sku", skusDTO);
+            model.put("sku", skuDTOList);
         } catch (NumberFormatException e) {
             model.put("success", false);
             model.put("message", "Invalid request parameters");
