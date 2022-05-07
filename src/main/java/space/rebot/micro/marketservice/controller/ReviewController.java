@@ -23,7 +23,7 @@ public class ReviewController {
     private ReviewService reviewService;
 
 
-    @PostMapping(value = "get", produces = "application/json")
+    @PostMapping(value = "get", produces = "application/json;charset=UTF-8")
     public ResponseEntity<?> getSkuReviews(@RequestParam("skuId") Long skuId) {
         Map<Object, Object> model = new HashMap<>();
         List<ReviewDTO> reviewDTOList = reviewService.getSkuReview(skuId);
@@ -31,7 +31,7 @@ public class ReviewController {
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
-    @PostMapping(value = "add", produces = "application/json")
+    @PostMapping(value = "add", produces = "application/json;charset=UTF-8")
     public ResponseEntity<?> addReviewToSku(@RequestBody ReviewDTO reviewDTO) {
         Map<Object, Object> model = new HashMap<>();
         try {
@@ -48,7 +48,7 @@ public class ReviewController {
     }
 
 
-    @PostMapping(value = "delete", produces = "application/json")
+    @PostMapping(value = "delete", produces = "application/json;charset=UTF-8")
     public ResponseEntity<?> deleteReview(@RequestParam("id") UUID uuid) {
         Map<Object, Object> model = new HashMap<>();
         try {
@@ -60,7 +60,7 @@ public class ReviewController {
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
-    @PostMapping(value = "update", produces = "application/json")
+    @PostMapping(value = "update", produces = "application/json;charset=UTF-8")
     public ResponseEntity<?> updateReview(@RequestBody ReviewDTO reviewDTO) {
         Map<Object, Object> model = new HashMap<>();
         try {

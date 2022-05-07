@@ -30,7 +30,7 @@ public class CartController {
     @Autowired
     private CartMapper cartMapper;
 
-    @PostMapping(value = "add", produces = "application/json")
+    @PostMapping(value = "add", produces = "application/json;charset=UTF-8")
     public ResponseEntity<?> addSkuToCart(@RequestParam("skuId") Long skuId, @RequestParam("cnt") int cnt,
                                           @RequestParam("isRetail") boolean isRetail) {
         Map<Object, Object> model = new HashMap<>();
@@ -51,7 +51,7 @@ public class CartController {
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
-    @PostMapping(value = "update", produces = "application/json")
+    @PostMapping(value = "update", produces = "application/json;charset=UTF-8")
     //cnt is a new number of sku
     public ResponseEntity<?> updateSkuCnt(@RequestParam("skuId") Long skuId, @RequestParam("cnt") int cnt,
                                           @RequestParam("isRetail") boolean isRetail) {
@@ -69,14 +69,14 @@ public class CartController {
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
-    @PostMapping(value = "delete", produces = "application/json")
+    @PostMapping(value = "delete", produces = "application/json;charset=UTF-8")
     public ResponseEntity<?> deleteUserSkuInCart(@RequestParam("skuId") Long skuId,
                                                  @RequestParam("isRetail") boolean isRetail) {
         cartService.deleteUserSkuInCart(skuId, isRetail);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping(value = "get", produces = "application/json")
+    @GetMapping(value = "get", produces = "application/json;charset=UTF-8")
     public ResponseEntity<?> getUserCart() {
         Map<Object, Object> model = new HashMap<>();
         List<CartDTO> cartDTOList = cartService.getUserCart().stream()

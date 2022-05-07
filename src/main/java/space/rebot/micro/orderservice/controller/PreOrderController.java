@@ -23,7 +23,7 @@ public class PreOrderController {
     @Autowired
     private PreOrderService preOrderService;
 
-    @PostMapping(value = "create", produces = "application/json")
+    @PostMapping(value = "create", produces = "application/json;charset=UTF-8")
     public ResponseEntity<?> createOrders(@RequestBody OrderRequestDTO orderRequestDTO) {
         Map<Object, Object> model = new HashMap<>();
         try {
