@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import space.rebot.micro.staticservice.exception.FileIsAlreadyExist;
 import space.rebot.micro.staticservice.exception.ImageCantBeDeleted;
 import space.rebot.micro.staticservice.exception.ImageNotFoundException;
 import space.rebot.micro.staticservice.model.Image;
@@ -46,16 +47,16 @@ public class ImageService {
             }
         } catch (ImageCantBeDeleted e) {
             throw e;
-        } catch (Exception e)  {
+        } catch (Exception e) {
             throw new ImageNotFoundException();
         }
     }
 
-    public String addImage(MultipartFile file) {
+    public String addImage(MultipartFile file) throws FileIsAlreadyExist {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
         String hashSum = "123";
 //        try {
-            // TODO CREATE HASH SUM
+        // TODO CREATE HASH SUM
 //            MessageDigest md = MessageDigest.getInstance("SHA-256");
 //            md.update(Byte.parseByte(user.getId() + "_" + file.getName()));
 //            byte[] digest = md.digest();
@@ -70,11 +71,18 @@ public class ImageService {
                 file.getContentType(),
                 dateService.utcNow(),
                 dateService.utcNow()
-                );
+        );
         try {
-            file.transferTo(new File(uploadPath + "/" + user.getId() + "_" + file.getOriginalFilename()));
-            Image saved = imagesRepository.save(image);
-            return saved.getId().toString();
+            File existIt = new File(uploadPath + "/" + image.getFilename());
+            if (!existIt.exists()) {
+                file.transferTo(new File(uploadPath + "/" + user.getId() + "_" + file.getOriginalFilename()));
+                Image saved = imagesRepository.save(image);
+                return saved.getId().toString();
+            } else {
+                throw new FileIsAlreadyExist();
+            }
+        } catch (FileIsAlreadyExist e) {
+           throw e;
         } catch (Exception e) {
             logger.error(e.getStackTrace());
             e.printStackTrace();

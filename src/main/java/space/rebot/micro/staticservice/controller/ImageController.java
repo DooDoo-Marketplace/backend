@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import space.rebot.micro.staticservice.exception.FileIsAlreadyExist;
 import space.rebot.micro.staticservice.exception.ImageNotFoundException;
 import space.rebot.micro.staticservice.service.ImageService;
 
@@ -24,8 +25,12 @@ public class ImageController {
             @RequestParam("file") MultipartFile file
     ) {
         Map<Object, Object> model = new HashMap<>();
-        String response = imageService.addImage(file);
-        model.put("file_id", response);
+        try {
+            String response = imageService.addImage(file);
+            model.put("file_id", response);
+        } catch (FileIsAlreadyExist e) {
+            model.put("error", e.getMessage());
+        }
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
