@@ -6,18 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import space.rebot.micro.common.dto.MessageDto;
-import space.rebot.micro.marketservice.dto.GroupResponseDTO;
-import space.rebot.micro.marketservice.service.GroupService;
-import space.rebot.micro.userservice.dto.auth.AuthRequestDto;
-import space.rebot.micro.userservice.dto.auth.AuthResponseDto;
-import space.rebot.micro.userservice.dto.auth.CodeRequestDto;
+import space.rebot.micro.orderservice.dto.GroupResponseDTO;
+import space.rebot.micro.orderservice.service.GroupService;
 import space.rebot.micro.userservice.dto.user.UserDto;
 import space.rebot.micro.userservice.exception.*;
 import space.rebot.micro.userservice.model.Session;
 import space.rebot.micro.userservice.model.User;
-import space.rebot.micro.userservice.service.AuthorizationService;
 import space.rebot.micro.userservice.service.UsersService;
-import space.rebot.micro.userservice.validator.PhoneValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -37,14 +32,14 @@ public class UsersController {
     @Autowired
     private GroupService groupService;
 
-    @GetMapping(value="", produces="application/json")
+    @GetMapping(value="", produces="application/json;charset=UTF-8")
     private ResponseEntity<?> getUser(){
         Session session = (Session) context.getAttribute(Session.SESSION);
         User user = session.getUser();
         return new ResponseEntity<>(usersService.getUserDto(user), HttpStatus.OK);
 
     }
-    @PutMapping(value="", produces="application/json")
+    @PutMapping(value="", produces="application/json;charset=UTF-8")
     private ResponseEntity<?> updateUser(@NonNull @RequestBody UserDto userDto){
         Session session = (Session) context.getAttribute(Session.SESSION);
         User user = session.getUser();
@@ -59,11 +54,12 @@ public class UsersController {
         return new ResponseEntity<>(usersService.getUserDto(user), HttpStatus.OK);
     }
 
-    @GetMapping(value="groups", produces="application/json")
+    @GetMapping(value="groups", produces="application/json;charset=UTF-8")
     public ResponseEntity<?> getUserGroups() {
         Map<Object, Object> model = new HashMap<>();
-        List<GroupResponseDTO> groups = groupService.getUserGroups();
-        model.put("success", true);
+        Session session = (Session) context.getAttribute(Session.SESSION);
+        User user = session.getUser();
+        List<GroupResponseDTO> groups = groupService.getUserGroups(user);
         model.put("groups", groups);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }

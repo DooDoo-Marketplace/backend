@@ -5,26 +5,26 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
     <changeSet id="insert data to users" author="gkapelyushok" context="test">
-        <sqlFile path="sql/insert-users.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="migrations/insert-users.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
     <changeSet id="insert data to sessions" author="gkapelyushok" context="test">
-        <sqlFile path="sql/insert-sessions.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="migrations/insert-sessions.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
     <changeSet id="insert data to users-roles" author="gkapelyushok" context="test">
-        <sqlFile path="sql/insert-users-roles.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="migrations/insert-users-roles.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
     <changeSet id="insert data to sku" author="gkapelyushok" context="test">
-        <sqlFile path="sql/insert-sku.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="migrations/insert-sku.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
     <changeSet id="insert data to cart" author="gkapelyushok" context="test">
-        <sqlFile path="sql/insert-cart.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="migrations/insert-cart.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
     <changeSet id="insert data to favorite" author="gkapelyushok" context="test">
-        <sqlFile path="sql/insert-users-favorite.sql" relativeToChangelogFile="true"/>
+        <sqlFile path="migrations/insert-users-favorite.sql" relativeToChangelogFile="true"/>
     </changeSet>
 </databaseChangeLog>

@@ -49,7 +49,7 @@ public interface CartRepository extends JpaRepository <Cart, Long> {
                   @Param("cartStatusId") int cartStatusId, @Param("isRetail") boolean isRetail);
 
     @Query(value = "select c.id from cart c where c.cart_status_id = :cartStatus limit :count", nativeQuery = true)
-    List<Long> getCartByDeletedStatus(@Param("cartStatus") int status, @Param("count") int count);
+    List<Long> getCartByStatus(@Param("cartStatus") int status, @Param("count") int count);
 
     @Modifying
     @Transactional
