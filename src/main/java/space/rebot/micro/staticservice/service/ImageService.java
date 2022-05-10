@@ -40,6 +40,7 @@ public class ImageService {
             throw new ImageNotFoundException();
         }
     }
+
     public String addImage(MultipartFile file) {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
         String hashSum = "123";

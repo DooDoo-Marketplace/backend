@@ -26,7 +26,6 @@ public class ImageController {
         Map<Object, Object> model = new HashMap<>();
         String response = imageService.addImage(file);
         model.put("file_id", response);
-        model.put("success", true);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
@@ -37,10 +36,8 @@ public class ImageController {
         Map<Object, Object> model = new HashMap<>();
         try {
             imageService.deleteImage(id);
-            model.put("success", true);
         } catch (ImageNotFoundException e) {
-            model.put("success", false);
-            model.put("message", e.getMessage());
+            model.put("error", e.getMessage());
             return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(model, HttpStatus.OK);
