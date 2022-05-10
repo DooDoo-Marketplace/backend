@@ -1,11 +1,13 @@
 package space.rebot.micro.staticservice.service;
 
+import liquibase.pro.packaged.F;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import space.rebot.micro.staticservice.exception.ImageCantBeDeleted;
 import space.rebot.micro.staticservice.exception.ImageNotFoundException;
 import space.rebot.micro.staticservice.model.Image;
 import space.rebot.micro.staticservice.repository.ImagesRepository;
@@ -33,9 +35,17 @@ public class ImageService {
     @Value("${upload.path}")
     private String uploadPath;
 
-    public void deleteImage(UUID id) throws ImageNotFoundException {
+    public void deleteImage(UUID id) throws ImageNotFoundException, ImageCantBeDeleted {
         try {
-            imagesRepository.deleteById(id);
+            Image current = imagesRepository.getImageById(id);
+            File file = new File(uploadPath + "/" + current.getFilename());
+            if (file.delete()) {
+                imagesRepository.deleteById(id);
+            } else {
+                throw new ImageCantBeDeleted();
+            }
+        } catch (ImageCantBeDeleted e) {
+            throw e;
         } catch (Exception e)  {
             throw new ImageNotFoundException();
         }

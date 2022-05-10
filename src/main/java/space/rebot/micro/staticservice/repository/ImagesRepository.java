@@ -10,6 +10,8 @@ import java.util.UUID;
 
 @Repository
 public interface ImagesRepository extends JpaRepository<Image, UUID> {
+    Image getImageById(UUID id);
+    Image getImageByFilename(String filename);
 
     @Query(value = "select images.id from images", nativeQuery = true)
     List<UUID> getUUIDByName();

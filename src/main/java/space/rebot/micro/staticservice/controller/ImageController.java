@@ -36,7 +36,7 @@ public class ImageController {
         Map<Object, Object> model = new HashMap<>();
         try {
             imageService.deleteImage(id);
-        } catch (ImageNotFoundException e) {
+        } catch (Exception e) {
             model.put("error", e.getMessage());
             return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         }
