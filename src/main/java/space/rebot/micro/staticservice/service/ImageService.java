@@ -1,14 +1,13 @@
 package space.rebot.micro.staticservice.service;
 
-import liquibase.pro.packaged.F;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import space.rebot.micro.staticservice.exception.FileIsAlreadyExist;
-import space.rebot.micro.staticservice.exception.ImageCantBeDeleted;
+import space.rebot.micro.staticservice.exception.FileIsAlreadyExistException;
+import space.rebot.micro.staticservice.exception.ImageCantBeDeletedException;
 import space.rebot.micro.staticservice.exception.ImageNotFoundException;
 import space.rebot.micro.staticservice.model.Image;
 import space.rebot.micro.staticservice.repository.ImagesRepository;
@@ -36,23 +35,23 @@ public class ImageService {
     @Value("${upload.path}")
     private String uploadPath;
 
-    public void deleteImage(UUID id) throws ImageNotFoundException, ImageCantBeDeleted {
+    public void deleteImage(UUID id) throws ImageNotFoundException, ImageCantBeDeletedException {
         try {
             Image current = imagesRepository.getImageById(id);
             File file = new File(uploadPath + "/" + current.getFilename());
             if (file.delete()) {
                 imagesRepository.deleteById(id);
             } else {
-                throw new ImageCantBeDeleted();
+                throw new ImageCantBeDeletedException();
             }
-        } catch (ImageCantBeDeleted e) {
+        } catch (ImageCantBeDeletedException e) {
             throw e;
         } catch (Exception e) {
             throw new ImageNotFoundException();
         }
     }
 
-    public String addImage(MultipartFile file) throws FileIsAlreadyExist {
+    public String addImage(MultipartFile file) throws FileIsAlreadyExistException {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
         String hashSum = "123";
 //        try {
@@ -79,9 +78,9 @@ public class ImageService {
                 Image saved = imagesRepository.save(image);
                 return saved.getId().toString();
             } else {
-                throw new FileIsAlreadyExist();
+                throw new FileIsAlreadyExistException();
             }
-        } catch (FileIsAlreadyExist e) {
+        } catch (FileIsAlreadyExistException e) {
            throw e;
         } catch (Exception e) {
             logger.error(e.getStackTrace());
