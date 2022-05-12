@@ -17,6 +17,7 @@ import space.rebot.micro.userservice.service.DateService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -36,22 +37,14 @@ public class ImageService {
     private String uploadPath;
 
     public void deleteImage(UUID id) throws ImageNotFoundException, ImageCantBeDeletedException {
-        try {
-            Image current = imagesRepository.getImageById(id);
-            File file = new File(uploadPath + "/" + current.getFilename());
-            if (file.delete()) {
-                imagesRepository.deleteById(id);
-            } else {
-                throw new ImageCantBeDeletedException();
-            }
-        } catch (ImageCantBeDeletedException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ImageNotFoundException();
-        }
+        Image current = imagesRepository.getImageById(id);
+        if (current == null) throw new ImageNotFoundException();
+        File file = new File(uploadPath + "/" + current.getFilename());
+        if (!file.delete()) throw new ImageCantBeDeletedException();
+        imagesRepository.deleteById(id);
     }
 
-    public String addImage(MultipartFile file) throws FileIsAlreadyExistException {
+    public String addImage(MultipartFile file) throws FileIsAlreadyExistException, IOException {
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
         String hashSum = "123";
 //        try {
@@ -71,22 +64,13 @@ public class ImageService {
                 dateService.utcNow(),
                 dateService.utcNow()
         );
-        try {
-            File existIt = new File(uploadPath + "/" + image.getFilename());
-            if (!existIt.exists()) {
-                file.transferTo(new File(uploadPath + "/" + user.getId() + "_" + file.getOriginalFilename()));
-                Image saved = imagesRepository.save(image);
-                return saved.getId().toString();
-            } else {
-                throw new FileIsAlreadyExistException();
-            }
-        } catch (FileIsAlreadyExistException e) {
-           throw e;
-        } catch (Exception e) {
-            logger.error(e.getStackTrace());
-            e.printStackTrace();
-        }
-        return "ERROR";
+        File existIt = new File(uploadPath + "/" + image.getFilename());
+        if (existIt.exists()) throw new FileIsAlreadyExistException();
+
+        file.transferTo(new File(uploadPath + "/" + user.getId() + "_" + file.getOriginalFilename()));
+        Image saved = imagesRepository.save(image);
+        return saved.getId().toString();
     }
+
 
 }
