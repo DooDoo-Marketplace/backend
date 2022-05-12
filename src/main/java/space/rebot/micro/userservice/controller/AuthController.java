@@ -32,7 +32,7 @@ public class AuthController {
     public AuthController(){
         this.phoneValidator = new PhoneValidator();
     }
-    @PostMapping(value="login", produces="application/json")
+    @PostMapping(value="login", produces="application/json;charset=UTF-8")
     private ResponseEntity<?> login(@NonNull @RequestBody AuthRequestDto authRequestDto){
         if (!phoneValidator.validate(authRequestDto.getPhone(), true)) {
             MessageDto error = new MessageDto("INVALID_PHONE");
@@ -50,7 +50,7 @@ public class AuthController {
 
 
     }
-    @PostMapping(value = "code", produces = "application/json")
+    @PostMapping(value = "code", produces = "application/json;charset=UTF-8")
     private ResponseEntity<?> code (@NonNull @RequestBody CodeRequestDto codeRequestDto){
         try {
             AuthResponseDto responseDto = authorizationService.authorizeByCode(codeRequestDto.getPhone(), codeRequestDto.getCode());
@@ -76,7 +76,7 @@ public class AuthController {
 
     }
 
-    @PostMapping(value = "logout", produces = "application/json")
+    @PostMapping(value = "logout", produces = "application/json;charset=UTF-8")
     private ResponseEntity<?> logout (@RequestParam(name = "all") Boolean closeAll){
        Session session = (Session)(this.context.getAttribute(Session.SESSION));
         if (closeAll){

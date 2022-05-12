@@ -32,14 +32,14 @@ public class UsersController {
     @Autowired
     private GroupService groupService;
 
-    @GetMapping(value="", produces="application/json")
+    @GetMapping(value="", produces="application/json;charset=UTF-8")
     private ResponseEntity<?> getUser(){
         Session session = (Session) context.getAttribute(Session.SESSION);
         User user = session.getUser();
         return new ResponseEntity<>(usersService.getUserDto(user), HttpStatus.OK);
 
     }
-    @PutMapping(value="", produces="application/json")
+    @PutMapping(value="", produces="application/json;charset=UTF-8")
     private ResponseEntity<?> updateUser(@NonNull @RequestBody UserDto userDto){
         Session session = (Session) context.getAttribute(Session.SESSION);
         User user = session.getUser();
@@ -54,7 +54,7 @@ public class UsersController {
         return new ResponseEntity<>(usersService.getUserDto(user), HttpStatus.OK);
     }
 
-    @GetMapping(value="groups", produces="application/json")
+    @GetMapping(value="groups", produces="application/json;charset=UTF-8")
     public ResponseEntity<?> getUserGroups() {
         Map<Object, Object> model = new HashMap<>();
         Session session = (Session) context.getAttribute(Session.SESSION);

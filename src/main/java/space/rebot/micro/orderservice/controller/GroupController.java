@@ -33,7 +33,7 @@ public class GroupController {
 
     //пользователь передает регион и мапу с ску из корзины и номер группы, которой хочет присоединиться
     // это иммитация код приглашения в группу, надо будет переделать под uuid
-    @PostMapping(value = "join", produces = "application/json")
+    @PostMapping(value = "join", produces = "application/json;charset=UTF-8")
     public ResponseEntity<?> joinGroup(@RequestBody OrderRequestDTO orderRequestDTOS) {
         Map<Object, Object> model = new HashMap<>();
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
@@ -59,7 +59,7 @@ public class GroupController {
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
-    @PostMapping(value = "leave", produces = "application/json")
+    @PostMapping(value = "leave", produces = "application/json;charset=UTF-8")
     public ResponseEntity<?> leaveGroup(@RequestParam("groupId") UUID groupId) {
         Map<Object, Object> model = new HashMap<>();
         User user = ((Session) context.getAttribute(Session.SESSION)).getUser();
