@@ -12,4 +12,12 @@ public class AuthResponseDto {
         this.token = token;
         this.registered = registered;
     }
+
+    public String getToken() {
+        return token;
+    }
+
+    public boolean isRegistered() {
+        return registered;
+    }
 }

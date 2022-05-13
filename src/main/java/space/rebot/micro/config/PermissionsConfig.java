@@ -45,4 +45,8 @@ public class PermissionsConfig {
         allowedUrls.put(RoleConfig.ROLE_ADMIN.toString(), admin);
 
     }
+
+    public HashMap<String, String[]> getAllowedUrls() {
+        return allowedUrls;
+    }
 }

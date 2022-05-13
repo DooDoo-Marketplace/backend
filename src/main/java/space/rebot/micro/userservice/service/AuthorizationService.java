@@ -68,10 +68,10 @@ public class AuthorizationService {
             InvalidCodeException,
             InvalidPhoneException {
         AuthRequest authRequest = authRequestRepository.getAuthRequestByPhone(phone);
-        Date now = dateService.utcNow();
         if (authRequest == null) {
             throw new AuthRequestNotFoundException();
         }
+        Date now = dateService.utcNow();
         if (code != authRequest.getCode()) {
             authRequest.setAttempts(authRequest.getAttempts() - 1);
             authRequestRepository.setAttemptsById(authRequest.getId(), authRequest.getAttempts());
