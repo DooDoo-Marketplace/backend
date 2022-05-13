@@ -28,9 +28,9 @@ public class RoleFilter implements Filter {
     PermissionsConfig permissionsConfig;
 
     private String[] getUserPermissions(User user){
-        String[] permissions = permissionsConfig.allowedUrls.get(RoleConfig.UNAUTHORIZED.toString());
+        String[] permissions = permissionsConfig.getAllowedUrls().get(RoleConfig.UNAUTHORIZED.toString());
         for(Role role: user.getRoles()){
-            permissions = ArrayUtils.addAll(permissions, permissionsConfig.allowedUrls.get(role.getName()));
+            permissions = ArrayUtils.addAll(permissions, permissionsConfig.getAllowedUrls().get(role.getName()));
         }
         return permissions;
 
@@ -58,7 +58,7 @@ public class RoleFilter implements Filter {
         }
         else {
 
-            ((HttpServletResponse) servletResponse).sendError(HttpServletResponse.SC_FORBIDDEN);
+            ((HttpServletResponse) servletResponse).sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden");
         }
 
     }
