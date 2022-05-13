@@ -40,9 +40,6 @@ public class AuthorizationServiceTest {
     @Mock
     private UsersRepository usersRepository;
 
-    @Mock
-    private SmsService smsService;
-
     @InjectMocks
     private AuthorizationService authorizationService;
 
@@ -88,23 +85,6 @@ public class AuthorizationServiceTest {
         AuthResponseDto authResponseDto = authorizationService.authorizeByCode(phone, code);
 
         assertFalse(authResponseDto.isRegistered());
-    }
-
-    @Test
-    @DisplayName("Authorization by code should return token and registered = true")
-    public void authorizeByCode_shouldReturnRegisteredTrue() throws AttemptsLimitException, InvalidPhoneException, AuthRequestNotFoundException, InvalidCodeException {
-        String phone = "+79215641751";
-        int code = 1234;
-        AuthRequest authRequest = Mockito.mock(AuthRequest.class);
-        User user = Mockito.mock(User.class);
-
-        Mockito.when(authRequest.getCode()).thenReturn(code);
-        Mockito.when(authRequestRepository.getAuthRequestByPhone(phone)).thenReturn(authRequest);
-        Mockito.when(usersRepository.getUserByPhone(phone)).thenReturn(null);
-        Mockito.when(usersService.generateDefault(phone)).thenReturn(user);
-        AuthResponseDto authResponseDto = authorizationService.authorizeByCode(phone, code);
-
-        assertTrue(authResponseDto.isRegistered());
     }
 
     @Test
