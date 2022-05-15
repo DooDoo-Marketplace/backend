@@ -22,9 +22,6 @@ public class SkuService {
     public List<SkuDTO> getSku(String name, String region, Double lowPrice, Double upperPrice, Double rating, Integer limit, Integer page) {
         int offset = (page - 1) * limit;
         List<Sku> skuList = skuRepository.getSkusByNameAndFilters(name, region, lowPrice, upperPrice, rating, limit, offset);
-        if (skuList == null) {
-            return Collections.emptyList();
-        }
         if (skuList.size() < limit) {
             List<Sku> byDescription = skuRepository.getSkusByDescription(name, limit - skuList.size());
             if (byDescription == null) {
