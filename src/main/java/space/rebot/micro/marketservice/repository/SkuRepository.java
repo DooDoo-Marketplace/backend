@@ -28,7 +28,10 @@ public interface SkuRepository extends JpaRepository<Sku, Long> {
 
     Sku getSkuById(Long id);
 
-    @Query(value = "select * from sku s where s.name like :name and s.region like :region and s.rating >= :rate and ((s.group_price between :lPrice and :uPrice) or (s.retail_price between :lPrice and :uPrice)) limit :limit offset :offset", nativeQuery = true)
+    @Query(value = "select * from sku s where s.name like concat('%', :name, '%') and s.region like :region and s.rating >= :rate and ((s.group_price between :lPrice and :uPrice) or (s.retail_price between :lPrice and :uPrice)) limit :limit offset :offset", nativeQuery = true)
     List<Sku> getSkusByNameAndFilters(@Param("name") String name, @Param("region") String region, @Param("lPrice") double lPrice, @Param("uPrice") double uPrice,
                                       @Param("rate") double rate,  @Param("limit") int limit, @Param("offset") int offset);
+
+    @Query(value = "select * from sku s where s.description like concat('%', :name, '%') limit :limit", nativeQuery = true)
+    List<Sku> getSkusByDescription(@Param("name") String name, @Param("limit") int limit);
 }

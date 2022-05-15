@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import space.rebot.micro.marketservice.dto.SearchDTO;
 import space.rebot.micro.marketservice.dto.SkuDTO;
 import space.rebot.micro.marketservice.service.SkuService;
 
@@ -20,14 +21,10 @@ public class SkuController {
     private SkuService skuService;
 
     @GetMapping(value = "get", produces = "application/json")
-    private ResponseEntity<?> getByName(@NonNull @RequestParam("name") String name, @RequestParam(value = "region", required = false) String region,
-                                        @RequestParam(value = "lowPrice") Double lowPrice,
-                                        @RequestParam(value = "upperPrice") Double upperPrice,
-                                        @RequestParam(value = "rating") Double rating,
-                                        @RequestParam(value = "limit") Integer limit,
-                                        @RequestParam(value = "page") Integer page) {
+    private ResponseEntity<?> get(@RequestBody SearchDTO searchDTO) {
         Map<Object, Object> model = new HashMap<>();
-        List<SkuDTO> skuDTOList = skuService.getSku(name, region, lowPrice, upperPrice, rating, limit, page);
+        List<SkuDTO> skuDTOList = skuService.getSku(searchDTO.getName(), searchDTO.getRegion(), searchDTO.getMinPrice(),
+                searchDTO.getMaxPrice(), searchDTO.getRating(), searchDTO.getLimit(), searchDTO.getPage());
         model.put("sku", skuDTOList);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }

@@ -20,11 +20,17 @@ public class SkuService {
     private SkuMapper skuMapper;
 
     public List<SkuDTO> getSku(String name, String region, Double lowPrice, Double upperPrice, Double rating, Integer limit, Integer page) {
-        if (region == null) region = "%";
         int offset = (page - 1) * limit;
-        List<Sku> skuList = skuRepository.getSkusByNameAndFilters("%" + name + "%", region, lowPrice, upperPrice, rating, limit, offset);
+        List<Sku> skuList = skuRepository.getSkusByNameAndFilters(name, region, lowPrice, upperPrice, rating, limit, offset);
         if (skuList == null) {
             return Collections.emptyList();
+        }
+        if (skuList.size() < limit) {
+            List<Sku> byDescription = skuRepository.getSkusByDescription(name, limit - skuList.size());
+            if (byDescription == null) {
+                byDescription = Collections.emptyList();
+            }
+            skuList.addAll(byDescription);
         }
         return skuList.stream().map(sku -> skuMapper.mapToSkuDto(sku))
                 .collect(Collectors.toList());
