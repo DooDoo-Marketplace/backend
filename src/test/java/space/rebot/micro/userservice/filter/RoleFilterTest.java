@@ -5,9 +5,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -20,14 +21,13 @@ import space.rebot.micro.userservice.model.User;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 public class RoleFilterTest {
-
-    @Mock
-    private PermissionsConfig mockPermissionsConfig;
+    @Spy
+    @Autowired
+    private PermissionsConfig permissionsConfig;
 
     @InjectMocks
     private RoleFilter roleFilter;
@@ -36,11 +36,6 @@ public class RoleFilterTest {
     private MockHttpServletResponse res;
     private MockFilterChain chain;
 
-    private final PermissionsConfig permissionsConfig = new PermissionsConfig();
-    private final String[] unauthorized = permissionsConfig.getAllowedUrls()
-            .get(RoleConfig.UNAUTHORIZED.toString());
-    private final String[] userPermission = permissionsConfig.getAllowedUrls()
-            .get(RoleConfig.ROLE_USER.toString());
 
     @BeforeEach
     public void init() {
@@ -61,18 +56,10 @@ public class RoleFilterTest {
     @DisplayName("Authorized user doesn't have permission")
     public void doFilter_shouldSendError_whenUserDoesntHavePermission() throws ServletException, IOException {
         List<Role> roles = new ArrayList<>();
-        Role role = new Role();
-        role.setId(1);
-        role.setName("USER");
-        roles.add(role);
 
         Session session = Mockito.mock(Session.class);
         User user = Mockito.mock(User.class);
-        HashMap<String, String[]> map = Mockito.mock(HashMap.class);
 
-        Mockito.when(map.get(RoleConfig.UNAUTHORIZED.toString()))
-                .thenReturn(unauthorized);
-        Mockito.when(mockPermissionsConfig.getAllowedUrls()).thenReturn(map);
         Mockito.when(user.getRoles()).thenReturn(roles);
         Mockito.when(session.getUser()).thenReturn(user);
 
@@ -80,29 +67,22 @@ public class RoleFilterTest {
         req.setAttribute(Session.SESSION, session);
 
         roleFilter.doFilter(req, res, chain);
-        Mockito.verify(chain, Mockito.times(0)).doFilter(req,res);
+        Mockito.verify(chain,Mockito.never()).doFilter(req,res);
     }
 
     @Test
     @DisplayName("Authorized user has permission")
-    public void doFilter_shouldDoFilter() throws ServletException, IOException {
+    public void doFilter_shouldCheckValidUrlAndRole() throws ServletException, IOException {
         List<Role> roles = new ArrayList<>();
         Role role = new Role();
         role.setId(1);
-        role.setName("USER");
+        role.setName(RoleConfig.ROLE_USER.toString());
         roles.add(role);
 
         Session session = Mockito.mock(Session.class);
         User user = Mockito.mock(User.class);
-        HashMap<String, String[]> map = Mockito.mock(HashMap.class);
-
 
         Mockito.when(session.getUser()).thenReturn(user);
-        Mockito.when(map.get(RoleConfig.UNAUTHORIZED.toString()))
-                .thenReturn(unauthorized);
-        Mockito.when(map.get(RoleConfig.ROLE_USER.toString()))
-                .thenReturn(userPermission);
-        Mockito.when(mockPermissionsConfig.getAllowedUrls()).thenReturn(map);
         Mockito.when(user.getRoles()).thenReturn(roles);
 
         req.setRequestURI(".*/api/v1/cart.*");
