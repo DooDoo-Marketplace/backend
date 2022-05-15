@@ -18,7 +18,8 @@ public class PermissionsConfig {
         //UNAUTHORIZED permissions
         String[] unauthorized = {
                 ".*/api/v1/auth/login",
-                ".*/api/v1/auth/code"
+                ".*/api/v1/auth/code",
+                ".*/api/v1/sku/get"
         };
 
         //USER permissions
@@ -31,7 +32,8 @@ public class PermissionsConfig {
                 ".*/api/v1/auth/logout.*",
                 ".*/api/v1/review.*",
                 ".*/api/v1/favorite.*",
-                ".*/api/v1/static.*"
+                ".*/api/v1/static.*",
+                ".*/api/v1/sku/get.*"
         };
 
         //ADMIN permissions
