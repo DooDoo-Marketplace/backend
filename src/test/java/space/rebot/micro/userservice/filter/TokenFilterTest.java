@@ -9,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -24,7 +23,6 @@ import java.io.IOException;
 @ExtendWith(MockitoExtension.class)
 public class TokenFilterTest {
     @Spy
-    @Autowired
     private PermissionsConfig permissionsConfig;
 
     @Mock
