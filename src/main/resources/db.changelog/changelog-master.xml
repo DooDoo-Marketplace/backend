@@ -28,6 +28,8 @@
     <include file="changes/DD-57-create-orders-tables.xml" relativeToChangelogFile="true"/>
     <include file="changes/DBEB-37-create-users-favorite-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/DBEB-30-create-review-table.xml" relativeToChangelogFile="true"/>
-    <include file="changes/DBEB-37-create-users-favorite-table.xml" relativeToChangelogFile="true"/>
+    <include file="changes/DBEB-7-create-images-table.xml" relativeToChangelogFile="true"/>
     <include file="changes/data.xml" relativeToChangelogFile="true"/>
+
+
 </databaseChangeLog>

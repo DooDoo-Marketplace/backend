@@ -32,11 +32,14 @@ public class PermissionsConfig {
                 ".*/api/v1/auth/logout.*",
                 ".*/api/v1/review.*",
                 ".*/api/v1/favorite.*",
+                ".*/api/v1/static.*",
                 ".*/api/v1/sku/get.*"
         };
 
         //ADMIN permissions
-        String[] admin = {};
+        String[] admin = {
+                ".*/api/v1/static.*"
+        };
 
         //Do not edit this part if you are not adding new role
 

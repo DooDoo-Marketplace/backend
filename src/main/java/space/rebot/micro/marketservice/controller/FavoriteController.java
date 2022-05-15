@@ -23,7 +23,7 @@ public class FavoriteController {
     @Autowired
     private SkuMapper skuMapper;
 
-    @GetMapping(value = "get", produces = "application/json")
+    @GetMapping(value = "get", produces = "application/json;charset=UTF-8")
     public ResponseEntity<?> getFavorite() {
         Map<Object, Object> model = new HashMap<>();
         List<SkuDTO> skuDTOList = favoriteService.getUserFavorite();
@@ -31,7 +31,7 @@ public class FavoriteController {
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
-    @PostMapping(value = "add", produces = "application/json")
+    @PostMapping(value = "add", produces = "application/json;charset=UTF-8")
     public ResponseEntity<?> addFavorite(@RequestParam("skuId") Long skuId) {
         Map<Object, Object> model = new HashMap<>();
         try {
@@ -46,7 +46,7 @@ public class FavoriteController {
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
-    @PostMapping(value = "delete", produces = "application/json")
+    @PostMapping(value = "delete", produces = "application/json;charset=UTF-8")
     public ResponseEntity<?> deleteFavorite(@RequestParam("skuId") Long skuId) {
         Map<Object, Object> model = new HashMap<>();
         try {
