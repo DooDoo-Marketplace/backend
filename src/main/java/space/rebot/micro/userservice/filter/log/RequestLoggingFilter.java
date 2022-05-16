@@ -65,7 +65,7 @@ public class RequestLoggingFilter implements Filter {
             wrappedRequest = new BufferedServletRequestWrapper((HttpServletRequest) servletRequest);
             String params = extractRequestParameters(wrappedRequest);
             String body = extractRequestBody(wrappedRequest);
-            Session session = (Session)(wrappedRequest.getAttribute(Session.SESSION));
+            Session session = (Session) (wrappedRequest.getAttribute(Session.SESSION));
             StringBuilder msg = new StringBuilder();
             msg.append("Request from User:\n");
             if (session == null) {
@@ -77,9 +77,15 @@ public class RequestLoggingFilter implements Filter {
                         .append(user.getLastName()).append("\n");
             }
 
-            msg.append(wrappedRequest.getMethod()).append(" : ").append(wrappedRequest.getRequestURI())
-                    .append("\nParameters: ").append(params)
-                    .append("\nBody: ").append(body);
+            msg.append(wrappedRequest.getMethod()).append(" : ").append(wrappedRequest.getRequestURI());
+            msg.append("\nParameters: ").append(params);
+
+            if (!body.contains("Content-Type: image")) {
+                msg.append("\nBody: ").append(body);
+            } else {
+                msg.append("\nBody: IMAGE");
+            }
+
             logger.info(msg);
         } catch (IOException e) {
             logger.warn("Can't logging this request\n");
@@ -88,7 +94,9 @@ public class RequestLoggingFilter implements Filter {
         }
         ContentCachingResponseWrapper responseCacheWrapperObject =
                 new ContentCachingResponseWrapper((HttpServletResponse) servletResponse);
+
         filterChain.doFilter(wrappedRequest, responseCacheWrapperObject);
+
 
         byte[] responseArray = responseCacheWrapperObject.getContentAsByteArray();
         String responseStr = new String(responseArray, responseCacheWrapperObject.getCharacterEncoding())
