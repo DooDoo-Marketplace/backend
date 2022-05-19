@@ -7,19 +7,14 @@ import lombok.Data;
 public class UserDto {
 
     @JsonView
-    String firstName;
+    private String firstName;
 
     @JsonView
-    String lastName;
+    private String lastName;
 
     @JsonView
-    String phone;
+    private String phone;
 
     @JsonView
-    String email;
-
-
-
-
-
+    private String email;
 }

@@ -38,7 +38,7 @@ public class AuthorizationService {
     private UsersRepository usersRepository;
 
     @Resource(name = "smsService")
-    SmsService smsService;
+    private SmsService smsService;
 
 
     public void generateAuthRequest(String phone) throws TooFastRequestsException {
@@ -46,7 +46,7 @@ public class AuthorizationService {
         Date now = dateService.utcNow();
         if (authRequest != null) {
             if (DateUtils.between(now, authRequest.getCreatedAt()) < 3 * 60) {
-                throw new TooFastRequestsException();
+                throw new TooFastRequestsException("TOO_FAST_RESPONSES");
             }
             authRequestRepository.delete(authRequest);
         }
@@ -58,18 +58,15 @@ public class AuthorizationService {
         request.setPhone(phone);
         request.setAttempts(3);
         authRequestRepository.save(request);
-
-
     }
 
     public AuthResponseDto authorizeByCode(String phone, int code)
             throws AuthRequestNotFoundException,
             AttemptsLimitException,
-            InvalidCodeException,
-            InvalidPhoneException {
+            InvalidCodeException, InvalidPhoneException {
         AuthRequest authRequest = authRequestRepository.getAuthRequestByPhone(phone);
         if (authRequest == null) {
-            throw new AuthRequestNotFoundException();
+            throw new AuthRequestNotFoundException("AUTH_REQUEST_NOT_FOUND");
         }
         Date now = dateService.utcNow();
         if (code != authRequest.getCode()) {
@@ -78,8 +75,8 @@ public class AuthorizationService {
 
             if (authRequest.getAttempts() <= 0) {
                 authRequestRepository.delete(authRequest);
-                throw new AttemptsLimitException();
-            } else throw new InvalidCodeException();
+                throw new AttemptsLimitException("ATTEMPTS_LIMIT_REACHED");
+            } else throw new InvalidCodeException("INVALID_CODE");
 
         }
         authRequestRepository.delete(authRequest);
@@ -105,7 +102,7 @@ public class AuthorizationService {
     }
 
     public void closeAllSessions(Session session) {
-        this.sessionRepository.setExpirationByUser(session.getUser());
+        this.sessionRepository.setExpirationByUser(session.getUser().getId());
     }
 
 }

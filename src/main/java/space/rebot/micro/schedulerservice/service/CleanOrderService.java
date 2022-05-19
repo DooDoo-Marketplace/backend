@@ -28,7 +28,8 @@ public class CleanOrderService {
     @Transactional
     public void cleanOrder() {
         List<Integer> status = new ArrayList<>();
-        status.add(OrdersStatusEnum.CANCELLED.getId(), OrdersStatusEnum.COMPLETED.getId());
+        status.add(OrdersStatusEnum.CANCELLED.getId());
+        status.add(OrdersStatusEnum.COMPLETED.getId());
         List<UUID> ids;
         List<GroupsOrders> groupsOrders;
         do {

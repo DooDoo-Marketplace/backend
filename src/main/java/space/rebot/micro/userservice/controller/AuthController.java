@@ -16,63 +16,62 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/auth")
 public class AuthController {
 
     @Autowired
-    AuthorizationService authorizationService;
+    private AuthorizationService authorizationService;
 
     @Autowired
     private HttpServletRequest context;
 
+    @Autowired
+    private PhoneValidator phoneValidator;
 
-    PhoneValidator phoneValidator;
-    public AuthController(){
-        this.phoneValidator = new PhoneValidator();
-    }
     @PostMapping(value="login", produces="application/json;charset=UTF-8")
-    private ResponseEntity<?> login(@NonNull @RequestBody AuthRequestDto authRequestDto){
+    private ResponseEntity<?> login(@RequestBody AuthRequestDto authRequestDto){
+        Map<Object, Object> model = new HashMap<>();
         if (!phoneValidator.validate(authRequestDto.getPhone(), true)) {
-            MessageDto error = new MessageDto("INVALID_PHONE");
-            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+            model.put("message", "INVALID_PHONE");
+            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         }
         try{
             authorizationService.generateAuthRequest(authRequestDto.getPhone());
         }catch (TooFastRequestsException ex) {
-            MessageDto error = new MessageDto("TOO_FAST_RESPONSES");
-            return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+            model.put("message", ex.getMessage());
+            return new ResponseEntity<>(model, HttpStatus.FORBIDDEN);
         }
-        return ResponseEntity.ok(new MessageDto("REQUEST_CREATED"));
+        model.put("message", "REQUEST_CREATED");
+        return new ResponseEntity<>(model, HttpStatus.OK);
 
 
 
 
     }
     @PostMapping(value = "code", produces = "application/json;charset=UTF-8")
-    private ResponseEntity<?> code (@NonNull @RequestBody CodeRequestDto codeRequestDto){
+    private ResponseEntity<?> code (@RequestBody CodeRequestDto codeRequestDto){
+        Map<Object, Object> model = new HashMap<>();
         try {
             AuthResponseDto responseDto = authorizationService.authorizeByCode(codeRequestDto.getPhone(), codeRequestDto.getCode());
-            return ResponseEntity.ok(responseDto);
+            model.put("response", responseDto);
+        } catch (AuthRequestNotFoundException ex){
+            model.put("message", ex.getMessage());
+            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
+        } catch (InvalidCodeException ex){
+            model.put("message", ex.getMessage());
+            return new ResponseEntity<>(model, HttpStatus.FORBIDDEN);
+        } catch (AttemptsLimitException ex){
+            model.put("message", ex.getMessage());
+            return new ResponseEntity<>(model, HttpStatus.TOO_MANY_REQUESTS);
+        } catch (InvalidPhoneException ex){
+            model.put("message", ex.getMessage());
+            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         }
-
-        catch (AuthRequestNotFoundException ex){
-            MessageDto error = new MessageDto("AUTH_REQUEST_NOT_FOUND");
-            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-        }
-        catch (InvalidCodeException ex){
-            MessageDto error = new MessageDto("INVALID_CODE");
-            return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
-        }
-        catch (AttemptsLimitException ex){
-            MessageDto error = new MessageDto("ATTEMPTS_LIMIT_REACHED");
-            return new ResponseEntity<>(error, HttpStatus.TOO_MANY_REQUESTS);
-        }
-        catch (InvalidPhoneException ex){
-            MessageDto error = new MessageDto("INVALID_PHONE");
-            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(model,HttpStatus.OK);
 
     }
 

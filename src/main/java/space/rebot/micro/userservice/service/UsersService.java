@@ -32,7 +32,7 @@ public class UsersService {
     public User generateDefault(String phone) throws InvalidPhoneException {
         UserFactory factory = new UserFactory();
         PhoneValidator validator = new PhoneValidator();
-        if (!validator.validate(phone, false)) throw new InvalidPhoneException();
+        if (!validator.validate(phone, false)) throw new InvalidPhoneException("INVALID_PHONE");
         Role role = rolesRepository.getRoleByName(RoleConfig.ROLE_USER.toString());
         factory.setPhone(phone);
         factory.addRole(role);
@@ -46,7 +46,7 @@ public class UsersService {
     public void editFromDto(User user, UserDto userDto) throws InvalidUserDtoException {
         UserFactory factory = new UserFactory();
         UserDtoValidator validator = new UserDtoValidator();
-        if (!validator.validate(userDto, true)) throw new InvalidUserDtoException();
+        if (!validator.validate(userDto, true)) throw new InvalidUserDtoException("INVALID_FIELDS");
         factory.load(user);
         User updated = factory.fromDto(userDto);
         usersRepository.save(updated);

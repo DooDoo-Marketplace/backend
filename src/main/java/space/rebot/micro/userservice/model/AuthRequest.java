@@ -1,8 +1,11 @@
 package space.rebot.micro.userservice.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Date;
 
+@Data
 @Entity
 @Table(name = "auth_requests")
 public class AuthRequest {
@@ -20,43 +23,6 @@ public class AuthRequest {
     @Column(name = "attempts")
     private int attempts;
 
-    public int getAttempts() {
-        return attempts;
-    }
-
-    public void setAttempts(int attempts) {
-        this.attempts = attempts;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public AuthRequest() {
     }
 }

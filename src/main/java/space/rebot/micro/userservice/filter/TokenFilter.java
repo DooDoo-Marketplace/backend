@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
 public class TokenFilter implements Filter {
 
     @Autowired
-    SessionsRepository repository;
+    private SessionsRepository repository;
 
     @Autowired
-    PermissionsConfig permissionsConfig;
+    private PermissionsConfig permissionsConfig;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

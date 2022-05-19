@@ -1,11 +1,13 @@
 package space.rebot.micro.userservice.model;
 
-import space.rebot.micro.marketservice.model.Sku;
+import lombok.Data;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
-
+@Data
 @Entity
 @Table(name = "users")
 public class User {
@@ -25,84 +27,18 @@ public class User {
     private Date onlineAt;
     @Column(name = "phone")
     private String phone;
-    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch=FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "roles_id") }
     )
-    List<Role> roles;
+    private List<Role> roles;
 
 
     public User(){
         this.roles = new LinkedList<>();
     }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Date getRegisteredAt() {
-        return registeredAt;
-    }
-
-    public void setRegisteredAt(Date registeredAt) {
-        this.registeredAt = registeredAt;
-    }
-
-    public Date getOnlineAt() {
-        return onlineAt;
-    }
-
-    public void setOnlineAt(Date onlineAt) {
-        this.onlineAt = onlineAt;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public void addRole(Role role){
         this.roles.add(role);
     }

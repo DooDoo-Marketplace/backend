@@ -11,21 +11,17 @@ import space.rebot.micro.userservice.model.Role;
 import space.rebot.micro.userservice.model.Session;
 import space.rebot.micro.userservice.model.User;
 
-
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 @Order(11)
 public class RoleFilter implements Filter {
 
     @Autowired
-    PermissionsConfig permissionsConfig;
+    private PermissionsConfig permissionsConfig;
 
     private String[] getUserPermissions(User user){
         String[] permissions = permissionsConfig.getAllowedUrls().get(RoleConfig.UNAUTHORIZED.toString());
