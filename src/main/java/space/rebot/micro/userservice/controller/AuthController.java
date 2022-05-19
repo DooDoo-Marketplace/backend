@@ -58,17 +58,11 @@ public class AuthController {
         try {
             AuthResponseDto responseDto = authorizationService.authorizeByCode(codeRequestDto.getPhone(), codeRequestDto.getCode());
             model.put("response", responseDto);
-        } catch (AuthRequestNotFoundException ex){
-            model.put("message", ex.getMessage());
-            return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
-        } catch (InvalidCodeException ex){
-            model.put("message", ex.getMessage());
-            return new ResponseEntity<>(model, HttpStatus.FORBIDDEN);
-        } catch (AttemptsLimitException ex){
-            model.put("message", ex.getMessage());
-            return new ResponseEntity<>(model, HttpStatus.TOO_MANY_REQUESTS);
-        } catch (InvalidPhoneException ex){
-            model.put("message", ex.getMessage());
+        } catch (AuthException e) {
+            model.put("message", e.getMessage());
+            return new ResponseEntity<>(model, e.getStatus());
+        } catch (InvalidPhoneException e){
+            model.put("message", e.getMessage());
             return new ResponseEntity<>(model, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(model,HttpStatus.OK);

@@ -9,10 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import space.rebot.micro.userservice.dto.auth.AuthResponseDto;
-import space.rebot.micro.userservice.exception.AttemptsLimitException;
-import space.rebot.micro.userservice.exception.AuthRequestNotFoundException;
-import space.rebot.micro.userservice.exception.InvalidCodeException;
-import space.rebot.micro.userservice.exception.InvalidPhoneException;
+import space.rebot.micro.userservice.exception.*;
 import space.rebot.micro.userservice.model.AuthRequest;
 import space.rebot.micro.userservice.model.User;
 import space.rebot.micro.userservice.repository.AuthRequestsRepository;
@@ -52,7 +49,7 @@ public class AuthorizationServiceTest {
         int code = 1234;
         Mockito.when(authRequestRepository.getAuthRequestByPhone(phone))
                 .thenReturn(null);
-        assertThrows(AuthRequestNotFoundException.class, () ->
+        assertThrows(AuthException.class, () ->
                 authorizationService.authorizeByCode(phone, code));
 
     }
@@ -65,14 +62,14 @@ public class AuthorizationServiceTest {
         int code = 1234;
         Mockito.when(authRequestRepository.getAuthRequestByPhone(phone))
                 .thenReturn(null);
-        assertThrows(AuthRequestNotFoundException.class, () ->
+        assertThrows(AuthException.class, () ->
                 authorizationService.authorizeByCode(phone, code));
 
     }
 
     @Test
     @DisplayName("Authorization by code should return token and registered = false")
-    public void authorizeByCode_shouldReturnRegisteredFalse() throws AttemptsLimitException, InvalidPhoneException, AuthRequestNotFoundException, InvalidCodeException {
+    public void authorizeByCode_shouldReturnRegisteredFalse() throws AuthException, InvalidPhoneException {
         String phone = "+79215641751";
         int code = 1234;
         User user = Mockito.mock(User.class);
@@ -102,7 +99,7 @@ public class AuthorizationServiceTest {
         Mockito.when(authRequest.getAttempts()).thenReturn(attempts);
 
 
-        assertThrows(InvalidCodeException.class, () ->
+        assertThrows(AuthException.class, () ->
                 authorizationService.authorizeByCode(phone, code));
     }
 
@@ -121,7 +118,7 @@ public class AuthorizationServiceTest {
         Mockito.when(authRequest.getAttempts()).thenReturn(attempts);
 
 
-        assertThrows(AttemptsLimitException.class, () ->
+        assertThrows(AuthException.class, () ->
                 authorizationService.authorizeByCode(phone, code));
     }
 

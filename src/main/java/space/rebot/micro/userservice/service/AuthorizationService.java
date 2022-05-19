@@ -1,5 +1,6 @@
 package space.rebot.micro.userservice.service;
 
+import org.springframework.http.HttpStatus;
 import space.rebot.micro.config.RoleConfig;
 import space.rebot.micro.userservice.dto.auth.AuthResponseDto;
 import space.rebot.micro.userservice.exception.*;
@@ -61,12 +62,10 @@ public class AuthorizationService {
     }
 
     public AuthResponseDto authorizeByCode(String phone, int code)
-            throws AuthRequestNotFoundException,
-            AttemptsLimitException,
-            InvalidCodeException, InvalidPhoneException {
+            throws InvalidPhoneException, AuthException {
         AuthRequest authRequest = authRequestRepository.getAuthRequestByPhone(phone);
         if (authRequest == null) {
-            throw new AuthRequestNotFoundException("AUTH_REQUEST_NOT_FOUND");
+            throw new AuthException("AUTH_REQUEST_NOT_FOUND", HttpStatus.BAD_REQUEST);
         }
         Date now = dateService.utcNow();
         if (code != authRequest.getCode()) {
@@ -75,8 +74,8 @@ public class AuthorizationService {
 
             if (authRequest.getAttempts() <= 0) {
                 authRequestRepository.delete(authRequest);
-                throw new AttemptsLimitException("ATTEMPTS_LIMIT_REACHED");
-            } else throw new InvalidCodeException("INVALID_CODE");
+                throw new AuthException("ATTEMPTS_LIMIT_REACHED", HttpStatus.TOO_MANY_REQUESTS);
+            } else throw new AuthException("INVALID_CODE", HttpStatus.FORBIDDEN);
 
         }
         authRequestRepository.delete(authRequest);
