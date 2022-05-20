@@ -1,6 +1,7 @@
 package space.rebot.micro.userservice.repository;
 
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import space.rebot.micro.userservice.model.Session;
 import space.rebot.micro.userservice.model.User;
@@ -11,16 +12,17 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SessionsRepository extends JpaRepository<Session, Long> {
 
-    @Query(value = "select * from sessions where token = ?1", nativeQuery = true)
-    Session getByToken(String token);
+    @Query(value = "select * from sessions where token = :token", nativeQuery = true)
+    Session getByToken(@Param("token") String token);
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(value = "update sessions set expired = true where id = ?1", nativeQuery = true)
-    void setExpirationById(Long id);
+    @Query(value = "update sessions set expired = true where id = :id", nativeQuery = true)
+    void setExpirationById(@Param("id") long id);
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query(value = "update sessions set expired = true where user_id = ?1", nativeQuery = true)
-    void setExpirationByUser(User id);
+    @Query(value = "update sessions set expired = true where user_id = :id",
+            nativeQuery = true)
+    void setExpirationByUser(@Param("id") long id);
 }

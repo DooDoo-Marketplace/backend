@@ -1,8 +1,11 @@
 package space.rebot.micro.userservice.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.List;
 
+@Data
 @Entity
 @Table(name = "roles")
 public class Role {
@@ -14,20 +17,7 @@ public class Role {
     @Column(name = "name", nullable = false)
     private String name;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public Role() {
     }
 
 }

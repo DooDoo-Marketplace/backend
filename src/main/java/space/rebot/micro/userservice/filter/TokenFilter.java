@@ -21,15 +21,15 @@ import java.util.stream.Collectors;
 public class TokenFilter implements Filter {
 
     @Autowired
-    SessionsRepository repository;
+    private SessionsRepository repository;
 
     @Autowired
-    PermissionsConfig permissionsConfig;
+    private PermissionsConfig permissionsConfig;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        String[] unauthorized = permissionsConfig.allowedUrls.get(RoleConfig.UNAUTHORIZED.toString());
+        String[] unauthorized = permissionsConfig.getAllowedUrls().get(RoleConfig.UNAUTHORIZED.toString());
         boolean skipAuth = false;
         String requestUrl = request.getRequestURL().toString();
         for (String url: unauthorized){

@@ -1,25 +1,24 @@
 package space.rebot.micro.userservice.dto.user;
 import com.fasterxml.jackson.annotation.JsonView;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @JsonView
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDto {
 
     @JsonView
-    String firstName;
+    private String firstName;
 
     @JsonView
-    String lastName;
+    private String lastName;
 
     @JsonView
-    String phone;
+    private String phone;
 
     @JsonView
-    String email;
-
-
-
-
-
+    private String email;
 }

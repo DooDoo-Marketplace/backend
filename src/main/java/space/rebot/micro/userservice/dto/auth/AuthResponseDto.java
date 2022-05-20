@@ -1,15 +1,15 @@
 package space.rebot.micro.userservice.dto.auth;
 
-import com.fasterxml.jackson.annotation.JsonView;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@JsonView
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class AuthResponseDto {
-    @JsonView
-    String token;
-    @JsonView
-    boolean registered;
-    public AuthResponseDto(String token, boolean registered){
-        this.token = token;
-        this.registered = registered;
-    }
+
+    private String token;
+
+    private boolean registered;
 }

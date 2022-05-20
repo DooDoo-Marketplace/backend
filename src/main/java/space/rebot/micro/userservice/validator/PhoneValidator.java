@@ -1,7 +1,8 @@
 package space.rebot.micro.userservice.validator;
 
-import space.rebot.micro.userservice.utils.StringUtils;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PhoneValidator extends Validator<String>{
     @Override
     protected boolean isValid(String value){
